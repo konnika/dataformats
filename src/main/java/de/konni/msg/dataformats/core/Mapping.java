@@ -1,5 +1,6 @@
 package de.konni.msg.dataformats.core;
 
 public interface Mapping {
-    DataFormat applyTo(DataFormat format);
+    void applyTo(Data in, Data out);
+    boolean matches(DataFormatId in, DataFormatId out);
 }

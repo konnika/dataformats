@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Conversion {
-    private final DataFormat from;
-    private final DataFormat to;
+    private final DataFormatId from;
+    private final DataFormatId to;
     private final List<Mapping> mappings = new ArrayList<>();
 
-    public Conversion(final DataFormat from, final DataFormat to, final List<Mapping> mappings) {
+    public Conversion(final DataFormatId from, final DataFormatId to, final List<Mapping> mappings) {
         this.from = from;
         this.to = to;
         if (mappings != null) {

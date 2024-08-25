@@ -46,4 +46,12 @@ public class Type {
     public int hashCode() {
         return Objects.hash(clazz, enumValues);
     }
+
+    public Class<?> clazz() {
+        return clazz;
+    }
+
+    public Object cast(Object object) {
+        return clazz.cast(object);
+    }
 }

@@ -5,14 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 public class DataFormat {
-    private final String name;
+    private final DataFormatId id;
     private final List<ValueFormat> valueFormats = new ArrayList<>();
 
-    public DataFormat(String name, List<ValueFormat> valueFormats) {
-        this.name = name;
+    public DataFormat(DataFormatId id, List<ValueFormat> valueFormats) {
+        this.id = id;
         if (valueFormats != null) {
-            this.valueFormats.addAll(valueFormats);
+            valueFormats.forEach(this::add);
         }
+    }
+
+    private void add(ValueFormat valueFormat) {
+        this.valueFormats.add(valueFormat);
     }
 
     public boolean contains(Path path) {
