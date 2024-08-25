@@ -25,6 +25,14 @@ public class Value {
         return Objects.equals(this.type, type);
     }
 
+    public boolean hasValue() {
+        return object != null;
+    }
+
+    public boolean isEmpty() {
+        return object == null;
+    }
+
     public Type type() {
         return type;
     }

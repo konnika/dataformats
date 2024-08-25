@@ -2,32 +2,40 @@ package de.konni.msg.dataformats.core.mappings;
 
 import de.konni.msg.dataformats.core.*;
 
+import java.util.List;
 import java.util.Objects;
 
-public class FirstSimpleMapping implements Mapping {
+public class MultipleOneToOneMapping implements Mapping {
     private final DataFormatId fromFormatId;
     private final DataFormatId toFormatId;
-    private final Path fromPath;
-    private final Path toPath;
+    private final List<Path> fromPaths;
+    private final List<Path> toPaths;
     private final Type fromType;
     private final Type toType;
 
-    public FirstSimpleMapping() {
+    public MultipleOneToOneMapping() {
         this.fromFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE;
-        this.fromPath = new Path("benutzername");
+        this.fromPaths = List.of(
+                new Path("benutzername"),
+                new Path("institutsname")
+        );
         this.fromType = Type.STRING;
 
         this.toFormatId = DataFormatId.MAP;
-        this.toPath = new Path("benutzernamePath");
+        this.toPaths = List.of(
+                new Path("benutzernamePath"),
+                new Path("institutsnamePath"));
         this.toType = Type.STRING;
     }
 
     @Override
     public void applyTo(Data in, Data out) {
-        var before = in.get(fromPath);
-        if (before != null && before.hasValue()) {
-            var after = mapValueTypeSafe(before);
-            out.add(after);
+        for (int i = 0; i < fromPaths.size(); i++) {
+            var before = in.get(fromPaths.get(i));
+            if (before != null && before.hasValue()) {
+                var after = mapValueTypeSafe(before, toPaths.get(i));
+                out.add(after);
+            }
         }
     }
 
@@ -36,7 +44,7 @@ public class FirstSimpleMapping implements Mapping {
         return Objects.equals(in, fromFormatId) && Objects.equals(out, toFormatId);
     }
 
-    private Value mapValueTypeSafe(Value value) {
+    private Value mapValueTypeSafe(Value value, Path toPath) {
         if (value.has(fromType)) {
             var object = (String) value.object();
             var toValue = mapValue(object);
