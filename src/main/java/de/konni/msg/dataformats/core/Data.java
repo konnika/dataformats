@@ -8,7 +8,7 @@ public class Data {
     private final DataFormat dataFormat;
     private final Map<Path, Value> values = new HashMap<>();
 
-    public Data(DataFormat dataFormat, List<Value> values) {
+    Data(DataFormat dataFormat, List<Value> values) {
         this.dataFormat = dataFormat;
         if (values != null) {
             values.forEach(this::add);
@@ -21,5 +21,10 @@ public class Data {
 
     public Value get(Path path) {
         return values.get(path);
+    }
+
+    public static Data from(Object object, DataFormat dataFormat) {
+        // TODO values from object via DataFormat
+        return new Data(dataFormat, values);
     }
 }
