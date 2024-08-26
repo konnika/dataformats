@@ -10,9 +10,7 @@ public class Data {
 
     Data(DataFormat dataFormat, List<Value> values) {
         this.dataFormat = dataFormat;
-        if (values != null) {
-            values.forEach(this::add);
-        }
+        Validations.validateNotEmpty(values).forEach(this::add);
     }
 
     public void add(Value value) {

@@ -10,13 +10,13 @@ public class Path {
     private final List<String> asList;
 
     public Path(String string) {
-        this.asString = string; // TODO validate not is blank
+        this.asString = Validations.validateNotEmpty(string);
         this.asList = List.of(string.split("\\."));
     }
 
     Path(List<String> list) {
         this.asString = String.join(".", list);
-        this.asList = new ArrayList<>(list); // TODO validate this is not empty
+        this.asList = new ArrayList<>(Validations.validateNotEmpty(list));
     }
 
     @Override
@@ -43,6 +43,7 @@ public class Path {
         if (length() == 1) {
             return objectMap.get(asString);
         }
+
         var object = objectMap.get(firstElement());
         if (object == null) {
             return null;
@@ -54,6 +55,7 @@ public class Path {
         if (object instanceof List) {
             var list = (List<Object>) object;
             // TODO implement
+
         }
         throw new RuntimeException("Unexpected object in objectMap: " + object.getClass());
     }
