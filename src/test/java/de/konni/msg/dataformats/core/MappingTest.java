@@ -15,8 +15,8 @@ class MappingTest {
         var mapping = new FirstSimpleMapping();
 
         var value = new Value(new Path("benutzername"), Type.STRING, "xxx");
-        var before = new Data(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE, List.of(value));
-        var after = new Data(DataFormatId.MAP, Collections.emptyList());
+        var before = new Data(TestDataFormats.transactionMetadataUpdate(), List.of(value));
+        var after = new Data(TestDataFormats.transactionMetadataUpdateTarget(), Collections.emptyList());
 
         mapping.applyTo(before, after);
 
@@ -31,8 +31,8 @@ class MappingTest {
                 new Value(new Path("benutzername"), Type.STRING, "xxx"),
                 new Value(new Path("institutsname"), Type.STRING, "xxx")
         );
-        var before = new Data(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE, values);
-        var after = new Data(DataFormatId.MAP, Collections.emptyList());
+        var before = new Data(TestDataFormats.transactionMetadataUpdate(), values);
+        var after = new Data(TestDataFormats.transactionMetadataUpdateTarget(), Collections.emptyList());
 
         mapping.applyTo(before, after);
 

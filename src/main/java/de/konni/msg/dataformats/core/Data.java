@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Data {
-    private final DataFormatId id;
+    private final DataFormat dataFormat;
     private final Map<Path, Value> values = new HashMap<>();
 
-    public Data(DataFormatId id, List<Value> values) {
-        this.id = id;
+    public Data(DataFormat dataFormat, List<Value> values) {
+        this.dataFormat = dataFormat;
         if (values != null) {
             values.forEach(this::add);
         }

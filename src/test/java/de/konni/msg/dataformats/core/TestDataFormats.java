@@ -35,4 +35,33 @@ public class TestDataFormats {
         );
         return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE, values);
     }
+
+    public static DataFormat transactionMetadataUpdateTarget() {
+        var values = List.of(
+                new ValueFormat(new Path("user"), Type.STRING),
+                new ValueFormat(new Path("tenant"), Type.STRING),
+                new ValueFormat(new Path("header.customer.accountNumber"), Type.STRING),
+                new ValueFormat(new Path("header.customer.self.first"), Type.STRING),
+                new ValueFormat(new Path("header.customer.self.family"), Type.STRING),
+                new ValueFormat(new Path("header.customer.self.title"), Type.STRING),
+                new ValueFormat(new Path("header.customer.wife.first"), Type.STRING),
+                new ValueFormat(new Path("header.customer.wife.family"), Type.STRING),
+                new ValueFormat(new Path("header.customer.wife.title"), Type.STRING),
+                new ValueFormat(new Path("header.customer.address.street"), Type.STRING),
+                new ValueFormat(new Path("header.customer.address.zip"), Type.STRING),
+                new ValueFormat(new Path("header.customer.address.city"), Type.STRING),
+                new ValueFormat(new Path("header.customer.address.country"), Type.STRING),
+                new ValueFormat(new Path("header.customer.salutation"), Type.ENUM("MISSES", "MISTER", "COMPANY", "MISTER & MISSES", "MISTER & MISSES")),
+                new ValueFormat(new Path("header.administration.iban"), Type.STRING),
+                new ValueFormat(new Path("header.administration.bic"), Type.STRING),
+                new ValueFormat(new Path("header.administration.accountNumber"), Type.STRING),
+                new ValueFormat(new Path("header.administration.location"), Type.STRING),
+                new ValueFormat(new Path("header.administration.customerContact"), Type.STRING),
+                new ValueFormat(new Path("header.administration.administrationConfigurable[].key"), Type.STRING),
+                new ValueFormat(new Path("header.administration.administrationConfigurable[].text"), Type.STRING),
+                new ValueFormat(new Path("header.administration.administrationConfigurable[].checkbox"), Type.BOOLEAN),
+                new ValueFormat(new Path("header.administration.administrationConfigurable[].date"), Type.DATE)
+        );
+        return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_TARGET, values);
+    }
 }
