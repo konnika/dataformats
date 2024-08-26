@@ -21,7 +21,7 @@ public class Value {
         return object;
     }
 
-    public boolean has(Type type) {
+    public boolean is(Type type) {
         return Objects.equals(this.type, type);
     }
 

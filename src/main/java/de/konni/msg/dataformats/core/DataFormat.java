@@ -1,10 +1,11 @@
 package de.konni.msg.dataformats.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class DataFormat {
+class DataFormat {
     private final DataFormatId id;
     private final List<ValueFormat> valueFormats = new ArrayList<>();
 
@@ -19,11 +20,15 @@ public class DataFormat {
         this.valueFormats.add(valueFormat);
     }
 
-    public boolean contains(Path path) {
+    boolean contains(Path path) {
         return valueFormats.stream().anyMatch(v -> v.has(path));
     }
 
-    public Optional<ValueFormat> get(Path path) {
+    Optional<ValueFormat> get(Path path) {
         return valueFormats.stream().filter(p -> p.has(path)).findFirst();
+    }
+
+    List<ValueFormat> valueFormats() {
+        return Collections.unmodifiableList(valueFormats);
     }
 }

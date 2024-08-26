@@ -11,11 +11,19 @@ public class ValueFormat {
         this.type = type;
     }
 
-    public boolean has(Path path) {
+    boolean has(Path path) {
         return Objects.equals(this.path, path);
     }
 
-    public boolean has(Type type) {
+    boolean has(Type type) {
         return Objects.equals(this.type, type);
+    }
+
+    Path path() {
+        return path;
+    }
+
+    Type type() {
+        return type;
     }
 }

@@ -1,16 +1,15 @@
 package de.konni.msg.dataformats.core;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Type {
     public static final Type STRING = new Type(String.class);
     public static final Type OBJECT = new Type(Object.class);
     public static final Type BOOLEAN = new Type(Boolean.class);
     public static final Type DATE = new Type(LocalDate.class);
+
+    private static final Map<Class<?>, Type> types = Map.of(String.class, STRING, Boolean.class, BOOLEAN, LocalDate.class, DATE, Object.class, OBJECT);
 
     private final Class<?> clazz;
     private final List<String> enumValues = new ArrayList<>();
@@ -22,6 +21,14 @@ public class Type {
 
     public static Type ENUM(String... values) {
         return new Type(Enum.class, values);
+    }
+
+    public static Type from(Class<?> aClass) {
+        var type = types.get(aClass);
+        if (type == null) {
+            throw new RuntimeException("Unexcepted Class type: " + aClass.getName());
+        }
+        return type;
     }
 
     @Override

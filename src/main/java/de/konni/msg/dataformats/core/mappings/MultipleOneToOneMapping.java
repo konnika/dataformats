@@ -45,7 +45,7 @@ public class MultipleOneToOneMapping implements Mapping {
     }
 
     private Value mapValueTypeSafe(Value value, Path toPath) {
-        if (value.has(fromType)) {
+        if (value.is(fromType)) {
             var object = (String) value.object();
             var toValue = mapValue(object);
             return new Value(toPath, toType, toValue);

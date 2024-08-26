@@ -23,8 +23,13 @@ public class Data {
         return values.get(path);
     }
 
-    public static Data from(Object object, DataFormat dataFormat) {
-        // TODO values from object via DataFormat
+    public static Data from(Map<String, Object> objectMap, DataFormat dataFormat) {
+        var values = dataFormat.valueFormats().stream().map(valueFormat -> value(objectMap, valueFormat)).toList();
         return new Data(dataFormat, values);
+    }
+
+    private static Value value(Map<String, Object> objectMap, ValueFormat valueFormat) {
+        var object = valueFormat.path().value(objectMap);
+        return new Value(valueFormat.path(), valueFormat.type(), object);
     }
 }

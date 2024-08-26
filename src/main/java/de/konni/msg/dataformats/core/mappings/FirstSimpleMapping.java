@@ -37,7 +37,7 @@ public class FirstSimpleMapping implements Mapping {
     }
 
     private Value mapValueTypeSafe(Value value) {
-        if (value.has(fromType)) {
+        if (value.is(fromType)) {
             var object = (String) value.object();
             var toValue = mapValue(object);
             return new Value(toPath, toType, toValue);
