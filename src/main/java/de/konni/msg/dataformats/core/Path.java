@@ -35,14 +35,11 @@ public class Path {
         return Objects.hashCode(asString);
     }
 
-    private int length() {
+    int length() {
         return asList.size();
     }
 
     public Object singleValue(Map<String, Object> objectMap) {
-        if (length() == 0) {
-            throw new RuntimeException("Unexpected empty Path");
-        }
         if (length() == 1) {
             return objectMap.get(asString);
         }
@@ -53,7 +50,7 @@ public class Path {
         }
         if (object instanceof Map) {
             var map = (Map<String, Object>) object;
-            return withoutFirstElement().singleValue(map);
+            return afterFirstElement().singleValue(map);
         }
         if (object instanceof List) {
             throw new RuntimeException("Unexpected list in objectMap at " + asString);
@@ -69,16 +66,20 @@ public class Path {
         return asList.stream().anyMatch(str -> str.contains("[]"));
     }
 
-    private String firstElement() {
+    String firstElement() {
         return asList.get(0);
     }
 
-    private Path withoutFirstElement() {
+    Path afterFirstElement() {
         return new Path(asList.stream().skip(1).toList());
     }
 
     @Override
     public String toString() {
+        return asString;
+    }
+
+    String asString() {
         return asString;
     }
 
@@ -110,5 +111,9 @@ public class Path {
         }
 
         throw new RuntimeException("ObjectMap does not contain a list, as expected: " + object.getClass() + " at " + asString);
+    }
+
+    public boolean isFirstElementAListIndex() {
+        return asList.get(0).matches("\\[\\d+]");
     }
 }

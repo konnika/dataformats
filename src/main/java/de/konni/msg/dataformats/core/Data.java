@@ -52,6 +52,7 @@ public class Data {
         var list = pathToFirstArray.listOfValues(objectMap);
         for (int index = 0; index < list.size(); index++) {
             var map = list.get(index);
+            // FIXME this assumes that the pathAfterFirstArray is a singleValue. It should instead recurse here
             var object = pathAfterFirstArray.singleValue(map);
 
             var pathOfFirstArray = new Path("[" + index + "]");
@@ -59,5 +60,46 @@ public class Data {
             result.add(new Value(completePath, valueFormat.type(), object));
         }
         return result;
+    }
+
+    public Map<String, Object> toMap() {
+        var result = new HashMap<String, Object>();
+        for (Value value : values.values()) {
+            addValueToMap(result, value.path(), value.object());
+        }
+        return result;
+    }
+
+    private void addValueToMap(Map<String, Object> result, Path path, Object object) {
+        if (path.length() == 1) {
+            result.put(path.asString(), object);
+        } else {
+            var firstElement = path.firstElement();
+            if (path.afterFirstElement().isFirstElementAListIndex()) {
+                result.putIfAbsent(firstElement, new ArrayList<>());
+                var childList = (List<Map<String, Object>>) result.get(firstElement);
+                addValueToList(childList, path.afterFirstElement(), object);
+            } else {
+                result.putIfAbsent(firstElement, new HashMap<>());
+                var childMap = (Map<String, Object>) result.get(firstElement);
+                addValueToMap(childMap, path.afterFirstElement(), object);
+            }
+        }
+    }
+
+    private void addValueToList(List<Map<String, Object>> list, Path path, Object object) {
+        if (path.length() == 1) {
+            throw new RuntimeException("Expected Path of length > 1: " + path);
+        }
+
+        if (!path.isFirstElementAListIndex()) {
+            throw new RuntimeException("Expected list index in the first element of: " + path);
+        }
+
+        var index = Integer.parseInt(path.firstElement().replaceAll("[\\[\\]]", ""));
+        while (list.size() <= index) {
+            list.add(new HashMap<>());
+        }
+        addValueToMap(list.get(index), path.afterFirstElement(), object);
     }
 }
