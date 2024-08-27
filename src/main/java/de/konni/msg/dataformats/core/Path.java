@@ -3,6 +3,7 @@ package de.konni.msg.dataformats.core;
 import java.util.*;
 
 public class Path {
+    public static final String ARRAY_BRACKETS_WITH_INDEX = "\\[\\d+]";
     private final String asString;
     private final List<String> asList;
 
@@ -28,6 +29,19 @@ public class Path {
         if (o == null || getClass() != o.getClass()) return false;
         Path path = (Path) o;
         return Objects.equals(asString, path.asString);
+    }
+
+    public boolean equalsIgnoringIndices(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Path path = (Path) o;
+        if (Objects.equals(asString, path.asString)) {
+            return true;
+        }
+
+        var thisPathIndexesRemoved = asString.replaceAll(ARRAY_BRACKETS_WITH_INDEX, "[]");
+        var otherPathIndexesRemoved = path.asString.replaceAll(ARRAY_BRACKETS_WITH_INDEX, "[]");
+        return Objects.equals(thisPathIndexesRemoved, otherPathIndexesRemoved);
     }
 
     @Override
@@ -114,6 +128,6 @@ public class Path {
     }
 
     public boolean isFirstElementAListIndex() {
-        return asList.get(0).matches("\\[\\d+]");
+        return asList.get(0).matches(ARRAY_BRACKETS_WITH_INDEX);
     }
 }

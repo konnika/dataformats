@@ -15,6 +15,14 @@ public class Value {
         this.path = path;
         this.type = type;
         this.object = object;
+
+        validate();
+    }
+
+    private void validate() {
+        if (object != null && !type.clazz().equals(object.getClass())) {
+            throw new RuntimeException("Value type mismatch: " + type + " != " + object.getClass());
+        }
     }
 
     public Path path() {

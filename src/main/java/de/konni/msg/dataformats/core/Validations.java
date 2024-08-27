@@ -20,4 +20,11 @@ public class Validations {
         }
         return list;
     }
+
+    static <T> List<T> validateNotNull(List<T> list, String name) {
+        if (list == null) {
+            throw new RuntimeException("Invalid " + name + " encountered: null");
+        }
+        return list;
+    }
 }

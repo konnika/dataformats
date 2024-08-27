@@ -23,8 +23,8 @@ public class MultipleOneToOneMapping implements Mapping {
 
         this.toFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_TARGET;
         this.toPaths = List.of(
-                new Path("benutzernamePath"),
-                new Path("institutsnamePath"));
+                new Path("user"),
+                new Path("tenant"));
         this.toType = Type.STRING;
     }
 

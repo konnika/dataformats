@@ -4,14 +4,17 @@ import java.util.*;
 
 public class Data {
     private final DataFormat dataFormat;
+    private final DataFormatId dataFormatId;
     private final Map<Path, Value> values = new HashMap<>();
 
     Data(DataFormat dataFormat, List<Value> values) {
         this.dataFormat = dataFormat;
-        Validations.validateNotEmpty(values, "Data Values").forEach(this::addOrFailIfHasObject);
+        this.dataFormatId = dataFormat.id();
+        Validations.validateNotNull(values, "Data Values").forEach(this::addOrFailIfHasObject);
     }
 
     public void addOrOverrideIfHasObject(Value value) {
+        validatePath(value.path());
         this.values.put(value.path(), value);
     }
 
@@ -20,6 +23,7 @@ public class Data {
             throw new RuntimeException("Path already exists: " + value.path());
         }
 
+        validatePath(value.path());
         this.values.put(value.path(), value);
     }
 
@@ -44,12 +48,18 @@ public class Data {
                 .forEach(otherValue -> values.put(otherValue.path(), otherValue));
     }
 
+    private void validatePath(Path path) {
+        if (dataFormat.valueFormats().stream().map(ValueFormat::path).noneMatch(path::equalsIgnoringIndices)) {
+            throw new RuntimeException("Path does not exist: " + path);
+        }
+    }
+
     private void validateForOverride(Data other) {
         if (other == null) {
             throw new RuntimeException("Data is null");
         }
 
-        if (!Objects.equals(dataFormat, other.dataFormat)) {
+        if (!Objects.equals(dataFormatId, other.dataFormatId)) {
             throw new RuntimeException("Data format does not match");
         }
     }
@@ -137,5 +147,13 @@ public class Data {
             list.add(new HashMap<>());
         }
         addValueToMap(list.get(index), path.afterFirstElement(), object);
+    }
+
+    public boolean has(DataFormat dataFormat) {
+        return Objects.equals(dataFormat, this.dataFormat);
+    }
+
+    public DataFormatId dataFormatId() {
+        return dataFormatId;
     }
 }

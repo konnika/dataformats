@@ -2,7 +2,7 @@ package de.konni.msg.dataformats.core;
 
 import java.util.*;
 
-class DataFormat {
+public class DataFormat {
     private final DataFormatId id;
     private final List<ValueFormat> valueFormats = new ArrayList<>();
 
@@ -40,5 +40,9 @@ class DataFormat {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public DataFormatId id() {
+        return id;
     }
 }
