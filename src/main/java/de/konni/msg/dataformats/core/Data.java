@@ -11,10 +11,18 @@ public class Data {
 
     Data(DataFormat dataFormat, List<Value> values) {
         this.dataFormat = dataFormat;
-        Validations.validateNotEmpty(values, "Data Values").forEach(this::add);
+        Validations.validateNotEmpty(values, "Data Values").forEach(this::addOrFailIfPresent);
     }
 
-    public void add(Value value) {
+    public void addOrOverrideIfPresent(Value value) {
+        this.values.put(value.path(), value);
+    }
+
+    public void addOrFailIfPresent(Value value) {
+        if (values.containsKey(value.path())) {
+            throw new RuntimeException("Path already exists: " + value.path());
+        }
+
         this.values.put(value.path(), value);
     }
 
