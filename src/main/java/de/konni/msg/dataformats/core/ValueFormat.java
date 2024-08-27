@@ -26,4 +26,9 @@ public class ValueFormat {
     Type type() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return path.toString();
+    }
 }

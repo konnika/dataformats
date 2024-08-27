@@ -49,4 +49,9 @@ public class Value {
     public int hashCode() {
         return Objects.hash(path, type, object);
     }
+
+    @Override
+    public String toString() {
+        return path + "=" + object;
+    }
 }

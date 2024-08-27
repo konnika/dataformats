@@ -3,16 +3,20 @@ package de.konni.msg.dataformats.core;
 import java.util.List;
 
 public class Validations {
-    static String validateNotEmpty(String string) {
+    private Validations() {
+        // hide the constructor
+    }
+
+    static String validateNotEmpty(String string, String name) {
         if (string == null || string.isBlank()) {
-            throw new RuntimeException("Invalid Path encountered: null, empty or blank");
+            throw new RuntimeException("Invalid " + name + " encountered: null, empty or blank");
         }
         return string;
     }
 
-    static <T> List<T> validateNotEmpty(List<T> list) {
+    static <T> List<T> validateNotEmpty(List<T> list, String name) {
         if (list == null || list.isEmpty()) {
-            throw new RuntimeException("Invalid Path encountered: null or empty");
+            throw new RuntimeException("Invalid " + name + " encountered: null or empty");
         }
         return list;
     }

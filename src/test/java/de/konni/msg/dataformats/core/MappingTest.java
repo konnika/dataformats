@@ -4,7 +4,6 @@ import de.konni.msg.dataformats.core.mappings.FirstSimpleMapping;
 import de.konni.msg.dataformats.core.mappings.MultipleOneToOneMapping;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +15,9 @@ class MappingTest {
 
         var value = new Value(new Path("benutzername"), Type.STRING, "xxx");
         var before = new Data(TestDataFormats.transactionMetadataUpdate(), List.of(value));
-        var after = new Data(TestDataFormats.transactionMetadataUpdateTarget(), Collections.emptyList());
+
+        var otherValue = new Value(new Path("ignore me"), Type.STRING, "xxx");
+        var after = new Data(TestDataFormats.transactionMetadataUpdateTarget(), List.of(otherValue));
 
         mapping.applyTo(before, after);
 
@@ -32,7 +33,9 @@ class MappingTest {
                 new Value(new Path("institutsname"), Type.STRING, "xxx")
         );
         var before = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        var after = new Data(TestDataFormats.transactionMetadataUpdateTarget(), Collections.emptyList());
+
+        var otherValue = new Value(new Path("ignore me"), Type.STRING, "xxx");
+        var after = new Data(TestDataFormats.transactionMetadataUpdateTarget(), List.of(otherValue));
 
         mapping.applyTo(before, after);
 

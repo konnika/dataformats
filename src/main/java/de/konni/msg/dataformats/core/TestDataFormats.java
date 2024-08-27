@@ -24,10 +24,10 @@ public class TestDataFormats {
                 new ValueFormat(new Path("kopfdaten.verwaltungsdaten.kontonummer"), Type.STRING),
                 new ValueFormat(new Path("kopfdaten.verwaltungsdaten.betriebsstelle"), Type.STRING),
                 new ValueFormat(new Path("kopfdaten.verwaltungsdaten.kundenansprechpartner"), Type.STRING),
-                new ValueFormat(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar[].schluessel"), Type.STRING),
-                new ValueFormat(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar[].text"), Type.STRING),
-                new ValueFormat(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar[].checkbox"), Type.BOOLEAN),
-                new ValueFormat(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar[].datum"), Type.DATE)
+                new ValueFormat(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].schluessel"), Type.STRING),
+                new ValueFormat(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].text"), Type.STRING),
+                new ValueFormat(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox"), Type.BOOLEAN),
+                new ValueFormat(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].datum"), Type.DATE)
 //                new ValueFormat(new Path("institutskriterien"), Type.OBJECT),
 //    "institutskriterien": {
 //      "$ref": "./Institutskriterien.json"
@@ -57,10 +57,10 @@ public class TestDataFormats {
                 new ValueFormat(new Path("header.administration.accountNumber"), Type.STRING),
                 new ValueFormat(new Path("header.administration.location"), Type.STRING),
                 new ValueFormat(new Path("header.administration.customerContact"), Type.STRING),
-                new ValueFormat(new Path("header.administration.administrationConfigurable[].key"), Type.STRING),
-                new ValueFormat(new Path("header.administration.administrationConfigurable[].text"), Type.STRING),
-                new ValueFormat(new Path("header.administration.administrationConfigurable[].checkbox"), Type.BOOLEAN),
-                new ValueFormat(new Path("header.administration.administrationConfigurable[].date"), Type.DATE)
+                new ValueFormat(new Path("header.administration.administrationConfigurable.[].key"), Type.STRING),
+                new ValueFormat(new Path("header.administration.administrationConfigurable.[].text"), Type.STRING),
+                new ValueFormat(new Path("header.administration.administrationConfigurable.[].checkbox"), Type.BOOLEAN),
+                new ValueFormat(new Path("header.administration.administrationConfigurable.[].date"), Type.DATE)
         );
         return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_TARGET, values);
     }
