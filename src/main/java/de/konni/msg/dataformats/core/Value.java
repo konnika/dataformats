@@ -7,6 +7,10 @@ public class Value {
     private final Type type;
     private final Object object;
 
+    public Value(Path path, Type type) {
+        this(path, type, null);
+    }
+
     public Value(Path path, Type type, Object object) {
         this.path = path;
         this.type = type;

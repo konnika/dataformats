@@ -34,7 +34,7 @@ public class MultipleOneToOneMapping implements Mapping {
             var before = in.get(fromPaths.get(i));
             if (before != null && before.hasObject()) {
                 var after = mapValueTypeSafe(before, toPaths.get(i));
-                out.addOrOverrideIfPresent(after);
+                out.addOrOverrideIfHasObject(after);
             }
         }
     }

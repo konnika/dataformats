@@ -1,9 +1,6 @@
 package de.konni.msg.dataformats.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 class DataFormat {
     private final DataFormatId id;
@@ -30,5 +27,18 @@ class DataFormat {
 
     List<ValueFormat> valueFormats() {
         return Collections.unmodifiableList(valueFormats);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DataFormat that = (DataFormat) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

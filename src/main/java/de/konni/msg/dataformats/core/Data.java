@@ -1,9 +1,6 @@
 package de.konni.msg.dataformats.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Data {
     private final DataFormat dataFormat;
@@ -11,19 +8,50 @@ public class Data {
 
     Data(DataFormat dataFormat, List<Value> values) {
         this.dataFormat = dataFormat;
-        Validations.validateNotEmpty(values, "Data Values").forEach(this::addOrFailIfPresent);
+        Validations.validateNotEmpty(values, "Data Values").forEach(this::addOrFailIfHasObject);
     }
 
-    public void addOrOverrideIfPresent(Value value) {
+    public void addOrOverrideIfHasObject(Value value) {
         this.values.put(value.path(), value);
     }
 
-    public void addOrFailIfPresent(Value value) {
-        if (values.containsKey(value.path())) {
+    public void addOrFailIfHasObject(Value value) {
+        if (values.containsKey(value.path()) && values.get(value.path()).hasObject()) {
             throw new RuntimeException("Path already exists: " + value.path());
         }
 
         this.values.put(value.path(), value);
+    }
+
+    public void addNonNullValuesFrom(Data other) {
+        validateForOverride(other);
+
+        var nonNullValues = other.values.values().stream().filter(Value::hasObject).toList();
+        for (Value otherValue : nonNullValues) {
+            var path = otherValue.path();
+            var thisValue = values.get(path);
+            if (thisValue == null || thisValue.isEmpty()) {
+                values.put(path, otherValue);
+            }
+        }
+    }
+
+    public void overrideWithNonNullValuesFrom(Data other) {
+        validateForOverride(other);
+
+        other.values.values().stream()
+                .filter(Value::hasObject)
+                .forEach(otherValue -> values.put(otherValue.path(), otherValue));
+    }
+
+    private void validateForOverride(Data other) {
+        if (other == null) {
+            throw new RuntimeException("Data is null");
+        }
+
+        if (!Objects.equals(dataFormat, other.dataFormat)) {
+            throw new RuntimeException("Data format does not match");
+        }
     }
 
     public Value get(Path path) {
