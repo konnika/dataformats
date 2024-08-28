@@ -17,7 +17,7 @@ public class FirstSimpleMapping implements Mapping {
         this.fromPath = new Path("benutzername");
         this.fromType = Type.STRING;
 
-        this.toFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_TARGET;
+        this.toFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_ENGLISH;
         this.toPath = new Path("user");
         this.toType = Type.STRING;
     }

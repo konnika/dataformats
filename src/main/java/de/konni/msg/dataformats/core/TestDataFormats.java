@@ -36,7 +36,7 @@ public class TestDataFormats {
         return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE, values);
     }
 
-    public static DataFormat transactionMetadataUpdateTarget() {
+    public static DataFormat transactionMetadataUpdateEnglish() {
         var values = List.of(
                 new ValueFormat(new Path("user"), Type.STRING),
                 new ValueFormat(new Path("tenant"), Type.STRING),
@@ -62,6 +62,35 @@ public class TestDataFormats {
                 new ValueFormat(new Path("header.administration.administrationConfigurable.[].checkbox"), Type.BOOLEAN),
                 new ValueFormat(new Path("header.administration.administrationConfigurable.[].date"), Type.DATE)
         );
-        return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_TARGET, values);
+        return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_ENGLISH, values);
+    }
+
+    public static DataFormat transactionMetadataUpdateMarzipan() {
+        var values = List.of(
+                new ValueFormat(new Path("username"), Type.STRING),
+                new ValueFormat(new Path("institutsname"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.kundennummer"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.anrede"), Type.ENUM("ANREDE_FRAU", "ANREDE_HERR", "ANREDE_FIRMA", "ANREDE_EHELEUTE", "ANREDE_HERRUNDFRAU")),
+                new ValueFormat(new Path("kundendaten.nachname"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.vorname"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.titel"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.strasse"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.plz"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.wohnort"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.land"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.nachnameFrau"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.vornameFrau"), Type.STRING),
+                new ValueFormat(new Path("kundendaten.titelFrau"), Type.STRING),
+                new ValueFormat(new Path("institutsdaten.iban"), Type.STRING),
+                new ValueFormat(new Path("institutsdaten.bic"), Type.STRING),
+                new ValueFormat(new Path("institutsdaten.kontonummer"), Type.STRING),
+                new ValueFormat(new Path("institutsdaten.betriebsstelle"), Type.STRING),
+                new ValueFormat(new Path("institutsdaten.berater"), Type.STRING),
+                new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].schluessel"), Type.STRING),
+                new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].stringWert"), Type.STRING),
+                new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].dateWert"), Type.STRING),
+                new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].checkbox"), Type.STRING)
+        );
+        return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN, values);
     }
 }

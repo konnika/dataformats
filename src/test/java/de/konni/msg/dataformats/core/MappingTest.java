@@ -16,7 +16,7 @@ class MappingTest {
 
         var value = new Value(new Path("benutzername"), Type.STRING, "xxx");
         var before = new Data(TestDataFormats.transactionMetadataUpdate(), List.of(value));
-        var after = new Data(TestDataFormats.transactionMetadataUpdateTarget(), Collections.emptyList());
+        var after = new Data(TestDataFormats.transactionMetadataUpdateEnglish(), Collections.emptyList());
 
         mapping.applyTo(before, after);
 
@@ -32,7 +32,7 @@ class MappingTest {
                 new Value(new Path("institutsname"), Type.STRING, "xxx")
         );
         var before = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        var after = new Data(TestDataFormats.transactionMetadataUpdateTarget(), Collections.emptyList());
+        var after = new Data(TestDataFormats.transactionMetadataUpdateEnglish(), Collections.emptyList());
 
         mapping.applyTo(before, after);
 
