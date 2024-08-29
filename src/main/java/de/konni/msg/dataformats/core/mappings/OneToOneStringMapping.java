@@ -29,7 +29,6 @@ public class OneToOneStringMapping implements Mapping {
         paths.put(new Path("kopfdaten.kundendaten.adresse.plz"), new Path("kundendaten.plz"));
         paths.put(new Path("kopfdaten.kundendaten.adresse.ort"), new Path("kundendaten.ort"));
         paths.put(new Path("kopfdaten.kundendaten.adresse.land"), new Path("kundendaten.land"));
-//        paths.put(new Path("kopfdaten.kundendaten.anrede"), new Path("kundendaten.anrede"));
         paths.put(new Path("kopfdaten.verwaltungsdaten.iban"), new Path("institutsdaten.iban"));
         paths.put(new Path("kopfdaten.verwaltungsdaten.bic"), new Path("institutsdaten.bic"));
         paths.put(new Path("kopfdaten.verwaltungsdaten.kontonummer"), new Path("institutsdaten.kontonummer"));

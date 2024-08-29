@@ -8,6 +8,7 @@ public class Type {
     public static final Type OBJECT = new Type(Object.class);
     public static final Type BOOLEAN = new Type(Boolean.class);
     public static final Type DATE = new Type(LocalDate.class);
+    public static final Type ENUM = new Type(String.class);
 
     private static final Map<Class<?>, Type> types = Map.of(String.class, STRING, Boolean.class, BOOLEAN, LocalDate.class, DATE, Object.class, OBJECT);
 
@@ -19,8 +20,8 @@ public class Type {
         this.enumValues.addAll(Arrays.asList(values));
     }
 
-    public static Type ENUM(String... values) {
-        return new Type(Enum.class, values);
+    public static Type enumType(String... values) {
+        return new Type(String.class, values);
     }
 
     public static Type from(Class<?> aClass) {
@@ -58,7 +59,20 @@ public class Type {
         return clazz;
     }
 
-    public Object cast(Object object) {
-        return clazz.cast(object);
+    public int enumValueIndex(String value) {
+        var i = enumValues.indexOf(value);
+        if (i > -1) {
+            return i;
+        }
+
+        throw new RuntimeException("Unexcepted enum value " + value + " for type " + clazz + " with values " + String.join(",", enumValues));
+    }
+
+    public String enumValueAt(int index) {
+        if (index < enumValues.size()) {
+            return enumValues.get(index);
+        }
+
+        throw new RuntimeException("Enum value index too big " + index + " > " + enumValues.size());
     }
 }

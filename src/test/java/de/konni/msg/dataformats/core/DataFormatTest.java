@@ -27,10 +27,10 @@ class DataFormatTest {
 
     @Test
     void enumWorks() {
-        assertTrue(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.ENUM("FRAU", "HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU"))).orElse(false));
-        assertTrue(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.ENUM("HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU", "FRAU"))).orElse(false));
-        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.ENUM("HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU"))).orElse(true));
-        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.ENUM("xxx"))).orElse(true));
-        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.ENUM())).orElse(true));
+        assertTrue(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType("FRAU", "HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU"))).orElse(false));
+        assertTrue(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType("HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU", "FRAU"))).orElse(false));
+        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType("HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU"))).orElse(true));
+        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType("xxx"))).orElse(true));
+        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType())).orElse(true));
     }
 }
