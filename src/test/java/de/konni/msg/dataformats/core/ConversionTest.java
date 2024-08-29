@@ -1,6 +1,7 @@
 package de.konni.msg.dataformats.core;
 
 import de.konni.msg.dataformats.core.mappings.FirstSimpleMapping;
+import de.konni.msg.dataformats.core.mappings.OneToOneArrayMapping;
 import de.konni.msg.dataformats.core.mappings.OneToOneStringMapping;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +38,7 @@ class ConversionTest {
                 new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[2].checkbox"), Type.STRING, "zzz2")
         );
         var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        List<Mapping> mappings = List.of(new OneToOneStringMapping());
+        List<Mapping> mappings = List.of(new OneToOneStringMapping(), new OneToOneArrayMapping());
 
         var conversion = new Conversion(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), mappings);
         var converted = conversion.applyTo(data);
@@ -46,14 +47,14 @@ class ConversionTest {
         assertValue(converted, "institutsname", "BBB");
         assertValue(converted, "kundendaten.kundennummer", "CCC");
         // TODO un-comment as soon as array mapping is implemented
-//        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[0].schluessel", "XXX0");
-//        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[0].stringWert", "YYY0");
-//        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[1].schluessel", "XXX1");
-//        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[2].checkbox", "ZZZ2");
+        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[0].schluessel", "XXX0");
+        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[0].stringWert", "YYY0");
+        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[1].schluessel", "XXX1");
+        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[2].checkbox", "ZZZ2");
     }
 
     private static void assertValue(Data data, String path, String object) {
-        var value = data.get(new Path(path));
+        var value = data.getValue(new Path(path));
         assertNotNull(value);
         assertTrue(value.is(Type.STRING));
         assertTrue(value.hasObject());

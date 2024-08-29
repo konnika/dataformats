@@ -20,7 +20,7 @@ class MappingTest {
 
         mapping.applyTo(before, after);
 
-        assertEquals(new Value(new Path("user"), Type.STRING, "XXX"), after.get(new Path("user")));
+        assertEquals(new Value(new Path("user"), Type.STRING, "XXX"), after.getValue(new Path("user")));
     }
 
     @Test
@@ -36,7 +36,7 @@ class MappingTest {
 
         mapping.applyTo(before, after);
 
-        assertEquals(new Value(new Path("user"), Type.STRING, "XXX"), after.get(new Path("user")));
-        assertEquals(new Value(new Path("tenant"), Type.STRING, "XXX"), after.get(new Path("tenant")));
+        assertEquals(new Value(new Path("user"), Type.STRING, "XXX"), after.getValue(new Path("user")));
+        assertEquals(new Value(new Path("tenant"), Type.STRING, "XXX"), after.getValue(new Path("tenant")));
     }
 }

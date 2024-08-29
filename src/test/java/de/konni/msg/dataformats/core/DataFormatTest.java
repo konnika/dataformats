@@ -18,7 +18,7 @@ class DataFormatTest {
     }
 
     @Test
-    void getPathAndTypeWorks() {
+    void getValuePathAndTypeWorks() {
         assertTrue(dataFormat.get(new Path("benutzername")).map(vf -> vf.has(Type.STRING)).orElse(false));
         assertTrue(dataFormat.get(new Path("institutsname")).map(vf -> vf.has(Type.STRING)).orElse(false));
         assertTrue(dataFormat.get(new Path("kopfdaten.kundendaten.kundennummer")).map(vf -> vf.has(Type.STRING)).orElse(false));

@@ -35,10 +35,6 @@ public class OneToOneStringMapping implements Mapping {
         paths.put(new Path("kopfdaten.verwaltungsdaten.kontonummer"), new Path("institutsdaten.kontonummer"));
         paths.put(new Path("kopfdaten.verwaltungsdaten.betriebsstelle"), new Path("institutsdaten.betriebsstelle"));
         paths.put(new Path("kopfdaten.verwaltungsdaten.kundenansprechpartner"), new Path("institutsdaten.berater"));
-        paths.put(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].schluessel"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].schluessel"));
-        paths.put(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].text"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].stringWert"));
-        paths.put(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].checkbox"));
-        paths.put(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].datum"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].dateWert"));
     }
 
     @Override
@@ -47,7 +43,7 @@ public class OneToOneStringMapping implements Mapping {
             var from = entry.getKey();
             var to = entry.getValue();
 
-            var before = in.get(from);
+            var before = in.getValue(from);
             if (before != null && before.hasObject()) {
                 var after = mapValueTypeSafe(before, to);
                 out.addOrFailIfHasObject(after);

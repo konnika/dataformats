@@ -24,7 +24,7 @@ public class FirstSimpleMapping implements Mapping {
 
     @Override
     public void applyTo(Data in, Data out) {
-        var before = in.get(fromPath);
+        var before = in.getValue(fromPath);
         if (before != null && before.hasObject()) {
             var after = mapValueTypeSafe(before);
             out.addOrFailIfHasObject(after);

@@ -31,7 +31,7 @@ public class MultipleOneToOneMapping implements Mapping {
     @Override
     public void applyTo(Data in, Data out) {
         for (int i = 0; i < fromPaths.size(); i++) {
-            var before = in.get(fromPaths.get(i));
+            var before = in.getValue(fromPaths.get(i));
             if (before != null && before.hasObject()) {
                 var after = mapValueTypeSafe(before, toPaths.get(i));
                 out.addOrOverrideIfHasObject(after);

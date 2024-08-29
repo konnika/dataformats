@@ -106,6 +106,14 @@ public class Path {
         throw new RuntimeException("Path does not contain array, as expected: " + asString);
     }
 
+    public String firstArrayElement() {
+        // TODO handle properly in all places the difference between an abstract path (array without index) and a concrete patH (array with index)
+        return asList.stream()
+                .filter(element -> element.matches("\\[\\d+]"))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Path does not contain array, as expected: " + asString));
+    }
+
     public Path afterFirstArray() {
         var index = asList.indexOf("[]");
         if (index > -1) {
@@ -129,5 +137,9 @@ public class Path {
 
     public boolean isFirstElementAListIndex() {
         return asList.get(0).matches(ARRAY_BRACKETS_WITH_INDEX);
+    }
+
+    public boolean startsWith(Path path) {
+        return asString.startsWith(path.asString);
     }
 }

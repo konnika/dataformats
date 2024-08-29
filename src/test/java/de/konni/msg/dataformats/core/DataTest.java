@@ -23,19 +23,19 @@ class DataTest {
 
         var data = Data.from(toMap(object), TestDataFormats.transactionMetadataUpdate());
 
-        var value = data.get(new Path("benutzername"));
+        var value = data.getValue(new Path("benutzername"));
         assertNotNull(value);
         assertTrue(value.is(Type.STRING));
         assertTrue(value.hasObject());
         assertEquals("benutzername", value.object());
 
-        var nonValue = data.get(new Path("institutsname"));
+        var nonValue = data.getValue(new Path("institutsname"));
         assertNotNull(nonValue);
         assertTrue(nonValue.is(Type.STRING));
         assertTrue(nonValue.isEmpty());
         assertNull(nonValue.object());
 
-        var nestedValue = data.get(new Path("kopfdaten.kundendaten.kundennummer"));
+        var nestedValue = data.getValue(new Path("kopfdaten.kundendaten.kundennummer"));
         assertNotNull(nestedValue);
         assertTrue(nestedValue.is(Type.STRING));
         assertTrue(nestedValue.hasObject());
@@ -54,13 +54,13 @@ class DataTest {
 
         var data = Data.from(toMap(object), TestDataFormats.transactionMetadataUpdate());
 
-        var value0 = data.get(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"));
+        var value0 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"));
         assertNotNull(value0);
         assertTrue(value0.is(Type.STRING));
         assertTrue(value0.hasObject());
         assertEquals("schluessel[0]", value0.object());
 
-        var value1 = data.get(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"));
+        var value1 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"));
         assertNotNull(value1);
         assertTrue(value1.is(Type.STRING));
         assertTrue(value1.hasObject());
@@ -119,31 +119,31 @@ class DataTest {
 
         data.addNonNullValuesFrom(data2);
 
-        var value1 = data.get(new Path("benutzername"));
+        var value1 = data.getValue(new Path("benutzername"));
         assertNotNull(value1);
         assertTrue(value1.is(Type.STRING));
         assertTrue(value1.hasObject());
         assertEquals("1", value1.object());
 
-        var value2 = data.get(new Path("institutsname"));
+        var value2 = data.getValue(new Path("institutsname"));
         assertNotNull(value2);
         assertTrue(value2.is(Type.STRING));
         assertTrue(value2.hasObject());
         assertEquals("2", value2.object());
 
-        var nestedValue = data.get(new Path("kopfdaten.kundendaten.kundennummer"));
+        var nestedValue = data.getValue(new Path("kopfdaten.kundendaten.kundennummer"));
         assertNotNull(nestedValue);
         assertTrue(nestedValue.is(Type.STRING));
         assertTrue(nestedValue.hasObject());
         assertEquals("2", nestedValue.object());
 
-        var listValue0 = data.get(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"));
+        var listValue0 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"));
         assertNotNull(listValue0);
         assertTrue(listValue0.is(Type.STRING));
         assertTrue(listValue0.hasObject());
         assertEquals("1", listValue0.object());
 
-        var listValue1 = data.get(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"));
+        var listValue1 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"));
         assertNotNull(listValue1);
         assertTrue(listValue1.is(Type.STRING));
         assertTrue(listValue1.hasObject());
@@ -169,31 +169,31 @@ class DataTest {
 
         data.overrideWithNonNullValuesFrom(data2);
 
-        var value1 = data.get(new Path("benutzername"));
+        var value1 = data.getValue(new Path("benutzername"));
         assertNotNull(value1);
         assertTrue(value1.is(Type.STRING));
         assertTrue(value1.hasObject());
         assertEquals("2", value1.object());
 
-        var value2 = data.get(new Path("institutsname"));
+        var value2 = data.getValue(new Path("institutsname"));
         assertNotNull(value2);
         assertTrue(value2.is(Type.STRING));
         assertTrue(value2.hasObject());
         assertEquals("2", value2.object());
 
-        var nestedValue = data.get(new Path("kopfdaten.kundendaten.kundennummer"));
+        var nestedValue = data.getValue(new Path("kopfdaten.kundendaten.kundennummer"));
         assertNotNull(nestedValue);
         assertTrue(nestedValue.is(Type.STRING));
         assertTrue(nestedValue.hasObject());
         assertEquals("2", nestedValue.object());
 
-        var listValue0 = data.get(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"));
+        var listValue0 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"));
         assertNotNull(listValue0);
         assertTrue(listValue0.is(Type.STRING));
         assertTrue(listValue0.hasObject());
         assertEquals("2", listValue0.object());
 
-        var listValue1 = data.get(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"));
+        var listValue1 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"));
         assertNotNull(listValue1);
         assertTrue(listValue1.is(Type.STRING));
         assertTrue(listValue1.hasObject());

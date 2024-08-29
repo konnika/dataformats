@@ -64,8 +64,18 @@ public class Data {
         }
     }
 
-    public Value get(Path path) {
+    public Value getValue(Path path) {
         return values.get(path);
+    }
+
+    public List<Value> getValuesIgnoringIndices(Path path) {
+        return values.values().stream().filter(value -> value.path().equalsIgnoringIndices(path)).toList();
+    }
+
+    public List<Value> getValuesStartingWith(Path path) {
+        return values.values().stream()
+                .filter(v -> v.path().startsWith(path))
+                .toList();
     }
 
     public static Data from(Map<String, Object> objectMap, DataFormat dataFormat) {
