@@ -9,18 +9,30 @@ public class Path {
     public static final String REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX = "\\[\\d*]";
     public static final String SEPARATOR = ".";
     public static final String REGEX_SEPARATOR = "\\.";
+    public static final String REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT = "[a-zA-Z0-9_-]+";
 
     private final String asString;
     private final List<String> asList;
 
     public Path(String string) {
-        this.asString = Validations.validateNotEmpty(string, "Path");
-        this.asList = List.of(string.split(REGEX_SEPARATOR));
+        this(List.of(string.split(REGEX_SEPARATOR)));
     }
 
-    Path(List<String> list) {
+    public Path(List<String> list) {
         this.asString = String.join(SEPARATOR, list);
         this.asList = new ArrayList<>(Validations.validateNotEmpty(list, "Path list"));
+
+        validate();
+    }
+
+    private void validate() {
+        if (!asList.stream().allMatch(element -> element.matches(REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT) || element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX))) {
+            throw new RuntimeException("Unexpected character in Path (allowed are [a-zA-Z0-9_-]): " + asString);
+        }
+
+        if (isConcreteArrayPath() && isAbstractArrayPath()) {
+            throw new RuntimeException("Unexpected Path with abstract and concrete array values at the same time: " + asString);
+        }
     }
 
     public Path concat(Path next) {
@@ -64,23 +76,11 @@ public class Path {
     }
 
     public boolean isAbstractArrayPath() {
-        boolean result = asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITHOUT_INDEX));
-
-        if (asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX))) {
-            throw new RuntimeException("Unexpected Path with abstract and concrete array values at the same time: " + asString);
-        }
-
-        return result;
+        return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITHOUT_INDEX));
     }
 
     public boolean isConcreteArrayPath() {
-        boolean result = asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX));
-
-        if (asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITHOUT_INDEX))) {
-            throw new RuntimeException("Unexpected Path with abstract and concrete array values at the same time: " + asString);
-        }
-
-        return result;
+        return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX));
     }
 
     public Object getValueFrom(Map<String, Object> objectMap) {
