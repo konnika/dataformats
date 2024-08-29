@@ -33,10 +33,8 @@ public class OneToOneArrayMapping implements Mapping {
                 var before = in.getValue(value.path());
                 if (before != null && before.hasObject()) {
                     // FIXME this assumes that there is only one array index in the path
-//                    var index = Integer.parseInt(before.path().firstArray().replaceAll("[\\[\\]]", ""));
-//                    var pathOfFirstArray = new Path("[" + index + "]");
-                    var pathOfFirstArray = new Path(before.path().firstArrayElement());
-                    var afterPath = to.untilFirstArray().concat(pathOfFirstArray).concat(to.afterFirstArray());
+                    var pathOfFirstArray = new Path(before.path().firstConcreteArrayElement());
+                    var afterPath = to.untilFirstAbstractArray().concat(pathOfFirstArray).concat(to.afterFirstAbstractArray());
                     var after = mapValueTypeSafe(before, afterPath);
                     out.addOrFailIfHasObject(after);
                 }

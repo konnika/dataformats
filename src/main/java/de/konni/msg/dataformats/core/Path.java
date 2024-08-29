@@ -3,17 +3,23 @@ package de.konni.msg.dataformats.core;
 import java.util.*;
 
 public class Path {
-    public static final String ARRAY_BRACKETS_WITH_INDEX = "\\[\\d+]";
+    public static final String ARRAY_BRACKETS_WITHOUT_INDEX = "[]";
+    public static final String REGEX_ARRAY_BRACKETS_WITHOUT_INDEX = "\\[]";
+    public static final String REGEX_ARRAY_BRACKETS_WITH_INDEX = "\\[\\d+]";
+    public static final String REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX = "\\[\\d*]";
+    public static final String SEPARATOR = ".";
+    public static final String REGEX_SEPARATOR = "\\.";
+
     private final String asString;
     private final List<String> asList;
 
     public Path(String string) {
         this.asString = Validations.validateNotEmpty(string, "Path");
-        this.asList = List.of(string.split("\\."));
+        this.asList = List.of(string.split(REGEX_SEPARATOR));
     }
 
     Path(List<String> list) {
-        this.asString = String.join(".", list);
+        this.asString = String.join(SEPARATOR, list);
         this.asList = new ArrayList<>(Validations.validateNotEmpty(list, "Path list"));
     }
 
@@ -39,8 +45,8 @@ public class Path {
             return true;
         }
 
-        var thisPathIndexesRemoved = asString.replaceAll(ARRAY_BRACKETS_WITH_INDEX, "[]");
-        var otherPathIndexesRemoved = path.asString.replaceAll(ARRAY_BRACKETS_WITH_INDEX, "[]");
+        var thisPathIndexesRemoved = asString.replaceAll(REGEX_ARRAY_BRACKETS_WITH_INDEX, ARRAY_BRACKETS_WITHOUT_INDEX);
+        var otherPathIndexesRemoved = path.asString.replaceAll(REGEX_ARRAY_BRACKETS_WITH_INDEX, ARRAY_BRACKETS_WITHOUT_INDEX);
         return Objects.equals(thisPathIndexesRemoved, otherPathIndexesRemoved);
     }
 
@@ -53,7 +59,31 @@ public class Path {
         return asList.size();
     }
 
-    public Object singleValue(Map<String, Object> objectMap) {
+    public boolean containsArray() {
+        return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX));
+    }
+
+    public boolean isAbstractArrayPath() {
+        boolean result = asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITHOUT_INDEX));
+
+        if (asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX))) {
+            throw new RuntimeException("Unexpected Path with abstract and concrete array values at the same time: " + asString);
+        }
+
+        return result;
+    }
+
+    public boolean isConcreteArrayPath() {
+        boolean result = asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX));
+
+        if (asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITHOUT_INDEX))) {
+            throw new RuntimeException("Unexpected Path with abstract and concrete array values at the same time: " + asString);
+        }
+
+        return result;
+    }
+
+    public Object getValueFrom(Map<String, Object> objectMap) {
         if (length() == 1) {
             return objectMap.get(asString);
         }
@@ -64,20 +94,12 @@ public class Path {
         }
         if (object instanceof Map) {
             var map = (Map<String, Object>) object;
-            return afterFirstElement().singleValue(map);
+            return afterFirstElement().getValueFrom(map);
         }
         if (object instanceof List) {
             throw new RuntimeException("Unexpected list in objectMap at " + asString);
         }
         throw new RuntimeException("Unexpected object in objectMap: " + object.getClass() + " at " + asString);
-    }
-
-    boolean isSingleValue() {
-        return asList.stream().noneMatch(str -> str.contains("[]"));
-    }
-
-    boolean isListValue() {
-        return asList.stream().anyMatch(str -> str.contains("[]"));
     }
 
     String firstElement() {
@@ -97,8 +119,8 @@ public class Path {
         return asString;
     }
 
-    public Path untilFirstArray() {
-        var index = asList.indexOf("[]");
+    public Path untilFirstAbstractArray() {
+        var index = asList.indexOf(ARRAY_BRACKETS_WITHOUT_INDEX);
         if (index > -1) {
             return new Path(asList.subList(0, index));
         }
@@ -106,16 +128,15 @@ public class Path {
         throw new RuntimeException("Path does not contain array, as expected: " + asString);
     }
 
-    public String firstArrayElement() {
-        // TODO handle properly in all places the difference between an abstract path (array without index) and a concrete patH (array with index)
+    public String firstConcreteArrayElement() {
         return asList.stream()
-                .filter(element -> element.matches("\\[\\d+]"))
+                .filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Path does not contain array, as expected: " + asString));
     }
 
-    public Path afterFirstArray() {
-        var index = asList.indexOf("[]");
+    public Path afterFirstAbstractArray() {
+        var index = asList.indexOf(ARRAY_BRACKETS_WITHOUT_INDEX);
         if (index > -1) {
             return new Path(asList.subList(index + 1, asList.size()));
         }
@@ -123,8 +144,8 @@ public class Path {
         throw new RuntimeException("Path does not contain array, as expected: " + asString);
     }
 
-    public List<Map<String, Object>> listOfValues(Map<String, Object> objectMap) {
-        var object = singleValue(objectMap);
+    public List<Map<String, Object>> getArrayValuesFrom(Map<String, Object> objectMap) {
+        var object = getValueFrom(objectMap);
         if (object == null) {
             return Collections.emptyList();
         }
@@ -135,8 +156,8 @@ public class Path {
         throw new RuntimeException("ObjectMap does not contain a list, as expected: " + object.getClass() + " at " + asString);
     }
 
-    public boolean isFirstElementAListIndex() {
-        return asList.get(0).matches(ARRAY_BRACKETS_WITH_INDEX);
+    public boolean isFirstElementAConcreteArray() {
+        return asList.get(0).matches(REGEX_ARRAY_BRACKETS_WITH_INDEX);
     }
 
     public boolean startsWith(Path path) {
