@@ -31,4 +31,17 @@ public class ValueFormat {
     public String toString() {
         return path.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ValueFormat that = (ValueFormat) o;
+        return Objects.equals(path, that.path) && Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, type);
+    }
 }
