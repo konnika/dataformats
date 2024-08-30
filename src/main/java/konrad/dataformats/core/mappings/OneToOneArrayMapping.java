@@ -1,6 +1,6 @@
-package de.konni.msg.dataformats.core.mappings;
+package konrad.dataformats.core.mappings;
 
-import de.konni.msg.dataformats.core.*;
+import konrad.dataformats.core.*;
 
 import java.util.HashMap;
 import java.util.Map;

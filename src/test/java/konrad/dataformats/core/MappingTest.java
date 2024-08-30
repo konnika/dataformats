@@ -1,7 +1,7 @@
-package de.konni.msg.dataformats.core;
+package konrad.dataformats.core;
 
-import de.konni.msg.dataformats.core.mappings.FirstSimpleMapping;
-import de.konni.msg.dataformats.core.mappings.MultipleOneToOneMapping;
+import konrad.dataformats.core.mappings.FirstSimpleMapping;
+import konrad.dataformats.core.mappings.MultipleOneToOneMapping;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;

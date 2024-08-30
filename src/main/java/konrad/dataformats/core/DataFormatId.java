@@ -1,4 +1,4 @@
-package de.konni.msg.dataformats.core;
+package konrad.dataformats.core;
 
 public enum DataFormatId {
     PROS_TRANSACTION_METADATA_UPDATE,

@@ -1,4 +1,4 @@
-package de.konni.msg.dataformats.core;
+package konrad.dataformats.core;
 
 import java.time.LocalDate;
 import java.util.*;

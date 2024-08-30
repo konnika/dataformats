@@ -1,4 +1,4 @@
-package de.konni.msg.dataformats.core;
+package konrad.dataformats.core;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
