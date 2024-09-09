@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class OneToOneMappingTest {
     @Test
     void oneToOneMappingWorksOnString() {
-        var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate().id(), TestDataFormats.transactionMetadataUpdateMarzipan().id(),
+        var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(),
                 new Path("benutzername"), new Path("username"));
 
         var values = List.of(new Value(new Path("benutzername"), "xxx"));
@@ -31,7 +31,7 @@ class OneToOneMappingTest {
 
     @Test
     void oneToOneMappingWorksOnStringInArray() {
-        var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate().id(), TestDataFormats.transactionMetadataUpdateMarzipan().id(),
+        var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(),
                 new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].schluessel"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].schluessel"));
 
         var values = List.of(new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "xxx"));

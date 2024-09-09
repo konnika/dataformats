@@ -1,6 +1,10 @@
 package konrad.dataformats.core;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class DataFormat {
     private final DataFormatId id;
@@ -17,15 +21,15 @@ public class DataFormat {
         this.valueFormats.add(valueFormat);
     }
 
-    boolean contains(Path path) {
+    public boolean contains(Path path) {
         return valueFormats.stream().anyMatch(v -> v.has(path));
     }
 
-    Optional<ValueFormat> get(Path path) {
+    public Optional<ValueFormat> get(Path path) {
         return valueFormats.stream().filter(p -> p.has(path)).findFirst();
     }
 
-    List<ValueFormat> valueFormats() {
+    public List<ValueFormat> valueFormats() {
         return Collections.unmodifiableList(valueFormats);
     }
 
