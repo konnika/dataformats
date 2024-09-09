@@ -1,6 +1,11 @@
 package konrad.dataformats.core.mappings;
 
-import konrad.dataformats.core.*;
+import konrad.dataformats.core.Data;
+import konrad.dataformats.core.DataFormatId;
+import konrad.dataformats.core.Mapping;
+import konrad.dataformats.core.Path;
+import konrad.dataformats.core.Type;
+import konrad.dataformats.core.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +23,7 @@ public class OneToOneArrayMapping implements Mapping {
         this.paths = new HashMap<>();
         paths.put(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].schluessel"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].schluessel"));
         paths.put(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].text"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].stringWert"));
-        paths.put(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].checkbox"));
+//        paths.put(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].checkbox")); // TODO implement boolean mapping
         paths.put(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].datum"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].dateWert"));
     }
 
@@ -52,13 +57,9 @@ public class OneToOneArrayMapping implements Mapping {
         if (value.is(type)) {
             var beforeString = (String) value.object();
             var afterString = beforeString.toUpperCase();
-            return new Value(to, type, afterString);
+            return new Value(to, afterString);
         }
 
-        throw new RuntimeException("Unexpected Value type: " + value.type());
-    }
-
-    private static String mapValue(String fromValue) {
-        return fromValue.toUpperCase();
+        throw new RuntimeException("Unexpected Value object in " + value.path() + ": " + value.object().getClass() + " for type " + type);
     }
 }

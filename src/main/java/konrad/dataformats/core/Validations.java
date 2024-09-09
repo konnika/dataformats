@@ -27,4 +27,11 @@ public class Validations {
         }
         return list;
     }
+
+    static <T> T validateNotNull(T obj, String name) {
+        if (obj == null) {
+            throw new RuntimeException("Invalid " + name + " encountered: null");
+        }
+        return obj;
+    }
 }

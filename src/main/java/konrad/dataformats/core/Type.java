@@ -1,7 +1,11 @@
 package konrad.dataformats.core;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Type {
     public static final Type STRING = new Type(String.class);
@@ -74,5 +78,10 @@ public class Type {
         }
 
         throw new RuntimeException("Enum value index too big " + index + " > " + enumValues.size());
+    }
+
+    @Override
+    public String toString() {
+        return "class=" + clazz + ", enumValues=" + enumValues;
     }
 }

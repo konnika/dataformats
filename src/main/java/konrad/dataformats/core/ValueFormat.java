@@ -9,6 +9,13 @@ public class ValueFormat {
     public ValueFormat(Path path, Type type) {
         this.path = path;
         this.type = type;
+        validate();
+    }
+
+    private void validate() {
+        if (path.isConcreteArrayPath()) {
+            throw new RuntimeException("A ValueFormat is an abstract Path with no array indices");
+        }
     }
 
     boolean has(Path path) {
@@ -23,7 +30,7 @@ public class ValueFormat {
         return path;
     }
 
-    Type type() {
+    public Type type() {
         return type;
     }
 
@@ -39,6 +46,16 @@ public class ValueFormat {
         ValueFormat that = (ValueFormat) o;
         return Objects.equals(path, that.path) && Objects.equals(type, that.type);
     }
+
+//    public boolean equalsIgnoringPathIndices(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        ValueFormat that = (ValueFormat) o;
+//
+//        if (path == null && that.path == null) return true;
+//        if (path == null || that.path == null) return false;
+//        return path.equalsIgnoringIndices(that.path) && Objects.equals(type, that.type);
+//    }
 
     @Override
     public int hashCode() {

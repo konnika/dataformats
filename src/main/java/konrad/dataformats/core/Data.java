@@ -1,6 +1,11 @@
 package konrad.dataformats.core;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Data {
     private final DataFormat dataFormat;
@@ -10,7 +15,27 @@ public class Data {
     Data(DataFormat dataFormat, List<Value> values) {
         this.dataFormat = dataFormat;
         this.dataFormatId = dataFormat.id();
-        Validations.validateNotNull(values, "Data Values").forEach(this::addOrFailIfHasObject);
+
+        var listOfValues = Validations.validateNotNull(values, "Data Values");
+        listOfValues.forEach(this::addOrFailIfHasObject);
+
+        validate();
+    }
+
+    private void validate() {
+        var wrongValues = values.values().stream()
+                .filter(value -> dataFormat.valueFormats().stream()
+                        .filter(vf -> vf.path().equalsIgnoringIndices(value.path()))
+                        .findFirst()
+                        .map(vf -> !value.is(vf.type()))
+                        .orElse(false))
+                .toList();
+
+        if (!wrongValues.isEmpty()) {
+            throw new RuntimeException("Unexpected Value object es in Data with DataFormat " + dataFormat.id() + ": " + wrongValues);
+        }
+
+        // TODO validate enum values
     }
 
     public void addOrOverrideIfHasObject(Value value) {
@@ -50,7 +75,7 @@ public class Data {
 
     private void validatePath(Path path) {
         if (dataFormat.valueFormats().stream().map(ValueFormat::path).noneMatch(path::equalsIgnoringIndices)) {
-            throw new RuntimeException("Path does not exist: " + path);
+            throw new RuntimeException("Path " + path + " does not exist in Dataformat " + dataFormat.id());
         }
     }
 
@@ -97,7 +122,7 @@ public class Data {
 
     private static Value singleValue(Map<String, Object> objectMap, ValueFormat valueFormat) {
         var object = valueFormat.path().getValueFrom(objectMap);
-        return new Value(valueFormat.path(), valueFormat.type(), object);
+        return new Value(valueFormat.path(), object);
     }
 
     private static List<Value> listValues(Map<String, Object> objectMap, ValueFormat valueFormat) {
@@ -113,7 +138,7 @@ public class Data {
 
             var pathOfFirstArray = new Path("[" + index + "]");
             var completePath = pathToFirstArray.concat(pathOfFirstArray).concat(pathAfterFirstArray);
-            result.add(new Value(completePath, valueFormat.type(), object));
+            result.add(new Value(completePath, object));
         }
         return result;
     }

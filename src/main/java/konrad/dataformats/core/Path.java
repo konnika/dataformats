@@ -1,6 +1,10 @@
 package konrad.dataformats.core;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Path {
     public static final String ARRAY_BRACKETS_WITHOUT_INDEX = "[]";
@@ -11,8 +15,8 @@ public class Path {
     public static final String REGEX_SEPARATOR = "\\.";
     public static final String REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT = "[a-zA-Z0-9_-]+";
 
-    private final String asString;
-    private final List<String> asList;
+    protected final String asString;
+    protected final List<String> asList;
 
     public Path(String string) {
         this(List.of(string.split(REGEX_SEPARATOR)));
@@ -25,7 +29,7 @@ public class Path {
         validate();
     }
 
-    private void validate() {
+    protected void validate() {
         if (!asList.stream().allMatch(element -> element.matches(REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT) || element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX))) {
             throw new RuntimeException("Unexpected character in Path (allowed are [a-zA-Z0-9_-]): " + asString);
         }
@@ -75,11 +79,11 @@ public class Path {
         return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX));
     }
 
-    public boolean isAbstractArrayPath() {
+    protected boolean isAbstractArrayPath() {
         return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITHOUT_INDEX));
     }
 
-    public boolean isConcreteArrayPath() {
+    protected boolean isConcreteArrayPath() {
         return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX));
     }
 
@@ -162,5 +166,10 @@ public class Path {
 
     public boolean startsWith(Path path) {
         return asString.startsWith(path.asString);
+    }
+
+    public Path withoutArrayIndices() {
+        var list = asList.stream().map(element -> element.replaceAll(REGEX_ARRAY_BRACKETS_WITH_INDEX, ARRAY_BRACKETS_WITHOUT_INDEX)).toList();
+        return new Path(list);
     }
 }

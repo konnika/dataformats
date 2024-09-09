@@ -2,13 +2,20 @@ package konrad.dataformats.core;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.msg4banking.processservice.application.model.transaction.*;
+import de.msg4banking.processservice.application.model.transaction.KopfdatenIn;
+import de.msg4banking.processservice.application.model.transaction.KopfdatenUpdateRequest;
+import de.msg4banking.processservice.application.model.transaction.Kundendaten;
+import de.msg4banking.processservice.application.model.transaction.VerwaltungsdatenIn;
+import de.msg4banking.processservice.application.model.transaction.VerwaltungsdatenwertKonfigurierbar;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DataTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -70,9 +77,9 @@ class DataTest {
     @Test
     void createObjectFromData() {
         var values = List.of(
-                new Value(new Path("benutzername"), Type.STRING, "benutzername"),
-                new Value(new Path("institutsname"), Type.STRING, "institutsname"),
-                new Value(new Path("kopfdaten.kundendaten.kundennummer"), Type.STRING, "kopfdaten.kundendaten.kundennummer")
+                new Value(new Path("benutzername"), "benutzername"),
+                new Value(new Path("institutsname"), "institutsname"),
+                new Value(new Path("kopfdaten.kundendaten.kundennummer"), "kopfdaten.kundendaten.kundennummer")
         );
         var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
 
@@ -87,8 +94,8 @@ class DataTest {
     @Test
     void createObjectFromDataWithArray() {
         var values = List.of(
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), Type.STRING, "schluessel[0]"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"), Type.STRING, "schluessel[1]")
+                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "schluessel[0]"),
+                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"), "schluessel[1]")
         );
         var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
 
@@ -103,17 +110,17 @@ class DataTest {
     @Test
     void addNonNullValues() {
         var values = List.of(
-                new Value(new Path("benutzername"), Type.STRING, "1"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), Type.STRING, "1")
+                new Value(new Path("benutzername"), "1"),
+                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "1")
         );
         var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
 
         var values2 = List.of(
-                new Value(new Path("benutzername"), Type.STRING, "2"),
-                new Value(new Path("institutsname"), Type.STRING, "2"),
-                new Value(new Path("kopfdaten.kundendaten.kundennummer"), Type.STRING, "2"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), Type.STRING, "2"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"), Type.STRING, "2")
+                new Value(new Path("benutzername"), "2"),
+                new Value(new Path("institutsname"), "2"),
+                new Value(new Path("kopfdaten.kundendaten.kundennummer"), "2"),
+                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "2"),
+                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"), "2")
         );
         var data2 = new Data(TestDataFormats.transactionMetadataUpdate(), values2);
 
@@ -153,17 +160,17 @@ class DataTest {
     @Test
     void overrideWithNonNullValues() {
         var values = List.of(
-                new Value(new Path("benutzername"), Type.STRING, "1"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), Type.STRING, "1")
+                new Value(new Path("benutzername"), "1"),
+                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "1")
         );
         var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
 
         var values2 = List.of(
-                new Value(new Path("benutzername"), Type.STRING, "2"),
-                new Value(new Path("institutsname"), Type.STRING, "2"),
-                new Value(new Path("kopfdaten.kundendaten.kundennummer"), Type.STRING, "2"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), Type.STRING, "2"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"), Type.STRING, "2")
+                new Value(new Path("benutzername"), "2"),
+                new Value(new Path("institutsname"), "2"),
+                new Value(new Path("kopfdaten.kundendaten.kundennummer"), "2"),
+                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "2"),
+                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"), "2")
         );
         var data2 = new Data(TestDataFormats.transactionMetadataUpdate(), values2);
 

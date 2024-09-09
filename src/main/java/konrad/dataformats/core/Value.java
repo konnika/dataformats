@@ -3,36 +3,25 @@ package konrad.dataformats.core;
 import java.util.Objects;
 
 public class Value {
-    private final ValueFormat format;
+    private final Path path;
     private final Object object;
 
-    public Value(Path path, Type type) {
-        this(path, type, null);
-    }
-
-    public Value(ValueFormat format) {
-        this(format, null);
-    }
-
-    public Value(ValueFormat format, Object object) {
-        this(format.path(), format.type(), object);
-    }
-
-    public Value(Path path, Type type, Object object) {
-        format = new ValueFormat(path, type);
+    public Value(Path path, Object object) {
+        this.path = path;
         this.object = object;
 
         validate();
     }
 
     private void validate() {
-        if (object != null && !format.type().clazz().equals(object.getClass())) {
-            throw new RuntimeException("Value type mismatch: " + format.type() + " != " + object.getClass());
+        Validations.validateNotNull(path, "Path");
+        if (path.isAbstractArrayPath()) {
+            throw new RuntimeException("Path to value should not be abstract");
         }
     }
 
     public Path path() {
-        return format.path();
+        return path;
     }
 
     public Object object() {
@@ -40,7 +29,7 @@ public class Value {
     }
 
     public boolean is(Type type) {
-        return Objects.equals(format.type(), type);
+        return object == null || Objects.equals(object.getClass(), type.clazz());
     }
 
     public boolean hasObject() {
@@ -51,25 +40,21 @@ public class Value {
         return object == null;
     }
 
-    public Type type() {
-        return format.type();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Value value = (Value) o;
-        return Objects.equals(format.path(), value.format.path()) && Objects.equals(format.type(), value.format.type()) && Objects.equals(object, value.object);
+        return Objects.equals(path, value.path()) && Objects.equals(object, value.object);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(format.path(), format.type(), object);
+        return Objects.hash(path, object);
     }
 
     @Override
     public String toString() {
-        return format.path() + "=" + object;
+        return path + "=" + object;
     }
 }

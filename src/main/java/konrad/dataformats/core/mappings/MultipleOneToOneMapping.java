@@ -1,6 +1,11 @@
 package konrad.dataformats.core.mappings;
 
-import konrad.dataformats.core.*;
+import konrad.dataformats.core.Data;
+import konrad.dataformats.core.DataFormatId;
+import konrad.dataformats.core.Mapping;
+import konrad.dataformats.core.Path;
+import konrad.dataformats.core.Type;
+import konrad.dataformats.core.Value;
 
 import java.util.List;
 import java.util.Objects;
@@ -48,10 +53,10 @@ public class MultipleOneToOneMapping implements Mapping {
         if (value.is(fromType)) {
             var object = (String) value.object();
             var toValue = mapValue(object);
-            return new Value(toPath, toType, toValue);
+            return new Value(toPath, toValue);
         }
 
-        throw new RuntimeException("Unexpected Value type: " + value.type());
+        throw new RuntimeException("Unexpected Value object " + value.object().getClass() + " for type " + fromType);
     }
 
     private static String mapValue(String fromValue) {
