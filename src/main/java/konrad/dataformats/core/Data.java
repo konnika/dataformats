@@ -18,28 +18,12 @@ public class Data {
 
         var listOfValues = Validations.validateNotNull(values, "Data Values");
         listOfValues.forEach(this::addOrFailIfHasObject);
-
-        validate();
-    }
-
-    private void validate() {
-        var wrongValues = values.values().stream()
-                .filter(value -> dataFormat.valueFormats().stream()
-                        .filter(vf -> vf.path().equalsIgnoringIndices(value.path()))
-                        .findFirst()
-                        .map(vf -> !value.is(vf.type()))
-                        .orElse(false))
-                .toList();
-
-        if (!wrongValues.isEmpty()) {
-            throw new RuntimeException("Unexpected Value object es in Data with DataFormat " + dataFormat.id() + ": " + wrongValues);
-        }
-
-        // TODO validate enum values
     }
 
     public void addOrOverrideIfHasObject(Value value) {
-        validatePath(value.path());
+        var valueFormat = validatePath(value.path());
+        validateType(valueFormat, value);
+
         this.values.put(value.path(), value);
     }
 
@@ -73,10 +57,19 @@ public class Data {
                 .forEach(otherValue -> values.put(otherValue.path(), otherValue));
     }
 
-    private void validatePath(Path path) {
-        if (dataFormat.valueFormats().stream().map(ValueFormat::path).noneMatch(path::equalsIgnoringIndices)) {
-            throw new RuntimeException("Path " + path + " does not exist in Dataformat " + dataFormat.id());
+    private ValueFormat validatePath(Path path) {
+        return dataFormat.valueFormats().stream()
+                .filter(vf -> vf.path().equalsIgnoringIndices(path))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Path " + path + " does not exist in Dataformat " + dataFormat.id()));
+    }
+
+    private void validateType(ValueFormat valueFormat, Value value) {
+        if (!value.is(valueFormat.type())) {
+            throw new RuntimeException("Unexpected Value object in Data with DataFormat " + dataFormat.id() + ": " + value);
         }
+
+        // TODO validate enum values
     }
 
     private void validateForOverride(Data other) {
