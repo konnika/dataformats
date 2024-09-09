@@ -12,7 +12,7 @@ public class Data {
     private final DataFormatId dataFormatId;
     private final Map<Path, Value> values = new HashMap<>();
 
-    Data(DataFormat dataFormat, List<Value> values) {
+    public Data(DataFormat dataFormat, List<Value> values) {
         this.dataFormat = dataFormat;
         this.dataFormatId = dataFormat.id();
 

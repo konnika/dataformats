@@ -55,6 +55,6 @@ public class Value {
 
     @Override
     public String toString() {
-        return path + "=" + object;
+        return object == null ? "empty" : object.toString();
     }
 }

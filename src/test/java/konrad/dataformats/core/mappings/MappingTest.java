@@ -1,7 +1,9 @@
-package konrad.dataformats.core;
+package konrad.dataformats.core.mappings;
 
-import konrad.dataformats.core.mappings.FirstSimpleMapping;
-import konrad.dataformats.core.mappings.MultipleOneToOneMapping;
+import konrad.dataformats.core.Data;
+import konrad.dataformats.core.Path;
+import konrad.dataformats.core.TestDataFormats;
+import konrad.dataformats.core.Value;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
