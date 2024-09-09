@@ -3,7 +3,6 @@ package konrad.dataformats.core;
 import konrad.dataformats.core.mappings.FirstSimpleMapping;
 import konrad.dataformats.core.mappings.OneToOneArrayMapping;
 import konrad.dataformats.core.mappings.OneToOneEnumMapping;
-import konrad.dataformats.core.mappings.OneToOneStringMapping;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -43,7 +42,7 @@ class ConversionTest {
                 new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[2].checkbox"), true)
         );
         var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        List<Mapping> mappings = List.of(new OneToOneStringMapping(), new OneToOneArrayMapping(), new OneToOneEnumMapping());
+        List<Mapping> mappings = List.of(new OneToOneArrayMapping(), new OneToOneEnumMapping());
 
         var conversion = new Conversion(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), mappings);
         var converted = conversion.applyTo(data);

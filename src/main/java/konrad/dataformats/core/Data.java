@@ -106,7 +106,7 @@ public class Data {
     public static Data from(Map<String, Object> objectMap, DataFormat dataFormat) {
         var values = new ArrayList<>(
                 dataFormat.valueFormats().stream()
-                        .filter(vf -> !vf.path().containsArray())
+                        .filter(vf -> !vf.path().isArrayPath())
                         .map(vf -> singleValue(objectMap, vf))
                         .toList());
 

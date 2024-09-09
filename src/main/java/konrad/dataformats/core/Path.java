@@ -75,15 +75,15 @@ public class Path {
         return asList.size();
     }
 
-    public boolean containsArray() {
+    public boolean isArrayPath() {
         return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX));
     }
 
-    protected boolean isAbstractArrayPath() {
+    public boolean isAbstractArrayPath() {
         return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITHOUT_INDEX));
     }
 
-    protected boolean isConcreteArrayPath() {
+    public boolean isConcreteArrayPath() {
         return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX));
     }
 
