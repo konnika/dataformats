@@ -20,11 +20,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
-    implementation 'jakarta.xml.ws:jakarta.xml.ws-api:4.0.2'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-json'
-
+    testImplementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    testImplementation 'jakarta.xml.ws:jakarta.xml.ws-api:4.0.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework.boot:spring-boot-starter-json'
     testImplementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -40,7 +39,7 @@ jar {
 }
 
 bootJar {
-    archiveBaseName = 'dataformats-boot'
+    enabled = false
 }
 
 publishing {
