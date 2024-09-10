@@ -61,4 +61,13 @@ public class ValueFormat {
     public int hashCode() {
         return Objects.hash(path, type);
     }
+
+    public static ValueFormat fromCsv(String line) {
+        var parts = line.split(";");
+        if (parts.length == 2) {
+            return new ValueFormat(new Path(parts[0]), Type.fromCsv(parts[1]));
+        }
+        throw new RuntimeException("DataFormat CSV is expected to have these values per line: path;type. Got " + line);
+
+    }
 }

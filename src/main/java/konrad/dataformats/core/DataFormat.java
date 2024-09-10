@@ -2,6 +2,7 @@ package konrad.dataformats.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,6 +19,10 @@ public class DataFormat {
     }
 
     private void add(ValueFormat valueFormat) {
+        if (this.valueFormats.stream().anyMatch(vf -> vf.path().equals(valueFormat.path()))) {
+            throw new RuntimeException("DataFormat " + id + " already contains a value format for path " + valueFormat.path());
+        }
+
         this.valueFormats.add(valueFormat);
     }
 
@@ -38,7 +43,12 @@ public class DataFormat {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DataFormat that = (DataFormat) o;
-        return id == that.id;
+        if (id == that.id) {
+            if (valueFormats.size() == that.valueFormats.size()) {
+                return new HashSet<>(that.valueFormats).containsAll(valueFormats);
+            }
+        }
+        return false;
     }
 
     @Override
@@ -48,5 +58,10 @@ public class DataFormat {
 
     public DataFormatId id() {
         return id;
+    }
+
+    public static DataFormat fromCsv(DataFormatId id, List<String> lines) {
+        var formats = lines.stream().map(ValueFormat::fromCsv).toList();
+        return new DataFormat(id, formats);
     }
 }
