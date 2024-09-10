@@ -29,7 +29,7 @@ public class Data {
 
     public void addOrFailIfHasObject(Value value) {
         if (values.containsKey(value.path()) && values.get(value.path()).hasObject()) {
-            throw new RuntimeException("Path already exists: " + value.path());
+            throw new RuntimeException("Path " + value.path() + " already has value " + values.get(value.path()).object() + ". Cannot add new value " + value);
         }
 
         validatePath(value.path());

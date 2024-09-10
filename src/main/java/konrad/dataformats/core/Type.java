@@ -88,6 +88,10 @@ public class Type {
         return !enumValues.isEmpty();
     }
 
+    public int enumValueCount() {
+        return enumValues.size();
+    }
+
     @Override
     public String toString() {
         return "class=" + clazz + ", enumValues=" + enumValues;

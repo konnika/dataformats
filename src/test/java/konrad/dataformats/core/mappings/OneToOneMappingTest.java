@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OneToOneMappingTest {
     @Test
-    void oneToOneMappingWorksOnString() {
+    void stringWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(),
                 new Path("benutzername"), new Path("username"));
 
@@ -30,7 +30,7 @@ class OneToOneMappingTest {
     }
 
     @Test
-    void oneToOneMappingWorksOnStringInArray() {
+    void stringInArrayWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(),
                 new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].schluessel"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].schluessel"));
 
@@ -44,11 +44,31 @@ class OneToOneMappingTest {
         assertValue(after, "verwaltungsdaten.verwaltungsdatenwert.[0].schluessel");
     }
 
-    private static void assertValue(Data data, String path) {
-        var expected = new Value(new Path(path), "xxx");
+    @Test
+    void enumWorks() {
+        var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(),
+                new Path("kopfdaten.kundendaten.anrede"), new Path("kundendaten.anrede"));
+
+        var values = List.of(new Value(new Path("kopfdaten.kundendaten.anrede"), "HERR"));
+        var before = new Data(TestDataFormats.transactionMetadataUpdate(), values);
+        var after = new Data(TestDataFormats.transactionMetadataUpdateMarzipan(), Collections.emptyList());
+
+        mapping.applyTo(before, after);
+
+        assertEquals(1, after.toMap().size());
+        assertValue(after, "kundendaten.anrede", "ANREDE_HERR");
+    }
+
+
+    private static void assertValue(Data data, String path, String value) {
+        var expected = new Value(new Path(path), value);
         var actual = data.getValue(new Path(path));
         assertNotNull(actual);
         assertTrue(actual.hasObject());
         assertEquals(expected, actual);
+    }
+
+    private static void assertValue(Data data, String path) {
+        assertValue(data, path, "xxx");
     }
 }

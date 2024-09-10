@@ -74,9 +74,16 @@ public class OneToOneMapping implements Mapping {
 
         if (fromType.equals(toType)) {
             return toType.clazz().cast(value.object());
-        } else {
-            // TODO continue here: implement more conversions
-            throw new RuntimeException("Type conversion from " + fromType + " to " + toType + " is not yet supported");
         }
+        if (fromType.isEnum() && toType.isEnum()) {
+            if (fromType.enumValueCount() == toType.enumValueCount()) {
+                var index = fromType.enumValueIndex((String) value.object());
+                return toType.enumValueAt(index);
+            }
+            throw new RuntimeException("Type conversion from enum " + fromType + " to enum " + toType + " is not possible because of a different number of values");
+        }
+
+        // TODO continue here: implement more conversions
+        throw new RuntimeException("Type conversion from " + fromType + " to " + toType + " is not yet supported");
     }
 }
