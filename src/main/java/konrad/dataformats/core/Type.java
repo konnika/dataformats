@@ -80,6 +80,14 @@ public class Type {
         throw new RuntimeException("Enum value index too big " + index + " > " + enumValues.size());
     }
 
+    public boolean hasEnumValue(String value) {
+        return enumValues.contains(value);
+    }
+
+    public boolean isEnum() {
+        return !enumValues.isEmpty();
+    }
+
     @Override
     public String toString() {
         return "class=" + clazz + ", enumValues=" + enumValues;

@@ -29,7 +29,17 @@ public class Value {
     }
 
     public boolean is(Type type) {
-        return object == null || Objects.equals(object.getClass(), type.clazz());
+        Validations.validateNotNull(type, "Type");
+        if (object == null) {
+            return true;
+        }
+        if (Objects.equals(object.getClass(), type.clazz())) {
+            if (type.isEnum()) {
+                return type.hasEnumValue((String) object);
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean hasObject() {
