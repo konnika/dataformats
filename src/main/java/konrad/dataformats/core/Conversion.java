@@ -1,6 +1,6 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.mappings.OneToOneMapping;
+import konrad.dataformats.core.mappings.MappingGenerators;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,11 +29,18 @@ public class Conversion {
         return result;
     }
 
-    public static Conversion fromCsv(DataFormat from, DataFormat to, List<String> lines) {
+    public static Conversion fromCsv(DataFormat from, DataFormat to, List<String> lines, MappingGenerators mappingGenerators) {
         var mappings = lines.stream()
-                .map(line -> OneToOneMapping.fromCsv(from, to, line)) // TODO replace OneToOneMapping with a multiplexer that decides the mapping to use
-                .map(Mapping.class::cast)
+                .map(line -> mappingGenerators.fromIdOrFail(idFromCsvOrFail(line)).apply(from, to, line))
                 .toList();
         return new Conversion(from, to, mappings);
+    }
+
+    private static String idFromCsvOrFail(String line) {
+        var parts = line.split(";");
+        if (parts.length < 1) {
+            throw new RuntimeException("Conversion CSV is expected to have at least one value per line: mapping id. Got " + line);
+        }
+        return parts[0];
     }
 }

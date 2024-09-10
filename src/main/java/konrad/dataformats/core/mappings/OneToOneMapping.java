@@ -89,9 +89,9 @@ public class OneToOneMapping implements Mapping {
 
     public static OneToOneMapping fromCsv(DataFormat from, DataFormat to, String line) {
         var parts = line.split(";");
-        if (parts.length == 2) {
-            return new OneToOneMapping(from, to, new Path(parts[0]), new Path(parts[1]));
+        if (parts.length == 3) {
+            return new OneToOneMapping(from, to, new Path(parts[1]), new Path(parts[2]));
         }
-        throw new RuntimeException("Conversion CSV is expected to have these values per line: path from;path to. Got " + line);
+        throw new RuntimeException("Conversion CSV is expected to have these values per line: mapping id;path from;path to. Got " + line);
     }
 }

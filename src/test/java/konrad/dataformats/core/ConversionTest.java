@@ -1,5 +1,6 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.mappings.MappingGenerators;
 import konrad.dataformats.core.mappings.TestFirstSimpleMapping;
 import konrad.dataformats.core.mappings.TestOneToOneArrayMapping;
 import konrad.dataformats.core.mappings.TestOneToOneEnumMapping;
@@ -59,11 +60,11 @@ class ConversionTest {
     @Test
     void fromCsvWorks() {
         var csv = List.of(
-                "benutzername;username",
-                "kopfdaten.kundendaten.anrede;kundendaten.anrede",
-                "kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox;verwaltungsdaten.verwaltungsdatenwert.[].checkbox");
+                "1:1;benutzername;username",
+                "1:1;kopfdaten.kundendaten.anrede;kundendaten.anrede",
+                "1:1;kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox;verwaltungsdaten.verwaltungsdatenwert.[].checkbox");
 
-        var conversion = Conversion.fromCsv(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), csv);
+        var conversion = Conversion.fromCsv(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), csv, new MappingGenerators());
 
         var values = List.of(
                 new Value(new Path("benutzername"), "aaa"),
