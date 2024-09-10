@@ -37,18 +37,17 @@ class DataFormatTest {
     }
 
     @Test
-    void generateWorks() {
+    void fromCsvWorks() {
         var csv = List.of(
-                "benutzername;STRING;",
+                "benutzername;STRING",
                 "kopfdaten.kundendaten.anrede;ENUM:FRAU,HERR,FIRMA,EHELEUTE,HERRUNDFRAU",
-                "kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox;BOOLEAN;");
+                "kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox;BOOLEAN");
 
         var dataFormat = DataFormat.fromCsv(TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE, csv);
 
         assertValue(dataFormat, new Path("benutzername"), Type.STRING);
         assertValue(dataFormat, new Path("kopfdaten.kundendaten.anrede"), Type.enumType("FRAU", "HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU"));
         assertValue(dataFormat, new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox"), Type.BOOLEAN);
-
     }
 
     private static void assertValue(DataFormat dataFormat, Path path, Type type) {

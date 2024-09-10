@@ -57,6 +57,41 @@ class ConversionTest {
         assertValue(converted, "kundendaten.anrede", Type.enumType("ANREDE_FRAU", "ANREDE_HERR", "ANREDE_FIRMA", "ANREDE_EHELEUTE", "ANREDE_HERRUNDFRAU"), "ANREDE_EHELEUTE");
     }
 
+    @Test
+    void fromCsvWorks() {
+        var csv = List.of(
+                "benutzername;username",
+                "kopfdaten.kundendaten.anrede;kundendaten.anrede",
+                "kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox;verwaltungsdaten.verwaltungsdatenwert.[].checkbox");
+
+        var conversion = Conversion.fromCsv(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), csv);
+
+        var values = List.of(
+                new Value(new Path("benutzername"), "aaa"),
+                new Value(new Path("kopfdaten.kundendaten.anrede"), "EHELEUTE"),
+                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].checkbox"), true)
+        );
+        var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
+
+        var result = conversion.applyTo(data);
+
+        assertValue(result, new Path("username"), "aaa");
+        assertValue(result, new Path("kundendaten.anrede"), "ANREDE_EHELEUTE");
+        assertValue(result, new Path("verwaltungsdaten.verwaltungsdatenwert.[0].checkbox"), true);
+    }
+
+    private static void assertValue(Data result, Path path, String expectedValue) {
+        var value = result.getValue(path);
+        assertNotNull(value);
+        assertTrue(value.hasObject());
+        assertEquals(expectedValue, value.object());
+    }
+
+    private static void assertValue(Data result, Path path, boolean value) {
+        assertTrue(result.getValue(path).hasObject());
+        assertEquals(value, result.getValue(path).object());
+    }
+
     private void assertValue(Data data, String path, Type type, Boolean object) {
         var value = data.getValue(new Path(path));
         assertNotNull(value);

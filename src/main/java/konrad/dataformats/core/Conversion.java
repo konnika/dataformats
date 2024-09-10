@@ -1,5 +1,7 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.mappings.OneToOneMapping;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,5 +27,13 @@ public class Conversion {
         var result = new Data(to, Collections.emptyList());
         mappings.forEach(mapping -> mapping.applyTo(data, result));
         return result;
+    }
+
+    public static Conversion fromCsv(DataFormat from, DataFormat to, List<String> lines) {
+        var mappings = lines.stream()
+                .map(line -> OneToOneMapping.fromCsv(from, to, line)) // TODO replace OneToOneMapping with a multiplexer that decides the mapping to use
+                .map(Mapping.class::cast)
+                .toList();
+        return new Conversion(from, to, mappings);
     }
 }

@@ -68,6 +68,5 @@ public class ValueFormat {
             return new ValueFormat(new Path(parts[0]), Type.fromCsv(parts[1]));
         }
         throw new RuntimeException("DataFormat CSV is expected to have these values per line: path;type. Got " + line);
-
     }
 }

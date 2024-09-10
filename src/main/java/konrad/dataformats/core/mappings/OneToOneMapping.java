@@ -84,6 +84,14 @@ public class OneToOneMapping implements Mapping {
         }
 
         // TODO continue here: implement more conversions
-        throw new RuntimeException("Type conversion from " + fromType + " to " + toType + " is not yet supported");
+        throw new RuntimeException("Type conversion from " + fromType + " to " + toType + " is not yet supported. Paths: " + fromPath + ", " + toPath);
+    }
+
+    public static OneToOneMapping fromCsv(DataFormat from, DataFormat to, String line) {
+        var parts = line.split(";");
+        if (parts.length == 2) {
+            return new OneToOneMapping(from, to, new Path(parts[0]), new Path(parts[1]));
+        }
+        throw new RuntimeException("Conversion CSV is expected to have these values per line: path from;path to. Got " + line);
     }
 }

@@ -93,7 +93,7 @@ public class TestDataFormats {
                 new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].schluessel"), Type.STRING),
                 new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].stringWert"), Type.STRING),
                 new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].dateWert"), Type.STRING),
-                new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].checkbox"), Type.STRING)
+                new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].checkbox"), Type.BOOLEAN)
         );
         return new DataFormat(PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN, values);
     }
