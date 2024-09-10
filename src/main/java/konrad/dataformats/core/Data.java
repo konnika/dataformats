@@ -83,7 +83,15 @@ public class Data {
     }
 
     public Value getValue(Path path) {
-        return values.get(path);
+        if (path.isAbstractArrayPath()) {
+            throw new RuntimeException("Path " + path + " must be a concrete array path");
+        }
+
+        if (dataFormat.contains(path.withoutArrayIndices())) {
+            return values.get(path);
+        }
+
+        throw new RuntimeException("Path " + path + " does not exist in Dataformat " + dataFormat.id());
     }
 
     public List<Value> getValuesIgnoringIndices(Path path) {
