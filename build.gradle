@@ -1,16 +1,18 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'org.springframework.boot' version '3.3.3'
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'konrad.dataformats'
-version = '0.1.0'
+version = '0.2.0'
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+    withSourcesJar()
 }
 
 repositories {
@@ -30,6 +32,24 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jar {
+    archiveClassifier = ''
+    archiveBaseName = 'dataformats-core'
+}
+
+bootJar {
+    archiveBaseName = 'dataformats-boot'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'dataformats-core'
+            from components.java
+        }
+    }
 }
 
 //compileJava {
