@@ -43,7 +43,7 @@ class DataFormatTest {
                 "kopfdaten.kundendaten.anrede;ENUM:FRAU,HERR,FIRMA,EHELEUTE,HERRUNDFRAU",
                 "kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox;BOOLEAN;");
 
-        var dataFormat = DataFormat.fromCsv(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE, csv);
+        var dataFormat = DataFormat.fromCsv(TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE, csv);
 
         assertValue(dataFormat, new Path("benutzername"), Type.STRING);
         assertValue(dataFormat, new Path("kopfdaten.kundendaten.anrede"), Type.enumType("FRAU", "HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU"));

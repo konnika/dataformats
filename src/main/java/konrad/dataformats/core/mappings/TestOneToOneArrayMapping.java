@@ -4,6 +4,7 @@ import konrad.dataformats.core.Data;
 import konrad.dataformats.core.DataFormatId;
 import konrad.dataformats.core.Mapping;
 import konrad.dataformats.core.Path;
+import konrad.dataformats.core.TestDataFormats;
 import konrad.dataformats.core.Type;
 import konrad.dataformats.core.Value;
 
@@ -17,8 +18,8 @@ public class TestOneToOneArrayMapping implements Mapping {
     private final Map<Path, Path> paths;
 
     public TestOneToOneArrayMapping() {
-        this.fromFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE;
-        this.toFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN;
+        this.fromFormatId = TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE;
+        this.toFormatId = TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN;
         this.paths = new HashMap<>();
         paths.put(new Path("benutzername"), new Path("username"));
         paths.put(new Path("institutsname"), new Path("institutsname"));

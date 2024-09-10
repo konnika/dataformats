@@ -4,6 +4,7 @@ import konrad.dataformats.core.Data;
 import konrad.dataformats.core.DataFormatId;
 import konrad.dataformats.core.Mapping;
 import konrad.dataformats.core.Path;
+import konrad.dataformats.core.TestDataFormats;
 import konrad.dataformats.core.Type;
 import konrad.dataformats.core.Value;
 
@@ -19,8 +20,8 @@ public class TestOneToOneEnumMapping implements Mapping {
     private final Type typeTo = Type.enumType("ANREDE_FRAU", "ANREDE_HERR", "ANREDE_FIRMA", "ANREDE_EHELEUTE", "ANREDE_HERRUNDFRAU");
 
     public TestOneToOneEnumMapping() {
-        this.fromFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE;
-        this.toFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN;
+        this.fromFormatId = TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE;
+        this.toFormatId = TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN;
         this.paths = new HashMap<>();
         paths.put(new Path("kopfdaten.kundendaten.anrede"), new Path("kundendaten.anrede"));
     }

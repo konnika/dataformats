@@ -4,6 +4,7 @@ import konrad.dataformats.core.Data;
 import konrad.dataformats.core.DataFormatId;
 import konrad.dataformats.core.Mapping;
 import konrad.dataformats.core.Path;
+import konrad.dataformats.core.TestDataFormats;
 import konrad.dataformats.core.Type;
 import konrad.dataformats.core.Value;
 
@@ -18,11 +19,11 @@ public class TestFirstSimpleMapping implements Mapping {
     private final Type toType;
 
     public TestFirstSimpleMapping() {
-        this.fromFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE;
+        this.fromFormatId = TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE;
         this.fromPath = new Path("benutzername");
         this.fromType = Type.STRING;
 
-        this.toFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_ENGLISH;
+        this.toFormatId = TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE_ENGLISH;
         this.toPath = new Path("user");
         this.toType = Type.STRING;
     }

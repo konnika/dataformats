@@ -4,6 +4,7 @@ import konrad.dataformats.core.Data;
 import konrad.dataformats.core.DataFormatId;
 import konrad.dataformats.core.Mapping;
 import konrad.dataformats.core.Path;
+import konrad.dataformats.core.TestDataFormats;
 import konrad.dataformats.core.Type;
 import konrad.dataformats.core.Value;
 
@@ -19,14 +20,14 @@ public class TestMultipleOneToOneMapping implements Mapping {
     private final Type toType;
 
     public TestMultipleOneToOneMapping() {
-        this.fromFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE;
+        this.fromFormatId = TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE;
         this.fromPaths = List.of(
                 new Path("benutzername"),
                 new Path("institutsname")
         );
         this.fromType = Type.STRING;
 
-        this.toFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_ENGLISH;
+        this.toFormatId = TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE_ENGLISH;
         this.toPaths = List.of(
                 new Path("user"),
                 new Path("tenant"));

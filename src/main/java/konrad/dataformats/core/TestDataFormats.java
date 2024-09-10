@@ -3,6 +3,10 @@ package konrad.dataformats.core;
 import java.util.List;
 
 public class TestDataFormats {
+    public static final DataFormatId PROS_TRANSACTION_METADATA_UPDATE = new DataFormatId("PROS_TRANSACTION_METADATA_UPDATE");
+    public static final DataFormatId PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN = new DataFormatId("PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN");
+    public static final DataFormatId PROS_TRANSACTION_METADATA_UPDATE_ENGLISH = new DataFormatId("PROS_TRANSACTION_METADATA_UPDATE_ENGLISH");
+
     public static DataFormat transactionMetadataUpdate() {
         var values = List.of(
                 new ValueFormat(new Path("benutzername"), Type.STRING),
@@ -33,7 +37,7 @@ public class TestDataFormats {
 //      "$ref": "./Institutskriterien.json"
 //    }
         );
-        return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE, values);
+        return new DataFormat(PROS_TRANSACTION_METADATA_UPDATE, values);
     }
 
     public static DataFormat transactionMetadataUpdateEnglish() {
@@ -62,7 +66,7 @@ public class TestDataFormats {
                 new ValueFormat(new Path("header.administration.administrationConfigurable.[].checkbox"), Type.BOOLEAN),
                 new ValueFormat(new Path("header.administration.administrationConfigurable.[].date"), Type.DATE)
         );
-        return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_ENGLISH, values);
+        return new DataFormat(PROS_TRANSACTION_METADATA_UPDATE_ENGLISH, values);
     }
 
     public static DataFormat transactionMetadataUpdateMarzipan() {
@@ -91,6 +95,6 @@ public class TestDataFormats {
                 new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].dateWert"), Type.STRING),
                 new ValueFormat(new Path("verwaltungsdaten.verwaltungsdatenwert.[].checkbox"), Type.STRING)
         );
-        return new DataFormat(DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN, values);
+        return new DataFormat(PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN, values);
     }
 }
