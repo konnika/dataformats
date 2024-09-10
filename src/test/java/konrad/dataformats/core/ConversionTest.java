@@ -1,8 +1,8 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.mappings.FirstSimpleMapping;
-import konrad.dataformats.core.mappings.OneToOneArrayMapping;
-import konrad.dataformats.core.mappings.OneToOneEnumMapping;
+import konrad.dataformats.core.mappings.TestFirstSimpleMapping;
+import konrad.dataformats.core.mappings.TestOneToOneArrayMapping;
+import konrad.dataformats.core.mappings.TestOneToOneEnumMapping;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,7 +20,7 @@ class ConversionTest {
                 new Value(new Path("kopfdaten.kundendaten.kundennummer"), "kopfdaten.kundendaten.kundennummer")
         );
         var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        List<Mapping> mappings = List.of(new FirstSimpleMapping());
+        List<Mapping> mappings = List.of(new TestFirstSimpleMapping());
 
         var conversion = new Conversion(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateEnglish(), mappings);
         var converted = conversion.applyTo(data);
@@ -42,7 +42,7 @@ class ConversionTest {
                 new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[2].checkbox"), true)
         );
         var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        List<Mapping> mappings = List.of(new OneToOneArrayMapping(), new OneToOneEnumMapping());
+        List<Mapping> mappings = List.of(new TestOneToOneArrayMapping(), new TestOneToOneEnumMapping());
 
         var conversion = new Conversion(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), mappings);
         var converted = conversion.applyTo(data);

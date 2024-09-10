@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MappingTest {
     @Test
     void firstSimpleMappingWorks() {
-        var mapping = new FirstSimpleMapping();
+        var mapping = new TestFirstSimpleMapping();
 
         var value = new Value(new Path("benutzername"), "xxx");
         var before = new Data(TestDataFormats.transactionMetadataUpdate(), List.of(value));
@@ -27,7 +27,7 @@ class MappingTest {
 
     @Test
     void multipleOneToOneMappingWorks() {
-        var mapping = new MultipleOneToOneMapping();
+        var mapping = new TestMultipleOneToOneMapping();
 
         var values = List.of(
                 new Value(new Path("benutzername"), "xxx"),

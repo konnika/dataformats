@@ -11,14 +11,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class OneToOneEnumMapping implements Mapping {
+public class TestOneToOneEnumMapping implements Mapping {
     private final DataFormatId fromFormatId;
     private final DataFormatId toFormatId;
     private final Map<Path, Path> paths;
     private final Type typeFrom = Type.enumType("FRAU", "HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU");
     private final Type typeTo = Type.enumType("ANREDE_FRAU", "ANREDE_HERR", "ANREDE_FIRMA", "ANREDE_EHELEUTE", "ANREDE_HERRUNDFRAU");
 
-    public OneToOneEnumMapping() {
+    public TestOneToOneEnumMapping() {
         this.fromFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE;
         this.toFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN;
         this.paths = new HashMap<>();

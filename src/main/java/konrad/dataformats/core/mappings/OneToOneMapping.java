@@ -73,7 +73,7 @@ public class OneToOneMapping implements Mapping {
                 .orElseThrow(() -> new RuntimeException("Value path (to) " + value.path() + " is not defined in DataFormat " + fromFormat.id()));
 
         if (fromType.equals(toType)) {
-            return toType.clazz().cast(value.object());
+            return value.object();
         }
         if (fromType.isEnum() && toType.isEnum()) {
             if (fromType.enumValueCount() == toType.enumValueCount()) {

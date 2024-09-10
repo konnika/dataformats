@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class OneToOneArrayMapping implements Mapping {
+public class TestOneToOneArrayMapping implements Mapping {
     private final DataFormatId fromFormatId;
     private final DataFormatId toFormatId;
     private final Map<Path, Path> paths;
 
-    public OneToOneArrayMapping() {
+    public TestOneToOneArrayMapping() {
         this.fromFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE;
         this.toFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN;
         this.paths = new HashMap<>();

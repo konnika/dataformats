@@ -9,7 +9,7 @@ import konrad.dataformats.core.Value;
 
 import java.util.Objects;
 
-public class FirstSimpleMapping implements Mapping {
+public class TestFirstSimpleMapping implements Mapping {
     private final DataFormatId fromFormatId;
     private final DataFormatId toFormatId;
     private final Path fromPath;
@@ -17,7 +17,7 @@ public class FirstSimpleMapping implements Mapping {
     private final Type fromType;
     private final Type toType;
 
-    public FirstSimpleMapping() {
+    public TestFirstSimpleMapping() {
         this.fromFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE;
         this.fromPath = new Path("benutzername");
         this.fromType = Type.STRING;

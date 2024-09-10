@@ -10,7 +10,7 @@ import konrad.dataformats.core.Value;
 import java.util.List;
 import java.util.Objects;
 
-public class MultipleOneToOneMapping implements Mapping {
+public class TestMultipleOneToOneMapping implements Mapping {
     private final DataFormatId fromFormatId;
     private final DataFormatId toFormatId;
     private final List<Path> fromPaths;
@@ -18,7 +18,7 @@ public class MultipleOneToOneMapping implements Mapping {
     private final Type fromType;
     private final Type toType;
 
-    public MultipleOneToOneMapping() {
+    public TestMultipleOneToOneMapping() {
         this.fromFormatId = DataFormatId.PROS_TRANSACTION_METADATA_UPDATE;
         this.fromPaths = List.of(
                 new Path("benutzername"),
