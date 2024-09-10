@@ -34,7 +34,6 @@ class ConversionTest {
                 new Value(new Path("benutzername"), "aaa"),
                 new Value(new Path("institutsname"), "bbb"),
                 new Value(new Path("kopfdaten.kundendaten.kundennummer"), "ccc"),
-                // FIXME make it possible to create a value of type enum without passing all values. Also the validation of the value against the possible enum values should be done via DataFormat
                 new Value(new Path("kopfdaten.kundendaten.anrede"), "EHELEUTE"),
                 new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "xxx0"),
                 new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].text"), "yyy0"),
@@ -53,7 +52,7 @@ class ConversionTest {
         assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[0].schluessel", Type.STRING, "XXX0");
         assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[0].stringWert", Type.STRING, "YYY0");
         assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[1].schluessel", Type.STRING, "XXX1");
-//        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[2].checkbox", Type.STRING, (Boolean) true); // TODO add again once the boolean mapping is implemented
+        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[2].checkbox", Type.BOOLEAN, true);
         assertValue(converted, "kundendaten.anrede", Type.enumType("ANREDE_FRAU", "ANREDE_HERR", "ANREDE_FIRMA", "ANREDE_EHELEUTE", "ANREDE_HERRUNDFRAU"), "ANREDE_EHELEUTE");
     }
 
@@ -87,9 +86,10 @@ class ConversionTest {
         assertEquals(expectedValue, value.object());
     }
 
-    private static void assertValue(Data result, Path path, boolean value) {
-        assertTrue(result.getValue(path).hasObject());
-        assertEquals(value, result.getValue(path).object());
+    private static void assertValue(Data result, Path path, boolean object) {
+        var value = result.getValue(path);
+        assertTrue(value.hasObject());
+        assertEquals(object, value.object());
     }
 
     private void assertValue(Data data, String path, Type type, Boolean object) {
