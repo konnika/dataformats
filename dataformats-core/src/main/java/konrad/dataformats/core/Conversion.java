@@ -1,6 +1,6 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.mappings.MappingGenerators;
+import konrad.dataformats.core.registries.MappingGeneratorRegistry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,9 +33,9 @@ public class Conversion {
         return result;
     }
 
-    public static Conversion fromCsv(DataFormat from, DataFormat to, List<String> lines, MappingGenerators mappingGenerators) {
+    public static Conversion fromCsv(DataFormat from, DataFormat to, List<String> lines, MappingGeneratorRegistry mappingGeneratorRegistry) {
         var mappings = lines.stream()
-                .map(line -> mappingGenerators.fromIdOrFail(idFromCsvOrFail(line)).apply(from, to, line))
+                .map(line -> mappingGeneratorRegistry.fromId(idFromCsvOrFail(line)).apply(from, to, line))
                 .toList();
         return new Conversion(from, to, mappings);
     }

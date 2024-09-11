@@ -1,13 +1,16 @@
-package konrad.dataformats.core.mappings;
+package konrad.dataformats.core.registries;
+
+import konrad.dataformats.core.mappings.MappingGenerator;
+import konrad.dataformats.core.mappings.OneToOneMapping;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class MappingGenerators {
+public class MappingGeneratorRegistry {
     private final Map<String, MappingGenerator> generators;
 
-    public MappingGenerators() {
+    public MappingGeneratorRegistry() {
         this.generators = new HashMap<>();
         add("1:1", OneToOneMapping::fromCsv);
     }
@@ -16,11 +19,7 @@ public class MappingGenerators {
         generators.put(id, mappingGenerator);
     }
 
-    public Optional<MappingGenerator> fromId(String id) {
-        return Optional.ofNullable(generators.get(id));
-    }
-
-    public MappingGenerator fromIdOrFail(String id) {
+    public MappingGenerator fromId(String id) {
         return Optional.ofNullable(generators.get(id)).orElseThrow(() -> new RuntimeException("No MappingGenerator found for id: " + id));
     }
 }

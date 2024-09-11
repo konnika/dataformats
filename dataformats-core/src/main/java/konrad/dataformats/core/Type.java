@@ -1,5 +1,6 @@
 package konrad.dataformats.core;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +11,8 @@ public class Type {
     public static final Type STRING = new Type(String.class);
     public static final Type BOOLEAN = new Type(Boolean.class);
     public static final Type DATE = new Type(LocalDate.class);
+    public static final Type INTEGER = new Type(Integer.class);
+    public static final Type NUMBER = new Type(BigDecimal.class);
 
     public static final String ERROR_MESSAGE_CSV_FORMAT = "DataFormat CSV is expected to have a type value of: ENUM:value1,value2,value3. Got ";
 
@@ -107,6 +110,8 @@ public class Type {
             case "STRING" -> Type.STRING;
             case "BOOLEAN" -> Type.BOOLEAN;
             case "DATE" -> Type.DATE;
+            case "INTEGER" -> Type.INTEGER;
+            case "NUMBER" -> Type.NUMBER;
             default -> throw new RuntimeException("");
         };
     }

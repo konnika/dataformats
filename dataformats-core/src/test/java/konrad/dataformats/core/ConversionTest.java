@@ -1,9 +1,9 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.mappings.MappingGenerators;
 import konrad.dataformats.core.mappings.TestFirstSimpleMapping;
 import konrad.dataformats.core.mappings.TestOneToOneArrayMapping;
 import konrad.dataformats.core.mappings.TestOneToOneEnumMapping;
+import konrad.dataformats.core.registries.MappingGeneratorRegistry;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -64,7 +64,7 @@ class ConversionTest {
                 "1:1;kopfdaten.kundendaten.anrede;kundendaten.anrede",
                 "1:1;kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox;verwaltungsdaten.verwaltungsdatenwert.[].checkbox");
 
-        var conversion = Conversion.fromCsv(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), csv, new MappingGenerators());
+        var conversion = Conversion.fromCsv(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), csv, new MappingGeneratorRegistry());
 
         var values = List.of(
                 new Value(new Path("benutzername"), "aaa"),
