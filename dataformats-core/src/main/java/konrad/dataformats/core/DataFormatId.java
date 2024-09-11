@@ -5,6 +5,10 @@ import java.util.Objects;
 public class DataFormatId {
     private final String id;
 
+    public DataFormatId(Class<?> aClass) {
+        this(aClass.getName());
+    }
+
     public DataFormatId(String id) {
         this.id = id;
     }

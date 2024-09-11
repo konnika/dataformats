@@ -7,21 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataFormatRegistry {
-    private final Map<Class<?>, DataFormat> dataFormatsByClass;
     private final Map<DataFormatId, DataFormat> dataFormatsById;
 
     public DataFormatRegistry() {
-        this.dataFormatsByClass = new HashMap<>();
         this.dataFormatsById = new HashMap<>();
     }
 
-    public <T> void put(Class<T> aClass, DataFormat dataFormat) {
-        dataFormatsByClass.put(aClass, dataFormat);
+    public <T> void put(DataFormat dataFormat) {
         dataFormatsById.put(dataFormat.id(), dataFormat);
     }
 
     public DataFormat get(Class<?> aClass) {
-        var dataFormat = dataFormatsByClass.get(aClass);
+        var dataFormat = dataFormatsById.get(new DataFormatId(aClass.getName()));
         if (dataFormat == null) {
             throw new RuntimeException("No DataFormat found for " + aClass);
         }

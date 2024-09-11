@@ -9,12 +9,10 @@ import java.util.Objects;
 
 public class Data {
     private final DataFormat dataFormat;
-    private final DataFormatId dataFormatId;
     private final Map<Path, Value> values = new HashMap<>();
 
     public Data(DataFormat dataFormat, List<Value> values) {
         this.dataFormat = dataFormat;
-        this.dataFormatId = dataFormat.id();
 
         var listOfValues = Validations.validateNotNull(values, "Data Values");
         listOfValues.forEach(this::addOrFailIfHasObject);
@@ -77,7 +75,7 @@ public class Data {
             throw new RuntimeException("Data is null");
         }
 
-        if (!Objects.equals(dataFormatId, other.dataFormatId)) {
+        if (!has(other.dataFormat.id())) {
             throw new RuntimeException("Data format does not match");
         }
     }
@@ -196,7 +194,11 @@ public class Data {
         return Objects.equals(dataFormat, this.dataFormat);
     }
 
+    public boolean has(DataFormatId id) {
+        return Objects.equals(dataFormat.id(), id);
+    }
+
     public DataFormatId dataFormatId() {
-        return dataFormatId;
+        return dataFormat.id();
     }
 }
