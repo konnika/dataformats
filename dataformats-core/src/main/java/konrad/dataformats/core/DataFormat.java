@@ -64,4 +64,9 @@ public class DataFormat {
         var formats = lines.stream().map(ValueFormat::fromCsv).toList();
         return new DataFormat(id, formats);
     }
+
+    @Override
+    public String toString() {
+        return id.toString();
+    }
 }
