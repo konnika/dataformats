@@ -1,5 +1,6 @@
 package konrad.dataformats.core.mappings;
 
+import konrad.dataformats.core.Assertions;
 import konrad.dataformats.core.Data;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.TestDataFormats;
@@ -13,50 +14,51 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class OneToOneMappingTest {// TODO use testobjects
+class OneToOneMappingTest {
+
     @Test
     void stringWorks() {
-        var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(),
-                new Path("benutzername"), new Path("username"));
+        var mapping = new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(),
+                new Path("value"), new Path("mirrorValue"));
 
-        var values = List.of(new Value(new Path("benutzername"), "xxx"));
-        var before = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        var after = new Data(TestDataFormats.transactionMetadataUpdateMarzipan(), Collections.emptyList());
+        var values = List.of(new Value(new Path("value"), "xxx"));
+        var before = new Data(TestDataFormats.tree(), values);
+        var after = new Data(TestDataFormats.mirrorTree(), Collections.emptyList());
 
         mapping.applyTo(before, after);
 
         assertEquals(1, after.toMap().size());
-        assertValue(after, "username");
+        Assertions.assertValue(after, "mirrorValue", "xxx");
     }
 
     @Test
     void stringInArrayWorks() {
-        var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(),
-                new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].schluessel"), new Path("verwaltungsdaten.verwaltungsdatenwert.[].schluessel"));
+        var mapping = new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(),
+                new Path("leaves.[].value"), new Path("mirrorLeaves.[].mirrorValue"));
 
-        var values = List.of(new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "xxx"));
-        var before = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        var after = new Data(TestDataFormats.transactionMetadataUpdateMarzipan(), Collections.emptyList());
+        var values = List.of(new Value(new Path("leaves.[0].value"), "xxx"));
+        var before = new Data(TestDataFormats.tree(), values);
+        var after = new Data(TestDataFormats.mirrorTree(), Collections.emptyList());
 
         mapping.applyTo(before, after);
 
         assertEquals(1, after.toMap().size());
-        assertValue(after, "verwaltungsdaten.verwaltungsdatenwert.[0].schluessel");
+        Assertions.assertValue(after, "mirrorLeaves.[0].mirrorValue", "xxx");
     }
 
     @Test
     void enumWorks() {
-        var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(),
-                new Path("kopfdaten.kundendaten.anrede"), new Path("kundendaten.anrede"));
+        var mapping = new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(),
+                new Path("branch.leaf.color"), new Path("mirrorBranch.mirrorLeaf.mirrorColor"));
 
-        var values = List.of(new Value(new Path("kopfdaten.kundendaten.anrede"), "HERR"));
-        var before = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        var after = new Data(TestDataFormats.transactionMetadataUpdateMarzipan(), Collections.emptyList());
+        var values = List.of(new Value(new Path("branch.leaf.color"), "RED"));
+        var before = new Data(TestDataFormats.tree(), values);
+        var after = new Data(TestDataFormats.mirrorTree(), Collections.emptyList());
 
         mapping.applyTo(before, after);
 
         assertEquals(1, after.toMap().size());
-        assertValue(after, "kundendaten.anrede", "ANREDE_HERR");
+        Assertions.assertValue(after, "mirrorBranch.mirrorLeaf.mirrorColor", "MIRROR_RED");
     }
 
 
