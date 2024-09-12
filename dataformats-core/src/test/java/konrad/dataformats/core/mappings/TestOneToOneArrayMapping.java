@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class TestOneToOneArrayMapping implements Mapping {
+public class TestOneToOneArrayMapping implements Mapping { // TODO remove
     private final DataFormatId fromFormatId;
     private final DataFormatId toFormatId;
     private final Map<Path, Path> paths;

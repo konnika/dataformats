@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ConversionTest {
+class ConversionTest {// TODO use testobjects
     @Test
     void convertObject() {
         var values = List.of(

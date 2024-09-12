@@ -4,7 +4,6 @@ import konrad.dataformats.core.Data;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.TestDataFormats;
 import konrad.dataformats.core.Value;
-import konrad.dataformats.core.mappings.OneToOneMapping;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class OneToOneMappingTest {
+class OneToOneMappingTest {// TODO use testobjects
     @Test
     void stringWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(),

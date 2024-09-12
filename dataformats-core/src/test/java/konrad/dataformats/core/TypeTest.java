@@ -1,8 +1,5 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.Path;
-import konrad.dataformats.core.Type;
-import konrad.dataformats.core.Value;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

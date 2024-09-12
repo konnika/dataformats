@@ -10,7 +10,7 @@ import konrad.dataformats.core.Value;
 
 import java.util.Objects;
 
-public class TestFirstSimpleMapping implements Mapping {
+public class TestFirstSimpleMapping implements Mapping { // TODO remove
     private final DataFormatId fromFormatId;
     private final DataFormatId toFormatId;
     private final Path fromPath;

@@ -7,7 +7,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DataFormatTest {
+class DataFormatTest {// TODO use testobjects
     private final DataFormat dataFormat = TestDataFormats.transactionMetadataUpdate();
 
     @Test
