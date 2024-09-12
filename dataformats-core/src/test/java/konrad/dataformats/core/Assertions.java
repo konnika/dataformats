@@ -6,6 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Assertions {
+    public static void assertValue(DataFormat format, String path, Type type) {
+        var value = format.get(new Path(path));
+        assertTrue(value.isPresent());
+        assertTrue(value.get().has(new Path(path)));
+        assertTrue(value.get().has(type));
+    }
+
     public static void assertValue(Data data, String path, Object expected) {
         var value = data.getValue(new Path(path));
         assertNotNull(value);

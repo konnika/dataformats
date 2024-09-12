@@ -1,5 +1,7 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.testobjects.mirrortree.MirrorColor;
+import konrad.dataformats.testobjects.tree.Color;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -7,53 +9,68 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DataFormatTest {// TODO use testobjects
-    private final DataFormat dataFormat = TestDataFormats.transactionMetadataUpdate();
+class DataFormatTest {
+    private final DataFormat treeFormat = TestDataFormats.tree();
 
     @Test
     void containsWorks() {
-        assertTrue(dataFormat.contains(new Path("benutzername")));
-        assertTrue(dataFormat.contains(new Path("institutsname")));
-        assertTrue(dataFormat.contains(new Path("kopfdaten.kundendaten.kundennummer")));
-        assertTrue(dataFormat.contains(new Path("kopfdaten.kundendaten.nameFrau.nachname")));
-        assertFalse(dataFormat.contains(new Path("xxx")));
+        assertContains(treeFormat, "value");
+        assertContains(treeFormat, "branch.value");
+        assertContains(treeFormat, "branch.nullValue");
+        assertContains(treeFormat, "branch.leaf.color");
+        assertContains(treeFormat, "branch.leaf.value");
+        assertContains(treeFormat, "leaves.[].color");
+        assertContains(treeFormat, "leaves.[].value");
     }
 
     @Test
     void getValuePathAndTypeWorks() {
-        assertTrue(dataFormat.get(new Path("benutzername")).map(vf -> vf.has(Type.STRING)).orElse(false));
-        assertTrue(dataFormat.get(new Path("institutsname")).map(vf -> vf.has(Type.STRING)).orElse(false));
-        assertTrue(dataFormat.get(new Path("kopfdaten.kundendaten.kundennummer")).map(vf -> vf.has(Type.STRING)).orElse(false));
-        assertTrue(dataFormat.get(new Path("kopfdaten.kundendaten.nameFrau.nachname")).map(vf -> vf.has(Type.STRING)).orElse(false));
+        assertHasType(treeFormat, "value", Type.STRING);
+        assertHasType(treeFormat, "branch.value", Type.BOOLEAN);
+        assertHasType(treeFormat, "branch.nullValue", Type.STRING);
+        assertHasType(treeFormat, "branch.leaf.color", Type.enumType(Color.class));
+        assertHasType(treeFormat, "branch.leaf.value", Type.STRING);
+        assertHasType(treeFormat, "leaves.[].color", Type.enumType(Color.class));
+        assertHasType(treeFormat, "leaves.[].value", Type.STRING);
     }
+
 
     @Test
     void enumWorks() {
-        assertTrue(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType("FRAU", "HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU"))).orElse(false));
-        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType("HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU", "FRAU"))).orElse(false));
-        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType("HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU"))).orElse(true));
-        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType("xxx"))).orElse(true));
-        assertFalse(dataFormat.get(new Path("kopfdaten.kundendaten.anrede")).map(vf -> vf.has(Type.enumType())).orElse(true));
+        assertHasType(treeFormat, "branch.leaf.color", Type.enumType(Color.class));
+        assertHasType(treeFormat, "branch.leaf.color", Type.enumType("GREEN", "YELLOW", "RED", "BROWN"));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType(MirrorColor.class));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType("YELLOW", "RED", "BROWN", "GREEN"));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType("GREEN", "YELLOW", "RED"));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType("xxx"));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType());
     }
 
     @Test
     void fromCsvWorks() {
         var csv = List.of(
-                "benutzername;STRING",
-                "kopfdaten.kundendaten.anrede;ENUM:FRAU,HERR,FIRMA,EHELEUTE,HERRUNDFRAU",
-                "kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox;BOOLEAN");
+                "value;STRING",
+                "branch.value;BOOLEAN",
+                "branch.leaf.color;ENUM:GREEN,YELLOW,RED,BROWN",
+                "leaves.[].value;STRING");
 
-        var dataFormat = DataFormat.fromCsv(TestDataFormats.PROS_TRANSACTION_METADATA_UPDATE, csv);
+        var format = DataFormat.fromCsv(TestDataFormats.tree().id(), csv);
 
-        assertValue(dataFormat, new Path("benutzername"), Type.STRING);
-        assertValue(dataFormat, new Path("kopfdaten.kundendaten.anrede"), Type.enumType("FRAU", "HERR", "FIRMA", "EHELEUTE", "HERRUNDFRAU"));
-        assertValue(dataFormat, new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox"), Type.BOOLEAN);
+        Assertions.assertValue(format, "value", Type.STRING);
+        Assertions.assertValue(format, "branch.value", Type.BOOLEAN);
+        Assertions.assertValue(format, "branch.leaf.color", Type.enumType(Color.class));
+        Assertions.assertValue(format, "leaves.[].value", Type.STRING);
     }
 
-    private static void assertValue(DataFormat dataFormat, Path path, Type type) {
-        var value = dataFormat.get(path);
-        assertTrue(value.isPresent());
-        assertTrue(value.get().has(path));
-        assertTrue(value.get().has(type));
+    private void assertContains(DataFormat dataFormat, String path) {
+        assertTrue(dataFormat.contains(new Path(path)));
+    }
+
+    private void assertHasType(DataFormat dataFormat, String path, Type type) {
+        assertTrue(dataFormat.get(new Path(path)).map(vf -> vf.has(type)).orElse(false));
+    }
+
+    private void assertHasNotType(DataFormat dataFormat, String path, Type type) {
+        assertFalse(dataFormat.get(new Path(path)).map(vf -> vf.has(type)).orElse(false));
     }
 }
