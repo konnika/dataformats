@@ -13,9 +13,9 @@ public class TestDataFormats {
                 new ValueFormat(new Path("value"), Type.STRING),
                 new ValueFormat(new Path("branch.value"), Type.BOOLEAN),
                 new ValueFormat(new Path("branch.nullValue"), Type.STRING),
-                new ValueFormat(new Path("branch.leaf.color"), Type.enumType(Color.class)),
+                new ValueFormat(new Path("branch.leaf.color"), Type.forEnum(Color.class)),
                 new ValueFormat(new Path("branch.leaf.value"), Type.STRING),
-                new ValueFormat(new Path("leaves.[].color"), Type.enumType(Color.class)),
+                new ValueFormat(new Path("leaves.[].color"), Type.forEnum(Color.class)),
                 new ValueFormat(new Path("leaves.[].value"), Type.STRING)
         );
         return new DataFormat(new DataFormatId(Tree.class), formats);
@@ -26,9 +26,9 @@ public class TestDataFormats {
                 new ValueFormat(new Path("mirrorValue"), Type.STRING),
                 new ValueFormat(new Path("mirrorBranch.mirrorValue"), Type.BOOLEAN),
                 new ValueFormat(new Path("mirrorBranch.mirrorNullValue"), Type.STRING),
-                new ValueFormat(new Path("mirrorBranch.mirrorLeaf.mirrorColor"), Type.enumType(MirrorColor.class)),
+                new ValueFormat(new Path("mirrorBranch.mirrorLeaf.mirrorColor"), Type.forEnum(MirrorColor.class)),
                 new ValueFormat(new Path("mirrorBranch.mirrorLeaf.mirrorValue"), Type.STRING),
-                new ValueFormat(new Path("mirrorLeaves.[].mirrorColor"), Type.enumType(MirrorColor.class)),
+                new ValueFormat(new Path("mirrorLeaves.[].mirrorColor"), Type.forEnum(MirrorColor.class)),
                 new ValueFormat(new Path("mirrorLeaves.[].mirrorValue"), Type.STRING)
         );
         return new DataFormat(new DataFormatId(MirrorTree.class), formats);

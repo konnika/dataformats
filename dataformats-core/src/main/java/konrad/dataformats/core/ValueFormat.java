@@ -1,5 +1,7 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.registries.TypeRegistry;
+
 import java.util.Objects;
 
 public class ValueFormat {
@@ -47,26 +49,16 @@ public class ValueFormat {
         return Objects.equals(path, that.path) && Objects.equals(type, that.type);
     }
 
-//    public boolean equalsIgnoringPathIndices(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        ValueFormat that = (ValueFormat) o;
-//
-//        if (path == null && that.path == null) return true;
-//        if (path == null || that.path == null) return false;
-//        return path.equalsIgnoringIndices(that.path) && Objects.equals(type, that.type);
-//    }
-
     @Override
     public int hashCode() {
         return Objects.hash(path, type);
     }
 
-    public static ValueFormat fromCsv(String line) {
+    public static ValueFormat fromCsv(String line, TypeRegistry typeRegistry) {
         var parts = line.split(";");
         if (parts.length == 2) {
-            return new ValueFormat(new Path(parts[0]), Type.fromCsv(parts[1]));
+            return new ValueFormat(new Path(parts[0]), Type.fromCsv(parts[1], typeRegistry));
         }
-        throw new RuntimeException("DataFormat CSV is expected to have these values per line: path;type. Got " + line);
+        throw new RuntimeException("ValueFormat CSV is expected to have these values per line: path;type. Got " + line);
     }
 }

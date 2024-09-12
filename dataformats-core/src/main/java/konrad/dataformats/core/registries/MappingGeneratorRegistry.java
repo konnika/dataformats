@@ -19,7 +19,7 @@ public class MappingGeneratorRegistry {
         generators.put(id, mappingGenerator);
     }
 
-    public MappingGenerator fromId(String id) {
+    public MappingGenerator get(String id) {
         return Optional.ofNullable(generators.get(id)).orElseThrow(() -> new RuntimeException("No MappingGenerator found for id: " + id));
     }
 }

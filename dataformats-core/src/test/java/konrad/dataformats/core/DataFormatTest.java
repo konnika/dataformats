@@ -28,37 +28,37 @@ class DataFormatTest {
         assertHasType(treeFormat, "value", Type.STRING);
         assertHasType(treeFormat, "branch.value", Type.BOOLEAN);
         assertHasType(treeFormat, "branch.nullValue", Type.STRING);
-        assertHasType(treeFormat, "branch.leaf.color", Type.enumType(Color.class));
+        assertHasType(treeFormat, "branch.leaf.color", Type.forEnum(Color.class));
         assertHasType(treeFormat, "branch.leaf.value", Type.STRING);
-        assertHasType(treeFormat, "leaves.[].color", Type.enumType(Color.class));
+        assertHasType(treeFormat, "leaves.[].color", Type.forEnum(Color.class));
         assertHasType(treeFormat, "leaves.[].value", Type.STRING);
     }
 
 
     @Test
     void enumWorks() {
-        assertHasType(treeFormat, "branch.leaf.color", Type.enumType(Color.class));
-        assertHasType(treeFormat, "branch.leaf.color", Type.enumType("GREEN", "YELLOW", "RED", "BROWN"));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType(MirrorColor.class));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType("YELLOW", "RED", "BROWN", "GREEN"));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType("GREEN", "YELLOW", "RED"));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType("xxx"));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.enumType());
+        assertHasType(treeFormat, "branch.leaf.color", Type.forEnum(Color.class));
+        assertHasType(treeFormat, "branch.leaf.color", Type.forEnum("GREEN", "YELLOW", "RED", "BROWN"));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum(MirrorColor.class));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum("YELLOW", "RED", "BROWN", "GREEN"));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum("GREEN", "YELLOW", "RED"));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum("xxx"));
+        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum());
     }
 
     @Test
     void fromCsvWorks() {
         var csv = List.of(
-                "value;STRING",
-                "branch.value;BOOLEAN",
+                "value;java.lang.String",
+                "branch.value;java.lang.Boolean",
                 "branch.leaf.color;ENUM:GREEN,YELLOW,RED,BROWN",
-                "leaves.[].value;STRING");
+                "leaves.[].value;java.lang.String");
 
-        var format = DataFormat.fromCsv(TestDataFormats.tree().id(), csv);
+        var format = DataFormat.fromCsv(TestDataFormats.tree().id(), csv, TestTypeRegistry.get());
 
         Assertions.assertValue(format, "value", Type.STRING);
         Assertions.assertValue(format, "branch.value", Type.BOOLEAN);
-        Assertions.assertValue(format, "branch.leaf.color", Type.enumType(Color.class));
+        Assertions.assertValue(format, "branch.leaf.color", Type.forEnum(Color.class));
         Assertions.assertValue(format, "leaves.[].value", Type.STRING);
     }
 

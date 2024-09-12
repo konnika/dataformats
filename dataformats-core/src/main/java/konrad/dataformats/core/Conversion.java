@@ -35,12 +35,12 @@ public class Conversion {
 
     public static Conversion fromCsv(DataFormat from, DataFormat to, List<String> lines, MappingGeneratorRegistry mappingGeneratorRegistry) {
         var mappings = lines.stream()
-                .map(line -> mappingGeneratorRegistry.fromId(idFromCsvOrFail(line)).apply(from, to, line))
+                .map(line -> mappingGeneratorRegistry.get(idFromCsv(line)).apply(from, to, line))
                 .toList();
         return new Conversion(from, to, mappings);
     }
 
-    private static String idFromCsvOrFail(String line) {
+    private static String idFromCsv(String line) {
         var parts = line.split(";");
         if (parts.length < 1) {
             throw new RuntimeException("Conversion CSV is expected to have at least one value per line: mapping id. Got " + line);

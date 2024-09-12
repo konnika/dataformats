@@ -1,5 +1,7 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.registries.TypeRegistry;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,28 +10,40 @@ import java.util.List;
 import java.util.Objects;
 
 public class Type {
-    public static final Type STRING = new Type(String.class);
-    public static final Type BOOLEAN = new Type(Boolean.class);
-    public static final Type DATE = new Type(LocalDate.class);
-    public static final Type INTEGER = new Type(Integer.class);
-    public static final Type NUMBER = new Type(BigDecimal.class);
+    public static final Type STRING = Type.forClass(String.class);
+    public static final Type BOOLEAN = Type.forClass(Boolean.class);
+    public static final Type DATE = Type.forClass(LocalDate.class);
+    public static final Type INTEGER = Type.forClass(Integer.class);
+    public static final Type NUMBER = Type.forClass(BigDecimal.class);
 
     public static final String ERROR_MESSAGE_CSV_FORMAT = "DataFormat CSV is expected to have a type value of: ENUM:value1,value2,value3. Got ";
 
-    private final Class<?> clazz;
+    private final TypeId id;
     private final List<String> enumValues = new ArrayList<>();
 
-    private Type(Class<?> clazz, String... values) {
-        this.clazz = clazz;
-        this.enumValues.addAll(Arrays.asList(values));
+    public static Type forClass(Class<?> clazz) {
+        return new Type(clazz, new ArrayList<>());
     }
 
-    public static Type enumType(String... values) {
-        return new Type(String.class, values);
+    public static Type forEnum(String... values) {
+        return new Type(String.class, Arrays.stream(values).toList());
     }
 
-    public static Type enumType(Class<? extends Enum> enumClass) {
-        return new Type(String.class, Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).toArray(String[]::new));
+    public static Type forEnum(List<String> values) {
+        return new Type(String.class, values.stream().toList());
+    }
+
+    public static Type forEnum(Class<? extends Enum> enumClass) {
+        return new Type(String.class, Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).toList());
+    }
+
+    private Type(Class<?> aClass, List<String> enumValues) {
+        this.id = new TypeId(aClass);
+        this.enumValues.addAll(enumValues);
+    }
+
+    public TypeId id() {
+        return id;
     }
 
     @Override
@@ -37,7 +51,7 @@ public class Type {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Type type = (Type) o;
-        return Objects.equals(clazz, type.clazz) && enumValuesEqual(enumValues, type.enumValues);
+        return Objects.equals(id, type.id) && enumValuesEqual(enumValues, type.enumValues);
     }
 
     private boolean enumValuesEqual(List<String> list1, List<String> list2) {
@@ -52,11 +66,7 @@ public class Type {
 
     @Override
     public int hashCode() {
-        return Objects.hash(clazz, enumValues);
-    }
-
-    public Class<?> clazz() {
-        return clazz;
+        return Objects.hash(id, enumValues);
     }
 
     public int enumValueIndex(String value) {
@@ -65,7 +75,7 @@ public class Type {
             return i;
         }
 
-        throw new RuntimeException("Unexcepted enum value " + value + " for type " + clazz + " with values " + String.join(",", enumValues));
+        throw new RuntimeException("Unexpected enum value " + value + " for type " + id + " with values " + String.join(",", enumValues));
     }
 
     public String enumValueAt(int index) {
@@ -90,10 +100,10 @@ public class Type {
 
     @Override
     public String toString() {
-        return "Type class=" + clazz + ", enumValues=" + enumValues;
+        return "Type " + id + ", enumValues=" + enumValues;
     }
 
-    public static Type fromCsv(String typeString) {
+    public static Type fromCsv(String typeString, TypeRegistry typeRegistry) {
         if (typeString.startsWith("ENUM")) {
             var enumValuesIndex = typeString.indexOf(":");
             if (enumValuesIndex == -1) {
@@ -107,16 +117,13 @@ public class Type {
             if (values.length < 1) {
                 throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + typeString);
             }
-            return Type.enumType(values);
+            return Type.forEnum(values);
         }
 
-        return switch (typeString) {
-            case "STRING" -> Type.STRING;
-            case "BOOLEAN" -> Type.BOOLEAN;
-            case "DATE" -> Type.DATE;
-            case "INTEGER" -> Type.INTEGER;
-            case "NUMBER" -> Type.NUMBER;
-            default -> throw new RuntimeException("");
-        };
+        return typeRegistry.get(typeString);
+    }
+
+    public boolean is(Class<?> aClass) {
+        return id.is(aClass);
     }
 }

@@ -18,9 +18,9 @@ public class DataFormats {
                 new ValueFormat(new Path("value"), Type.STRING),
                 new ValueFormat(new Path("branch.value"), Type.BOOLEAN),
                 new ValueFormat(new Path("branch.nullValue"), Type.STRING),
-                new ValueFormat(new Path("branch.leaf.color"), Type.enumType("GREEN", "YELLOW", "RED", "BROWN")),
+                new ValueFormat(new Path("branch.leaf.color"), Type.forEnum("GREEN", "YELLOW", "RED", "BROWN")),
                 new ValueFormat(new Path("branch.leaf.value"), Type.STRING),
-                new ValueFormat(new Path("leaves.[].color"), Type.enumType("GREEN", "YELLOW", "RED", "BROWN")),
+                new ValueFormat(new Path("leaves.[].color"), Type.forEnum("GREEN", "YELLOW", "RED", "BROWN")),
                 new ValueFormat(new Path("leaves.[].value"), Type.STRING)
         );
         return new DataFormat(new DataFormatId(Tree.class), formats);

@@ -33,21 +33,13 @@ public class Value {
         if (object == null) {
             return true;
         }
-        if (Objects.equals(object.getClass(), type.clazz())) {
+        if (type.is(object.getClass())) {
             if (type.isEnum()) {
                 return type.hasEnumValue((String) object);
             }
             return true;
         }
         return false;
-    }
-
-    public boolean is(CoolType type) {
-        Validations.validateNotNull(type, "Type");
-        if (object == null) {
-            return true;
-        }
-        return type.is(object.getClass());
     }
 
     public boolean hasObject() {
