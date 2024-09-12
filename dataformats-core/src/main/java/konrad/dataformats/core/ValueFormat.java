@@ -36,7 +36,7 @@ public class ValueFormat {
 
     @Override
     public String toString() {
-        return path.toString();
+        return "ValueFormat " + path.toString();
     }
 
     @Override

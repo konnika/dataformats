@@ -116,7 +116,7 @@ public class Path {
 
     @Override
     public String toString() {
-        return asString;
+        return "Path " + asString;
     }
 
     String asString() {

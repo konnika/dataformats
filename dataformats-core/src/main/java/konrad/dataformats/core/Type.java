@@ -90,7 +90,7 @@ public class Type {
 
     @Override
     public String toString() {
-        return "class=" + clazz + ", enumValues=" + enumValues;
+        return "Type class=" + clazz + ", enumValues=" + enumValues;
     }
 
     public static Type fromCsv(String typeString) {

@@ -18,4 +18,13 @@ class TypeTest {
         assertTrue(values.stream().allMatch(v -> v.is(enumType)));
         assertTrue(nonValues.stream().noneMatch(v -> v.is(enumType)));
     }
+
+    @Test
+    void basicsWork() {
+        var type = new CoolType(new TypeId(String.class));
+        var value = new Value(new Path("x"), "a");
+
+        assertTrue(type.is(String.class));
+        assertTrue(value.is(type));
+    }
 }

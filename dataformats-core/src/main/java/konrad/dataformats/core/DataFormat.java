@@ -67,6 +67,6 @@ public class DataFormat {
 
     @Override
     public String toString() {
-        return id.toString();
+        return "DataFormat " + id.toString();
     }
 }

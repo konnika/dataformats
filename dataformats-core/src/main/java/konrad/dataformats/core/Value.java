@@ -42,6 +42,14 @@ public class Value {
         return false;
     }
 
+    public boolean is(CoolType type) {
+        Validations.validateNotNull(type, "Type");
+        if (object == null) {
+            return true;
+        }
+        return type.is(object.getClass());
+    }
+
     public boolean hasObject() {
         return object != null;
     }
@@ -65,6 +73,6 @@ public class Value {
 
     @Override
     public String toString() {
-        return object == null ? "empty" : object.toString();
+        return object == null ? "Value empty" : "Value " + object.toString();
     }
 }

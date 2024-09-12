@@ -13,7 +13,7 @@ public class DataFormatRegistry {
         this.dataFormatsById = new HashMap<>();
     }
 
-    public <T> void put(DataFormat dataFormat) {
+    public <T> void add(DataFormat dataFormat) {
         dataFormatsById.put(dataFormat.id(), dataFormat);
     }
 

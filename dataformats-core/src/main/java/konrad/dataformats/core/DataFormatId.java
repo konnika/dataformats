@@ -32,6 +32,6 @@ public class DataFormatId {
 
     @Override
     public String toString() {
-        return id;
+        return "DataFormatId " + id;
     }
 }
