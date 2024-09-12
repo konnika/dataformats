@@ -96,44 +96,46 @@ public class Data {
         return values.values().stream().filter(value -> value.path().equalsIgnoringIndices(path)).toList();
     }
 
-    public List<Value> getValuesStartingWith(Path path) {
-        return values.values().stream()
-                .filter(v -> v.path().startsWith(path))
-                .toList();
-    }
-
     public static Data from(Map<String, Object> objectMap, DataFormat dataFormat) {
-        var values = new ArrayList<>(
-                dataFormat.valueFormats().stream()
-                        .filter(vf -> !vf.path().isArrayPath())
-                        .map(vf -> singleValue(objectMap, vf))
-                        .toList());
+        var values = dataFormat.valueFormats().stream()
+                .map(ValueFormat::path)
+                .map(path -> getValuesFromMap(objectMap, path))
+                .flatMap(List::stream)
+                .toList();
 
-        values.addAll(
-                dataFormat.valueFormats().stream()
-                        .filter(vf -> vf.path().isAbstractArrayPath())
-                        .map(vf -> listValues(objectMap, vf))
-                        .flatMap(List::stream)
-                        .toList());
+//        var values = new ArrayList<>(
+//                dataFormat.valueFormats().stream()
+//                        .map(ValueFormat::path)
+//                        .filter(path -> !path.isArrayPath())
+//                        .map(path -> singleValue(objectMap, path))
+//                        .toList());
+//
+//        values.addAll(
+//                dataFormat.valueFormats().stream()
+//                        .map(ValueFormat::path)
+//                        .filter(Path::isAbstractArrayPath)
+//                        .map(path -> listValues(objectMap, path))
+//                        .flatMap(List::stream)
+//                        .toList());
 
         return new Data(dataFormat, values);
     }
 
-//    public static Data from2(Map<String, Object> objectMap, DataFormat dataFormat) {
-//        // get all valueFormats.paths
-//        // call method(map, paths)
-//        // all single values: get path
-//        // all array values: get first list - for each map: method(map, remaining path) and flatten results
-//    }
-
-    private static Value singleValue(Map<String, Object> objectMap, ValueFormat valueFormat) {
-        var object = valueFormat.path().getValueFrom(objectMap);
-        return new Value(valueFormat.path(), object);
+    private static List<Value> getValuesFromMap(Map<String, Object> objectMap, Path path) {
+        if (path.isArrayPath()) {
+            return listValues(objectMap, path);
+        }
+        return List.of(singleValue(objectMap, path));
     }
 
-    private static List<Value> listValues(Map<String, Object> objectMap, ValueFormat valueFormat) {
-        var pathToFirstArray = valueFormat.path().untilFirstAbstractArray();
-        var pathAfterFirstArray = valueFormat.path().afterFirstAbstractArray();
+    private static Value singleValue(Map<String, Object> objectMap, Path path) {
+        var object = path.getValueFrom(objectMap);
+        return new Value(path, object);
+    }
+
+    private static List<Value> listValues(Map<String, Object> objectMap, Path path) {
+        var pathToFirstArray = path.untilFirstAbstractArray();
+        var pathAfterFirstArray = path.afterFirstAbstractArray();
 
         var result = new ArrayList<Value>();
         var list = pathToFirstArray.getArrayValuesFrom(objectMap);
