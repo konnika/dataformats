@@ -43,7 +43,7 @@ public class DataFormat {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DataFormat that = (DataFormat) o;
-        if (id == that.id) {
+        if (id.equals(that.id)) {
             if (valueFormats.size() == that.valueFormats.size()) {
                 return new HashSet<>(that.valueFormats).containsAll(valueFormats);
             }

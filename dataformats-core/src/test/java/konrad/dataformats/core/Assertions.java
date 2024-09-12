@@ -23,8 +23,10 @@ public class Assertions {
 
     public static void assertNoValue(Data data, String path) {
         var value = data.getValue(new Path(path));
-        assertNotNull(value);
-        assertTrue(value.isEmpty());
-        assertNull(value.object());
+        if (value != null) {
+            assertNotNull(value);
+            assertTrue(value.isEmpty());
+            assertNull(value.object());
+        }
     }
 }

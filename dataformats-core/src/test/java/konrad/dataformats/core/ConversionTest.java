@@ -1,111 +1,90 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.mappings.TestFirstSimpleMapping;
-import konrad.dataformats.core.mappings.TestOneToOneArrayMapping;
-import konrad.dataformats.core.mappings.TestOneToOneEnumMapping;
+import konrad.dataformats.core.mappings.OneToOneMapping;
 import konrad.dataformats.core.registries.MappingGeneratorRegistry;
+import konrad.dataformats.testobjects.tree.Color;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ConversionTest {// TODO use testobjects
+class ConversionTest {
+
     @Test
     void convertObject() {
         var values = List.of(
-                new Value(new Path("benutzername"), "benutzername"),
-                new Value(new Path("institutsname"), "institutsname"),
-                new Value(new Path("kopfdaten.kundendaten.kundennummer"), "kopfdaten.kundendaten.kundennummer")
+                new Value(new Path("value"), "tree"),
+                new Value(new Path("branch.value"), true),
+                new Value(new Path("branch.nullValue"), null),
+                new Value(new Path("branch.leaf.color"), "GREEN"),
+                new Value(new Path("branch.leaf.value"), "branch.leaf"),
+                new Value(new Path("leaves.[0].color"), "RED"),
+                new Value(new Path("leaves.[0].value"), "tree.leaf1"),
+                new Value(new Path("leaves.[1].color"), "YELLOW"),
+                new Value(new Path("leaves.[1].value"), "tree.leaf2")
         );
-        var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        List<Mapping> mappings = List.of(new TestFirstSimpleMapping());
+        var data = new Data(TestDataFormats.tree(), values);
 
-        var conversion = new Conversion(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateEnglish(), mappings);
+        List<Mapping> mappings = List.of(
+                mirrorMapping("value", "mirrorValue"),
+                mirrorMapping("branch.value", "mirrorBranch.mirrorValue"),
+                mirrorMapping("branch.nullValue", "mirrorBranch.mirrorNullValue"),
+                mirrorMapping("branch.leaf.color", "mirrorBranch.mirrorLeaf.mirrorColor"),
+                mirrorMapping("branch.leaf.value", "mirrorBranch.mirrorLeaf.mirrorValue"),
+                mirrorMapping("leaves.[].color", "mirrorLeaves.[].mirrorColor"),
+                mirrorMapping("leaves.[].value", "mirrorLeaves.[].mirrorValue"));
+
+        var conversion = new Conversion(TestDataFormats.tree(), TestDataFormats.mirrorTree(), mappings);
         var converted = conversion.applyTo(data);
 
-        assertValue(converted, "user", Type.STRING, "BENUTZERNAME");
+        Assertions.assertValue(converted, "mirrorValue", "tree");
+        Assertions.assertValue(converted, "mirrorBranch.mirrorValue", true);
+        Assertions.assertNoValue(converted, "mirrorBranch.mirrorNullValue");
+        Assertions.assertValue(converted, "mirrorBranch.mirrorLeaf.mirrorColor", "MIRROR_GREEN");
+        Assertions.assertValue(converted, "mirrorBranch.mirrorLeaf.mirrorValue", "branch.leaf");
+        Assertions.assertValue(converted, "mirrorLeaves.[0].mirrorColor", "MIRROR_RED");
+        Assertions.assertValue(converted, "mirrorLeaves.[0].mirrorValue", "tree.leaf1");
+        Assertions.assertValue(converted, "mirrorLeaves.[1].mirrorColor", "MIRROR_YELLOW");
+        Assertions.assertValue(converted, "mirrorLeaves.[1].mirrorValue", "tree.leaf2");
     }
 
-    @Test
-    void convertTransactionMetadataUpdate() {
-        var values = List.of(
-                new Value(new Path("benutzername"), "aaa"),
-                new Value(new Path("institutsname"), "bbb"),
-                new Value(new Path("kopfdaten.kundendaten.kundennummer"), "ccc"),
-                new Value(new Path("kopfdaten.kundendaten.anrede"), "EHELEUTE"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "xxx0"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].text"), "yyy0"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"), "xxx1"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[2].checkbox"), true)
-        );
-        var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
-        List<Mapping> mappings = List.of(new TestOneToOneArrayMapping(), new TestOneToOneEnumMapping());
-
-        var conversion = new Conversion(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), mappings);
-        var converted = conversion.applyTo(data);
-
-        assertValue(converted, "username", Type.STRING, "AAA");
-        assertValue(converted, "institutsname", Type.STRING, "BBB");
-        assertValue(converted, "kundendaten.kundennummer", Type.STRING, "CCC");
-        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[0].schluessel", Type.STRING, "XXX0");
-        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[0].stringWert", Type.STRING, "YYY0");
-        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[1].schluessel", Type.STRING, "XXX1");
-        assertValue(converted, "verwaltungsdaten.verwaltungsdatenwert.[2].checkbox", Type.BOOLEAN, true);
-        assertValue(converted, "kundendaten.anrede", Type.enumType("ANREDE_FRAU", "ANREDE_HERR", "ANREDE_FIRMA", "ANREDE_EHELEUTE", "ANREDE_HERRUNDFRAU"), "ANREDE_EHELEUTE");
+    private static OneToOneMapping mirrorMapping(String path, String mirrorPath) {
+        return new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(), new Path(path), new Path(mirrorPath));
     }
 
     @Test
     void fromCsvWorks() {
         var csv = List.of(
-                "1:1;benutzername;username",
-                "1:1;kopfdaten.kundendaten.anrede;kundendaten.anrede",
-                "1:1;kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[].checkbox;verwaltungsdaten.verwaltungsdatenwert.[].checkbox");
+                "1:1;value;mirrorValue",
+                "1:1;branch.value;mirrorBranch.mirrorValue",
+                "1:1;branch.leaf.color;mirrorBranch.mirrorLeaf.mirrorColor",
+                "1:1;leaves.[].value;mirrorLeaves.[].mirrorValue");
 
-        var conversion = Conversion.fromCsv(TestDataFormats.transactionMetadataUpdate(), TestDataFormats.transactionMetadataUpdateMarzipan(), csv, new MappingGeneratorRegistry());
+        var conversion = Conversion.fromCsv(TestDataFormats.tree(), TestDataFormats.mirrorTree(), csv, new MappingGeneratorRegistry());
 
         var values = List.of(
-                new Value(new Path("benutzername"), "aaa"),
-                new Value(new Path("kopfdaten.kundendaten.anrede"), "EHELEUTE"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].checkbox"), true)
+                new Value(new Path("value"), "tree"),
+                new Value(new Path("branch.value"), true),
+                new Value(new Path("branch.leaf.color"), "GREEN"),
+                new Value(new Path("leaves.[0].value"), "tree.leaf1"),
+                new Value(new Path("leaves.[1].value"), "tree.leaf2")
         );
-        var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
+        var data = new Data(TestDataFormats.tree(), values);
 
-        var result = conversion.applyTo(data);
+        var converted = conversion.applyTo(data);
 
-        assertValue(result, new Path("username"), "aaa");
-        assertValue(result, new Path("kundendaten.anrede"), "ANREDE_EHELEUTE");
-        assertValue(result, new Path("verwaltungsdaten.verwaltungsdatenwert.[0].checkbox"), true);
+        Assertions.assertValue(converted, "mirrorValue", "tree");
+        Assertions.assertValue(converted, "mirrorBranch.mirrorValue", true);
+        Assertions.assertValue(converted, "mirrorBranch.mirrorLeaf.mirrorColor", "MIRROR_GREEN");
+        Assertions.assertValue(converted, "mirrorLeaves.[0].mirrorValue", "tree.leaf1");
+        Assertions.assertValue(converted, "mirrorLeaves.[1].mirrorValue", "tree.leaf2");
     }
 
-    private static void assertValue(Data result, Path path, String expectedValue) {
-        var value = result.getValue(path);
-        assertNotNull(value);
-        assertTrue(value.hasObject());
-        assertEquals(expectedValue, value.object());
-    }
-
-    private static void assertValue(Data result, Path path, boolean object) {
-        var value = result.getValue(path);
-        assertTrue(value.hasObject());
-        assertEquals(object, value.object());
-    }
-
-    private void assertValue(Data data, String path, Type type, Boolean object) {
-        var value = data.getValue(new Path(path));
-        assertNotNull(value);
-        assertTrue(value.is(type));
-        assertTrue(value.hasObject());
-        assertEquals(object, value.object());
-    }
-
-    private static void assertValue(Data data, String path, Type type, String object) {
-        var value = data.getValue(new Path(path));
-        assertNotNull(value);
-        assertTrue(value.is(type));
-        assertTrue(value.hasObject());
-        assertEquals(object, value.object());
+    @Test
+    void name() {
+        String[] array = Arrays.stream(Color.values()).map(Enum::name).toArray(String[]::new);
+        assertEquals(4, array.length);
     }
 }

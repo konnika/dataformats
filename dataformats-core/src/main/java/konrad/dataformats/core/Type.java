@@ -28,6 +28,10 @@ public class Type {
         return new Type(String.class, values);
     }
 
+    public static Type enumType(Class<? extends Enum> enumClass) {
+        return new Type(String.class, Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).toArray(String[]::new));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
