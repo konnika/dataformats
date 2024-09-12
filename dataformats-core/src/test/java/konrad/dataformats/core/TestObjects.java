@@ -1,4 +1,4 @@
-package konrad.dataformats.use;
+package konrad.dataformats.core;
 
 import konrad.dataformats.testobjects.tree.Branch;
 import konrad.dataformats.testobjects.tree.Color;

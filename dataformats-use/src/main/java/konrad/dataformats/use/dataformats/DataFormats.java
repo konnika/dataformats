@@ -6,7 +6,7 @@ import konrad.dataformats.core.Path;
 import konrad.dataformats.core.Type;
 import konrad.dataformats.core.ValueFormat;
 import konrad.dataformats.core.registries.DataFormatRegistry;
-import konrad.dataformats.use.objects.one.Tree;
+import konrad.dataformats.testobjects.tree.Tree;
 
 import java.util.List;
 

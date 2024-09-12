@@ -1,4 +1,5 @@
 rootProject.name = 'dataformats'
+include 'dataformats-testobjects'
 include 'dataformats-core'
 include 'dataformats-use'
 

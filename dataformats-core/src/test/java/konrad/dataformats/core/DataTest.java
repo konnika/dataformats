@@ -1,118 +1,149 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.testobjects.tree.Color;
+import konrad.dataformats.testobjects.tree.Tree;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static konrad.dataformats.core.Assertions.assertNoValue;
+import static konrad.dataformats.core.Assertions.assertValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DataTest {
     @Test
     void enumValuesAreValidated() {
-        var value = new Value(new Path("kopfdaten.kundendaten.anrede"), "this enum value does not exist");
-        assertThrows(RuntimeException.class, () -> new Data(TestDataFormats.transactionMetadataUpdate(), List.of(value)));
+        var value = new Value(new Path("branch.leaf.color"), "this color does not exist");
+        assertThrows(RuntimeException.class, () -> new Data(TestDataFormats.tree(), List.of(value)));
     }
 
     @Test
     void addNonNullValues() {
         var values = List.of(
-                new Value(new Path("benutzername"), "1"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "1")
+                new Value(new Path("value"), "tree"),
+                new Value(new Path("branch.value"), true),
+                new Value(new Path("branch.nullValue"), null),
+                new Value(new Path("branch.leaf.color"), "GREEN"),
+                new Value(new Path("branch.leaf.value"), "branch.leaf"),
+                new Value(new Path("leaves.[0].color"), null),
+                new Value(new Path("leaves.[0].value"), "tree.leaf1"),
+                new Value(new Path("leaves.[1].color"), "YELLOW"),
+                new Value(new Path("leaves.[1].value"), null)
         );
-        var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
+        var data = new Data(TestDataFormats.tree(), values);
 
         var values2 = List.of(
-                new Value(new Path("benutzername"), "2"),
-                new Value(new Path("institutsname"), "2"),
-                new Value(new Path("kopfdaten.kundendaten.kundennummer"), "2"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "2"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"), "2")
+                new Value(new Path("value"), "2"),
+                new Value(new Path("branch.value"), false),
+                new Value(new Path("branch.nullValue"), "2"),
+                new Value(new Path("branch.leaf.color"), "BROWN"),
+                new Value(new Path("branch.leaf.value"), "2"),
+                new Value(new Path("leaves.[0].color"), "BROWN"),
+                new Value(new Path("leaves.[0].value"), "2"),
+                new Value(new Path("leaves.[1].color"), "BROWN"),
+                new Value(new Path("leaves.[1].value"), null)
         );
-        var data2 = new Data(TestDataFormats.transactionMetadataUpdate(), values2);
+        var data2 = new Data(TestDataFormats.tree(), values2);
 
         data.addNonNullValuesFrom(data2);
 
-        var value1 = data.getValue(new Path("benutzername"));
-        assertNotNull(value1);
-        assertTrue(value1.is(Type.STRING));
-        assertTrue(value1.hasObject());
-        assertEquals("1", value1.object());
-
-        var value2 = data.getValue(new Path("institutsname"));
-        assertNotNull(value2);
-        assertTrue(value2.is(Type.STRING));
-        assertTrue(value2.hasObject());
-        assertEquals("2", value2.object());
-
-        var nestedValue = data.getValue(new Path("kopfdaten.kundendaten.kundennummer"));
-        assertNotNull(nestedValue);
-        assertTrue(nestedValue.is(Type.STRING));
-        assertTrue(nestedValue.hasObject());
-        assertEquals("2", nestedValue.object());
-
-        var listValue0 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"));
-        assertNotNull(listValue0);
-        assertTrue(listValue0.is(Type.STRING));
-        assertTrue(listValue0.hasObject());
-        assertEquals("1", listValue0.object());
-
-        var listValue1 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"));
-        assertNotNull(listValue1);
-        assertTrue(listValue1.is(Type.STRING));
-        assertTrue(listValue1.hasObject());
-        assertEquals("2", listValue1.object());
+        assertValue(data, "value", "tree");
+        assertValue(data, "branch.value", true);
+        assertValue(data, "branch.nullValue", "2");
+        assertValue(data, "branch.leaf.color", "GREEN");
+        assertValue(data, "branch.leaf.value", "branch.leaf");
+        assertValue(data, "leaves.[0].color", "BROWN");
+        assertValue(data, "leaves.[0].value", "tree.leaf1");
+        assertValue(data, "leaves.[1].color", "YELLOW");
+        assertNoValue(data, "leaves.[1].value");
     }
 
     @Test
     void overrideWithNonNullValues() {
         var values = List.of(
-                new Value(new Path("benutzername"), "1"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "1")
+                new Value(new Path("value"), "tree"),
+                new Value(new Path("branch.value"), true),
+                new Value(new Path("branch.nullValue"), null),
+                new Value(new Path("branch.leaf.color"), "GREEN"),
+                new Value(new Path("branch.leaf.value"), "branch.leaf"),
+                new Value(new Path("leaves.[0].color"), null),
+                new Value(new Path("leaves.[0].value"), "tree.leaf1"),
+                new Value(new Path("leaves.[1].color"), "YELLOW"),
+                new Value(new Path("leaves.[1].value"), null)
         );
-        var data = new Data(TestDataFormats.transactionMetadataUpdate(), values);
+        var data = new Data(TestDataFormats.tree(), values);
 
         var values2 = List.of(
-                new Value(new Path("benutzername"), "2"),
-                new Value(new Path("institutsname"), "2"),
-                new Value(new Path("kopfdaten.kundendaten.kundennummer"), "2"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"), "2"),
-                new Value(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"), "2")
+                new Value(new Path("value"), "2"),
+                new Value(new Path("branch.value"), false),
+                new Value(new Path("branch.nullValue"), "2"),
+                new Value(new Path("branch.leaf.color"), null),
+                new Value(new Path("branch.leaf.value"), "2"),
+                new Value(new Path("leaves.[0].color"), "BROWN"),
+                new Value(new Path("leaves.[0].value"), null),
+                new Value(new Path("leaves.[1].color"), "BROWN"),
+                new Value(new Path("leaves.[1].value"), null)
         );
-        var data2 = new Data(TestDataFormats.transactionMetadataUpdate(), values2);
+        var data2 = new Data(TestDataFormats.tree(), values2);
 
         data.overrideWithNonNullValuesFrom(data2);
 
-        var value1 = data.getValue(new Path("benutzername"));
-        assertNotNull(value1);
-        assertTrue(value1.is(Type.STRING));
-        assertTrue(value1.hasObject());
-        assertEquals("2", value1.object());
+        assertValue(data, "value", "2");
+        assertValue(data, "branch.value", false);
+        assertValue(data, "branch.nullValue", "2");
+        assertValue(data, "branch.leaf.color", "GREEN");
+        assertValue(data, "branch.leaf.value", "2");
+        assertValue(data, "leaves.[0].color", "BROWN");
+        assertValue(data, "leaves.[0].value", "tree.leaf1");
+        assertValue(data, "leaves.[1].color", "BROWN");
+        assertNoValue(data, "leaves.[1].value");
+    }
 
-        var value2 = data.getValue(new Path("institutsname"));
-        assertNotNull(value2);
-        assertTrue(value2.is(Type.STRING));
-        assertTrue(value2.hasObject());
-        assertEquals("2", value2.object());
+    @Test
+    void createDataFromObject() {
+        var tree = TestObjects.tree();
 
-        var nestedValue = data.getValue(new Path("kopfdaten.kundendaten.kundennummer"));
-        assertNotNull(nestedValue);
-        assertTrue(nestedValue.is(Type.STRING));
-        assertTrue(nestedValue.hasObject());
-        assertEquals("2", nestedValue.object());
+        var data = Data.from(TestObjectMapper.toMap(tree), TestDataFormats.tree());
 
-        var listValue0 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[0].schluessel"));
-        assertNotNull(listValue0);
-        assertTrue(listValue0.is(Type.STRING));
-        assertTrue(listValue0.hasObject());
-        assertEquals("2", listValue0.object());
+        assertValue(data, "value", "tree");
+        assertValue(data, "branch.value", true);
+        assertNoValue(data, "branch.nullValue");
+        assertValue(data, "branch.leaf.color", "GREEN");
+        assertValue(data, "branch.leaf.value", "branch.leaf");
+        assertValue(data, "leaves.[0].color", "RED");
+        assertValue(data, "leaves.[0].value", "tree.leaf1");
+        assertValue(data, "leaves.[1].color", "YELLOW");
+        assertValue(data, "leaves.[1].value", "tree.leaf2");
+    }
 
-        var listValue1 = data.getValue(new Path("kopfdaten.verwaltungsdaten.verwaltungsdatenKonfigurierbar.[1].schluessel"));
-        assertNotNull(listValue1);
-        assertTrue(listValue1.is(Type.STRING));
-        assertTrue(listValue1.hasObject());
-        assertEquals("2", listValue1.object());
+    @Test
+    void createObjectFromData() {
+        var values = List.of(
+                new Value(new Path("value"), "tree"),
+                new Value(new Path("branch.value"), true),
+                new Value(new Path("branch.nullValue"), null),
+                new Value(new Path("branch.leaf.color"), "GREEN"),
+                new Value(new Path("branch.leaf.value"), "branch.leaf"),
+                new Value(new Path("leaves.[0].color"), "RED"),
+                new Value(new Path("leaves.[0].value"), "tree.leaf1"),
+                new Value(new Path("leaves.[1].color"), "YELLOW"),
+                new Value(new Path("leaves.[1].value"), "tree.leaf2")
+        );
+        var data = new Data(TestDataFormats.tree(), values);
+
+        var map = data.toMap();
+        var tree = TestObjectMapper.toObject(map, Tree.class);
+
+        assertEquals("tree", tree.value());
+        assertEquals(true, tree.branch().value());
+        assertNull(tree.branch().nullValue());
+        assertEquals(Color.GREEN, tree.branch().leaf().color());
+        assertEquals("branch.leaf", tree.branch().leaf().value());
+        assertEquals(Color.RED, tree.leaves().get(0).color());
+        assertEquals("tree.leaf1", tree.leaves().get(0).value());
+        assertEquals(Color.YELLOW, tree.leaves().get(1).color());
+        assertEquals("tree.leaf2", tree.leaves().get(1).value());
     }
 }

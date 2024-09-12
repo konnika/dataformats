@@ -1,10 +1,6 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.DataFormat;
-import konrad.dataformats.core.DataFormatId;
-import konrad.dataformats.core.Path;
-import konrad.dataformats.core.Type;
-import konrad.dataformats.core.ValueFormat;
+import konrad.dataformats.testobjects.tree.Tree;
 
 import java.util.List;
 
@@ -12,6 +8,19 @@ public class TestDataFormats {
     public static final DataFormatId PROS_TRANSACTION_METADATA_UPDATE = new DataFormatId("PROS_TRANSACTION_METADATA_UPDATE");
     public static final DataFormatId PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN = new DataFormatId("PROS_TRANSACTION_METADATA_UPDATE_MARZIPAN");
     public static final DataFormatId PROS_TRANSACTION_METADATA_UPDATE_ENGLISH = new DataFormatId("PROS_TRANSACTION_METADATA_UPDATE_ENGLISH");
+
+    public static DataFormat tree() {
+        var formats = List.of(
+                new ValueFormat(new Path("value"), Type.STRING),
+                new ValueFormat(new Path("branch.value"), Type.BOOLEAN),
+                new ValueFormat(new Path("branch.nullValue"), Type.STRING),
+                new ValueFormat(new Path("branch.leaf.color"), Type.enumType("GREEN", "YELLOW", "RED", "BROWN")),
+                new ValueFormat(new Path("branch.leaf.value"), Type.STRING),
+                new ValueFormat(new Path("leaves.[].color"), Type.enumType("GREEN", "YELLOW", "RED", "BROWN")),
+                new ValueFormat(new Path("leaves.[].value"), Type.STRING)
+        );
+        return new DataFormat(new DataFormatId(Tree.class), formats);
+    }
 
     public static DataFormat transactionMetadataUpdate() {
         var values = List.of(
