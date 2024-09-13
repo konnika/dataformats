@@ -4,6 +4,7 @@ import konrad.dataformats.testobjects.tree.Color;
 import konrad.dataformats.testobjects.tree.Tree;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static konrad.dataformats.core.Assertions.assertNoValue;
@@ -116,6 +117,17 @@ class DataTest {
         assertValue(data, "leaves.[0].value", "tree.leaf1");
         assertValue(data, "leaves.[1].color", "YELLOW");
         assertValue(data, "leaves.[1].value", "tree.leaf2");
+    }
+
+    @Test
+    void createDataFromObjectWithListInList() {
+        var bigTree = TestObjects.bigTree();
+
+        var data = Data.from(TestObjectMapper.toMap(bigTree), TestDataFormats.bigTree());
+
+        assertValue(data, "bigInteger", 11);
+//        assertValue(data, "branches.[0].bigDate", );
+        assertValue(data, "branches.[0].leaves.[0].bigNumber", BigDecimal.valueOf(12));
     }
 
     @Test

@@ -112,29 +112,6 @@ public class Data {
                 .toList();
     }
 
-//    private static Value singleValue(Map<String, Object> objectMap, Path path) {
-//        var object = path.getValueFrom(objectMap);
-//        return new Value(path, object);
-//    }
-
-//    private static List<Value> listValues(Map<String, Object> objectMap, Path path) {
-//        var pathToFirstArray = path.untilFirstAbstractArray();
-//        var pathAfterFirstArray = path.afterFirstAbstractArray();
-//
-//        var result = new ArrayList<Value>();
-//        var list = pathToFirstArray.getArrayValuesFrom(objectMap);
-//        for (int index = 0; index < list.size(); index++) {
-//            var map = list.get(index);
-//            // FIXME this assumes that the pathAfterFirstArray is a singleValue. It should instead recurse here
-//            var object = pathAfterFirstArray.getValueFrom(map);
-//
-//            var pathOfFirstArray = new Path("[" + index + "]");
-//            var completePath = pathToFirstArray.concat(pathOfFirstArray).concat(pathAfterFirstArray);
-//            result.add(new Value(completePath, object));
-//        }
-//        return result;
-//    }
-
     public Map<String, Object> toMap() {
         var result = new HashMap<String, Object>();
         for (Value value : values.values()) {

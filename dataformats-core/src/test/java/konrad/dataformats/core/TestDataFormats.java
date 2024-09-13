@@ -1,5 +1,6 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.testobjects.bigtree.BigTree;
 import konrad.dataformats.testobjects.mirrortree.MirrorColor;
 import konrad.dataformats.testobjects.mirrortree.MirrorTree;
 import konrad.dataformats.testobjects.tree.Color;
@@ -32,5 +33,14 @@ public class TestDataFormats {
                 new ValueFormat(new Path("mirrorLeaves.[].mirrorValue"), Type.STRING)
         );
         return new DataFormat(new DataFormatId(MirrorTree.class), formats);
+    }
+
+    public static DataFormat bigTree() {
+        var formats = List.of(
+                new ValueFormat(new Path("branches.[].leaves.[].bigNumber"), Type.NUMBER),
+                new ValueFormat(new Path("branches.[].bigDate"), Type.DATE),
+                new ValueFormat(new Path("bigInteger"), Type.INTEGER)
+        );
+        return new DataFormat(new DataFormatId(BigTree.class), formats);
     }
 }

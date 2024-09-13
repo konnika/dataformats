@@ -1,5 +1,7 @@
 package konrad.dataformats.core;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -17,7 +19,12 @@ public class Assertions {
         var value = data.getValue(new Path(path));
         assertNotNull(value);
         assertTrue(value.hasObject());
-        assertEquals(expected, value.object());
+
+        if (expected instanceof BigDecimal expectedBigDecimal) {
+            assertTrue(expectedBigDecimal.compareTo((BigDecimal) expected) == 0);
+        } else {
+            assertEquals(expected, value.object());
+        }
     }
 
     public static void assertValue(Data data, String path, Object expected, Type expectedType) {

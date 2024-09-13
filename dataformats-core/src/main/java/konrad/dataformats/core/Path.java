@@ -111,11 +111,11 @@ public class Path {
         throw new RuntimeException("Unexpected object in objectMap: " + object.getClass() + " at " + asString);
     }
 
-    String firstElement() {
+    public String firstElement() {
         return asList.get(0);
     }
 
-    Path afterFirstElement() {
+    public Path afterFirstElement() {
         return new Path(asList.stream().skip(1).toList());
     }
 
@@ -124,7 +124,7 @@ public class Path {
         return "Path " + asString;
     }
 
-    String asString() {
+    public String asString() {
         return asString;
     }
 
@@ -154,7 +154,7 @@ public class Path {
     }
 
     public Path afterFirstConcreteArray() {
-        var index = asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX)).findFirst().map(asList::indexOf).orElse(-1);
+        int index = asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX)).findFirst().map(asList::indexOf).orElse(-1);
         if (index > -1) {
             return new Path(asList.subList(index + 1, asList.size()));
         }
@@ -163,7 +163,6 @@ public class Path {
     }
 
     public List<Path> withArrayIndices(Map<String, Object> map) {
-        // FIXME public List<Path>
         if (!isAbstractArrayPath()) {
             return List.of(this);
         }
@@ -207,4 +206,5 @@ public class Path {
         var list = asList.stream().map(element -> element.replaceAll(REGEX_ARRAY_BRACKETS_WITH_INDEX, ARRAY_BRACKETS_WITHOUT_INDEX)).toList();
         return new Path(list);
     }
+
 }
