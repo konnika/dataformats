@@ -101,7 +101,12 @@ public class Path {
             return afterFirstElement().getValueFrom(map);
         }
         if (object instanceof List) {
-            throw new RuntimeException("Unexpected list in objectMap at " + asString);
+            if (isAbstractArrayPath()) {
+                throw new RuntimeException("Cannot get a concrete value from an abstract Path: " + asString);
+            }
+            var list = (List<Map<String, Object>>) object;
+            var index = Integer.parseInt(firstConcreteArrayElement().replaceAll("[\\[\\]]", ""));
+            return afterFirstConcreteArray().getValueFrom(list.get(index));
         }
         throw new RuntimeException("Unexpected object in objectMap: " + object.getClass() + " at " + asString);
     }
@@ -145,7 +150,37 @@ public class Path {
             return new Path(asList.subList(index + 1, asList.size()));
         }
 
-        throw new RuntimeException("Path does not contain array, as expected: " + asString);
+        throw new RuntimeException("Path does not contain an abstract array, as expected: " + asString);
+    }
+
+    public Path afterFirstConcreteArray() {
+        var index = asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX)).findFirst().map(asList::indexOf).orElse(-1);
+        if (index > -1) {
+            return new Path(asList.subList(index + 1, asList.size()));
+        }
+
+        throw new RuntimeException("Path does not contain a concrete array, as expected: " + asString);
+    }
+
+    public List<Path> withArrayIndices(Map<String, Object> map) {
+        // FIXME public List<Path>
+        if (!isAbstractArrayPath()) {
+            return List.of(this);
+        }
+
+        var pathToFirstArray = untilFirstAbstractArray();
+        var pathAfterFirstArray = afterFirstAbstractArray();
+
+        var list = pathToFirstArray.getArrayValuesFrom(map);
+        var result = new ArrayList<Path>();
+
+        for (int index = 0; index < list.size(); index++) {
+            var pathOfFirstArray = new Path("[" + index + "]");
+            var completePath = pathToFirstArray.concat(pathOfFirstArray).concat(pathAfterFirstArray);
+            result.addAll(completePath.withArrayIndices(list.get(index)));
+        }
+
+        return result;
     }
 
     public List<Map<String, Object>> getArrayValuesFrom(Map<String, Object> objectMap) {

@@ -103,53 +103,37 @@ public class Data {
                 .flatMap(List::stream)
                 .toList();
 
-//        var values = new ArrayList<>(
-//                dataFormat.valueFormats().stream()
-//                        .map(ValueFormat::path)
-//                        .filter(path -> !path.isArrayPath())
-//                        .map(path -> singleValue(objectMap, path))
-//                        .toList());
-//
-//        values.addAll(
-//                dataFormat.valueFormats().stream()
-//                        .map(ValueFormat::path)
-//                        .filter(Path::isAbstractArrayPath)
-//                        .map(path -> listValues(objectMap, path))
-//                        .flatMap(List::stream)
-//                        .toList());
-
         return new Data(dataFormat, values);
     }
 
     private static List<Value> getValuesFromMap(Map<String, Object> objectMap, Path path) {
-        if (path.isArrayPath()) {
-            return listValues(objectMap, path);
-        }
-        return List.of(singleValue(objectMap, path));
+        return path.withArrayIndices(objectMap).stream()
+                .map(p -> new Value(p, p.getValueFrom(objectMap)))
+                .toList();
     }
 
-    private static Value singleValue(Map<String, Object> objectMap, Path path) {
-        var object = path.getValueFrom(objectMap);
-        return new Value(path, object);
-    }
+//    private static Value singleValue(Map<String, Object> objectMap, Path path) {
+//        var object = path.getValueFrom(objectMap);
+//        return new Value(path, object);
+//    }
 
-    private static List<Value> listValues(Map<String, Object> objectMap, Path path) {
-        var pathToFirstArray = path.untilFirstAbstractArray();
-        var pathAfterFirstArray = path.afterFirstAbstractArray();
-
-        var result = new ArrayList<Value>();
-        var list = pathToFirstArray.getArrayValuesFrom(objectMap);
-        for (int index = 0; index < list.size(); index++) {
-            var map = list.get(index);
-            // FIXME this assumes that the pathAfterFirstArray is a singleValue. It should instead recurse here
-            var object = pathAfterFirstArray.getValueFrom(map);
-
-            var pathOfFirstArray = new Path("[" + index + "]");
-            var completePath = pathToFirstArray.concat(pathOfFirstArray).concat(pathAfterFirstArray);
-            result.add(new Value(completePath, object));
-        }
-        return result;
-    }
+//    private static List<Value> listValues(Map<String, Object> objectMap, Path path) {
+//        var pathToFirstArray = path.untilFirstAbstractArray();
+//        var pathAfterFirstArray = path.afterFirstAbstractArray();
+//
+//        var result = new ArrayList<Value>();
+//        var list = pathToFirstArray.getArrayValuesFrom(objectMap);
+//        for (int index = 0; index < list.size(); index++) {
+//            var map = list.get(index);
+//            // FIXME this assumes that the pathAfterFirstArray is a singleValue. It should instead recurse here
+//            var object = pathAfterFirstArray.getValueFrom(map);
+//
+//            var pathOfFirstArray = new Path("[" + index + "]");
+//            var completePath = pathToFirstArray.concat(pathOfFirstArray).concat(pathAfterFirstArray);
+//            result.add(new Value(completePath, object));
+//        }
+//        return result;
+//    }
 
     public Map<String, Object> toMap() {
         var result = new HashMap<String, Object>();
