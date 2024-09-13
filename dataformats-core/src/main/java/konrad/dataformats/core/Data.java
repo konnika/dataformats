@@ -85,7 +85,7 @@ public class Data {
             throw new RuntimeException("Path " + path + " must be a concrete array path");
         }
 
-        if (dataFormat.contains(path.withoutArrayIndices())) {
+        if (dataFormat.contains(path.asAbstractPath())) {
             return values.get(path);
         }
 
@@ -107,7 +107,7 @@ public class Data {
     }
 
     private static List<Value> getValuesFromMap(Map<String, Object> objectMap, Path path) {
-        return path.withArrayIndices(objectMap).stream()
+        return path.allConcretePaths(objectMap).stream()
                 .map(p -> new Value(p, p.getValueFrom(objectMap)))
                 .toList();
     }

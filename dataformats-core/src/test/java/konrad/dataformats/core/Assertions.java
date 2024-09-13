@@ -21,7 +21,7 @@ public class Assertions {
         assertTrue(value.hasObject());
 
         if (expected instanceof BigDecimal expectedBigDecimal) {
-            assertTrue(expectedBigDecimal.compareTo((BigDecimal) expected) == 0);
+            assertEquals(0, expectedBigDecimal.compareTo((BigDecimal) value.object()));
         } else {
             assertEquals(expected, value.object());
         }

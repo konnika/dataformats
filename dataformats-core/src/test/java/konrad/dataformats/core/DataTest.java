@@ -128,6 +128,9 @@ class DataTest {
         assertValue(data, "bigInteger", 11);
 //        assertValue(data, "branches.[0].bigDate", );
         assertValue(data, "branches.[0].leaves.[0].bigNumber", BigDecimal.valueOf(12));
+        assertValue(data, "branches.[0].leaves.[1].bigNumber", BigDecimal.valueOf(13));
+        assertValue(data, "branches.[1].leaves.[0].bigNumber", BigDecimal.valueOf(14));
+        assertValue(data, "branches.[1].leaves.[1].bigNumber", BigDecimal.valueOf(15));
     }
 
     @Test

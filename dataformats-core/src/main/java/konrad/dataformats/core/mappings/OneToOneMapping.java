@@ -67,9 +67,9 @@ public class OneToOneMapping implements Mapping {
     }
 
     private Object mapValue(Value value, Path toPath) {
-        var fromType = fromFormat.get(value.path().withoutArrayIndices()).map(ValueFormat::type)
+        var fromType = fromFormat.get(value.path().asAbstractPath()).map(ValueFormat::type)
                 .orElseThrow(() -> new RuntimeException("Value path (from) " + value.path() + " is not defined in DataFormat " + fromFormat.id()));
-        var toType = toFormat.get(toPath.withoutArrayIndices()).map(ValueFormat::type)
+        var toType = toFormat.get(toPath.asAbstractPath()).map(ValueFormat::type)
                 .orElseThrow(() -> new RuntimeException("Value path (to) " + value.path() + " is not defined in DataFormat " + fromFormat.id()));
 
         if (fromType.equals(toType)) {

@@ -162,27 +162,34 @@ public class Path {
         throw new RuntimeException("Path does not contain a concrete array, as expected: " + asString);
     }
 
-    public List<Path> withArrayIndices(Map<String, Object> map) {
-        if (!isAbstractArrayPath()) {
-            return List.of(this);
+    public List<Path> allConcretePaths(Map<String, Object> map) {
+        return allConcretePaths(map, null, this);
+    }
+
+    private List<Path> allConcretePaths(Map<String, Object> map, Path previous, Path remaining) {
+        if (!remaining.isAbstractArrayPath()) {
+            if (previous == null) {
+                return List.of(remaining);
+            }
+            return List.of(previous.concat(remaining));
         }
 
-        var pathToFirstArray = untilFirstAbstractArray();
-        var pathAfterFirstArray = afterFirstAbstractArray();
+        var nextListPath = remaining.untilFirstAbstractArray();
+        var remainingPath = remaining.afterFirstAbstractArray();
 
-        var list = pathToFirstArray.getArrayValuesFrom(map);
         var result = new ArrayList<Path>();
 
-        for (int index = 0; index < list.size(); index++) {
-            var pathOfFirstArray = new Path("[" + index + "]");
-            var completePath = pathToFirstArray.concat(pathOfFirstArray).concat(pathAfterFirstArray);
-            result.addAll(completePath.withArrayIndices(list.get(index)));
+        var list = nextListPath.getListFrom(map);
+        for (int i = 0; i < list.size(); i++) {
+            var pathToAppend = nextListPath.concat(new Path("[" + i + "]"));
+            var previousPath = previous == null ? pathToAppend : previous.concat(pathToAppend);
+            result.addAll(allConcretePaths(list.get(i), previousPath, remainingPath));
         }
 
         return result;
     }
 
-    public List<Map<String, Object>> getArrayValuesFrom(Map<String, Object> objectMap) {
+    public List<Map<String, Object>> getListFrom(Map<String, Object> objectMap) {
         var object = getValueFrom(objectMap);
         if (object == null) {
             return Collections.emptyList();
@@ -202,7 +209,7 @@ public class Path {
         return asString.startsWith(path.asString);
     }
 
-    public Path withoutArrayIndices() {
+    public Path asAbstractPath() {
         var list = asList.stream().map(element -> element.replaceAll(REGEX_ARRAY_BRACKETS_WITH_INDEX, ARRAY_BRACKETS_WITHOUT_INDEX)).toList();
         return new Path(list);
     }
