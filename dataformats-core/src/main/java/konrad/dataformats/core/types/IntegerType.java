@@ -1,5 +1,7 @@
 package konrad.dataformats.core.types;
 
+import konrad.dataformats.core.DataFormatsException;
+
 public class IntegerType extends AbstractType implements Type, TypeGenerator {
     public IntegerType() {
         super(new TypeId(Integer.class), Integer.class);
@@ -11,7 +13,7 @@ public class IntegerType extends AbstractType implements Type, TypeGenerator {
             return this;
         }
 
-        throw new RuntimeException(getClass().getSimpleName() + " cannot be created from value: " + value);
+        throw new DataFormatsException(getClass().getSimpleName() + " cannot be created from value: " + value);
     }
 
     @Override

@@ -18,7 +18,9 @@ class DataTest {
     @Test
     void enumValuesAreValidated() {
         var value = new Value(new Path("branch.leaf.color"), "this color does not exist");
-        assertThrows(RuntimeException.class, () -> new Data(TestDataFormats.tree(), List.of(value)));
+        var format = TestDataFormats.tree();
+        var values = List.of(value);
+        assertThrows(RuntimeException.class, () -> new Data(format, values));
     }
 
     @Test

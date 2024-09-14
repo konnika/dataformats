@@ -31,10 +31,10 @@ public class Path {
 
     public static Path join(List<Path> paths) {
         if (paths == null) {
-            throw new RuntimeException("Cannot join null paths");
+            throw new DataFormatsException("Cannot join null paths");
         }
         if (paths.isEmpty()) {
-            throw new RuntimeException("Cannot join empty paths");
+            throw new DataFormatsException("Cannot join empty paths");
         }
 
         var iterator = paths.iterator();
@@ -47,11 +47,11 @@ public class Path {
 
     protected void validate() {
         if (!asList.stream().allMatch(element -> element.matches(REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT) || element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX))) {
-            throw new RuntimeException("Unexpected character in Path (allowed are [a-zA-Z0-9_-]): " + asString);
+            throw new DataFormatsException("Unexpected character in Path (allowed are [a-zA-Z0-9_-]): " + asString);
         }
 
         if (isConcreteArrayPath() && isAbstractArrayPath()) {
-            throw new RuntimeException("Unexpected Path with abstract and concrete array values at the same time: " + asString);
+            throw new DataFormatsException("Unexpected Path with abstract and concrete array values at the same time: " + asString);
         }
     }
 
@@ -118,13 +118,13 @@ public class Path {
         }
         if (object instanceof List) {
             if (isAbstractArrayPath()) {
-                throw new RuntimeException("Cannot get a concrete value from an abstract Path: " + asString);
+                throw new DataFormatsException("Cannot get a concrete value from an abstract Path: " + asString);
             }
             var list = (List<Map<String, Object>>) object;
             var index = Integer.parseInt(firstConcreteArrayElement().replaceAll("[\\[\\]]", ""));
             return afterFirstConcreteArray().getValueFrom(list.get(index));
         }
-        throw new RuntimeException("Unexpected object in objectMap: " + object.getClass() + " at " + asString);
+        throw new DataFormatsException("Unexpected object in objectMap: " + object.getClass() + " at " + asString);
     }
 
     public String firstElement() {
@@ -150,14 +150,14 @@ public class Path {
             return new Path(asList.subList(0, index));
         }
 
-        throw new RuntimeException("Path does not contain array, as expected: " + asString);
+        throw new DataFormatsException("Path does not contain array, as expected: " + asString);
     }
 
     public String firstConcreteArrayElement() {
         return asList.stream()
                 .filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Path does not contain array, as expected: " + asString));
+                .orElseThrow(() -> new DataFormatsException("Path does not contain array, as expected: " + asString));
     }
 
     public Path afterFirstAbstractArray() {
@@ -166,7 +166,7 @@ public class Path {
             return new Path(asList.subList(index + 1, asList.size()));
         }
 
-        throw new RuntimeException("Path does not contain an abstract array, as expected: " + asString);
+        throw new DataFormatsException("Path does not contain an abstract array, as expected: " + asString);
     }
 
     public Path afterFirstConcreteArray() {
@@ -175,7 +175,7 @@ public class Path {
             return new Path(asList.subList(index + 1, asList.size()));
         }
 
-        throw new RuntimeException("Path does not contain a concrete array, as expected: " + asString);
+        throw new DataFormatsException("Path does not contain a concrete array, as expected: " + asString);
     }
 
     public List<Path> allConcretePaths(Map<String, Object> map) {
@@ -211,7 +211,7 @@ public class Path {
             return (List<Map<String, Object>>) list;
         }
 
-        throw new RuntimeException("ObjectMap does not contain a list, as expected: " + object.getClass() + " at " + asString);
+        throw new DataFormatsException("ObjectMap does not contain a list, as expected: " + object.getClass() + " at " + asString);
     }
 
     public boolean isFirstElementAConcreteArray() {
@@ -242,14 +242,14 @@ public class Path {
             if (!to.isAbstractArrayPath()) {
                 return to;
             }
-            throw new RuntimeException("Path is not concrete: " + this);
+            throw new DataFormatsException("Path is not concrete: " + this);
         }
         if (!to.isAbstractArrayPath()) {
-            throw new RuntimeException("Path is not abstract: " + to);
+            throw new DataFormatsException("Path is not abstract: " + to);
         }
         var arrayIndices = this.arrayIndices();
         if (arrayIndices.size() != to.arrayCount()) {
-            throw new RuntimeException("Paths have different number of arrays: " + this + ", " + to);
+            throw new DataFormatsException("Paths have different number of arrays: " + this + ", " + to);
         }
 
         var parts = new ArrayList<Path>();

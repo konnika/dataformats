@@ -3,34 +3,37 @@ package konrad.dataformats.core;
 import java.util.List;
 
 public class Validations {
+
+    public static final String INVALID_X_ENCOUNTERED = "Invalid %s encountered: %s";
+
     private Validations() {
         // hide the constructor
     }
 
     public static String validateNotEmpty(String string, String name) {
         if (string == null || string.isBlank()) {
-            throw new RuntimeException("Invalid " + name + " encountered: null, empty or blank");
+            throw new DataFormatsException(String.format(INVALID_X_ENCOUNTERED, name, "null, empty or blank"));
         }
         return string;
     }
 
     public static <T> List<T> validateNotEmpty(List<T> list, String name) {
         if (list == null || list.isEmpty()) {
-            throw new RuntimeException("Invalid " + name + " encountered: null or empty");
+            throw new DataFormatsException(String.format(INVALID_X_ENCOUNTERED, name, "null or empty"));
         }
         return list;
     }
 
     public static <T> List<T> validateNotNull(List<T> list, String name) {
         if (list == null) {
-            throw new RuntimeException("Invalid " + name + " encountered: null");
+            throw new DataFormatsException(String.format(INVALID_X_ENCOUNTERED, name, "null"));
         }
         return list;
     }
 
     public static <T> T validateNotNull(T obj, String name) {
         if (obj == null) {
-            throw new RuntimeException("Invalid " + name + " encountered: null");
+            throw new DataFormatsException(String.format(INVALID_X_ENCOUNTERED, name, "null"));
         }
         return obj;
     }

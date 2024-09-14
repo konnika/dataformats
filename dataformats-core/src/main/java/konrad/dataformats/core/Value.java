@@ -18,7 +18,7 @@ public class Value {
     private void validate() {
         Validations.validateNotNull(path, "Path");
         if (path.isAbstractArrayPath()) {
-            throw new RuntimeException("Path to value should not be abstract");
+            throw new DataFormatsException("Path to value should not be abstract");
         }
     }
 

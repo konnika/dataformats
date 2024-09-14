@@ -1,5 +1,7 @@
 package konrad.dataformats.core.types;
 
+import konrad.dataformats.core.DataFormatsException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +33,7 @@ public class EnumType extends AbstractType implements Type {
             return i;
         }
 
-        throw new RuntimeException("Unexpected enum value " + value + " for type " + this + " with values " + String.join(",", enumValues));
+        throw new DataFormatsException("Unexpected enum value " + value + " for type " + this + " with values " + String.join(",", enumValues));
     }
 
     public String enumValueAt(int index) {
@@ -39,7 +41,7 @@ public class EnumType extends AbstractType implements Type {
             return enumValues.get(index);
         }
 
-        throw new RuntimeException("Enum value index too big " + index + " > " + enumValues.size() + " for type " + this);
+        throw new DataFormatsException("Enum value index too big " + index + " > " + enumValues.size() + " for type " + this);
     }
 
     @Override

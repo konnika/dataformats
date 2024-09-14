@@ -27,7 +27,7 @@ public class Data {
 
     public void addOrFailIfHasObject(Value value) {
         if (values.containsKey(value.path()) && values.get(value.path()).hasObject()) {
-            throw new RuntimeException("Path " + value.path() + " already has value " + values.get(value.path()).object() + ". Cannot add new value " + value);
+            throw new DataFormatsException("Path " + value.path() + " already has value " + values.get(value.path()).object() + ". Cannot add new value " + value);
         }
 
         var valueFormat = validatePath(value.path());
@@ -61,35 +61,35 @@ public class Data {
         return dataFormat.valueFormats().stream()
                 .filter(vf -> vf.path().equalsIgnoringIndices(path))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Path " + path + " does not exist in Dataformat " + dataFormat.id()));
+                .orElseThrow(() -> new DataFormatsException("Path " + path + " does not exist in Dataformat " + dataFormat.id()));
     }
 
     private void validateType(ValueFormat valueFormat, Value value) {
         if (!value.is(valueFormat.type())) {
-            throw new RuntimeException("Value object has wrong format in Data with DataFormat " + dataFormat.id() + ". Expected " + valueFormat + ", but got " + value);
+            throw new DataFormatsException("Value object has wrong format in Data with DataFormat " + dataFormat.id() + ". Expected " + valueFormat + ", but got " + value);
         }
     }
 
     private void validateForOverride(Data other) {
         if (other == null) {
-            throw new RuntimeException("Data is null");
+            throw new DataFormatsException("Data is null");
         }
 
         if (!has(other.dataFormat.id())) {
-            throw new RuntimeException("Data format does not match");
+            throw new DataFormatsException("Data format does not match");
         }
     }
 
     public Value getValue(Path path) {
         if (path.isAbstractArrayPath()) {
-            throw new RuntimeException("Path " + path + " must be a concrete array path");
+            throw new DataFormatsException("Path " + path + " must be a concrete array path");
         }
 
         if (dataFormat.contains(path.asAbstractPath())) {
             return values.get(path);
         }
 
-        throw new RuntimeException("Path " + path + " does not exist in Dataformat " + dataFormat.id());
+        throw new DataFormatsException("Path " + path + " does not exist in Dataformat " + dataFormat.id());
     }
 
     public List<Value> getValuesIgnoringIndices(Path path) {
@@ -139,11 +139,11 @@ public class Data {
 
     private void addValueToList(List<Map<String, Object>> list, Path path, Object object) {
         if (path.length() == 1) {
-            throw new RuntimeException("Expected Path of length > 1: " + path);
+            throw new DataFormatsException("Expected Path of length > 1: " + path);
         }
 
         if (!path.isFirstElementAConcreteArray()) {
-            throw new RuntimeException("Expected list index in the first element of: " + path);
+            throw new DataFormatsException("Expected list index in the first element of: " + path);
         }
 
         var index = Integer.parseInt(path.firstElement().replaceAll("[\\[\\]]", ""));

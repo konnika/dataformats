@@ -22,7 +22,7 @@ public class DataFormat {
 
     private void add(ValueFormat valueFormat) {
         if (this.valueFormats.stream().anyMatch(vf -> vf.path().equals(valueFormat.path()))) {
-            throw new RuntimeException("DataFormat " + id + " already contains a value format for path " + valueFormat.path());
+            throw new DataFormatsException("DataFormat " + id + " already contains a value format for path " + valueFormat.path());
         }
 
         this.valueFormats.add(valueFormat);
@@ -45,11 +45,10 @@ public class DataFormat {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DataFormat that = (DataFormat) o;
-        if (id.equals(that.id)) {
-            if (valueFormats.size() == that.valueFormats.size()) {
-                return new HashSet<>(that.valueFormats).containsAll(valueFormats);
-            }
+        if (id.equals(that.id) && valueFormats.size() == that.valueFormats.size()) {
+            return new HashSet<>(that.valueFormats).containsAll(valueFormats);
         }
+
         return false;
     }
 

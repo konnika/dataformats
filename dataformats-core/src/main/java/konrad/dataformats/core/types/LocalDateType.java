@@ -1,5 +1,7 @@
 package konrad.dataformats.core.types;
 
+import konrad.dataformats.core.DataFormatsException;
+
 import java.time.LocalDate;
 
 public class LocalDateType extends AbstractType implements Type, TypeGenerator {
@@ -13,7 +15,7 @@ public class LocalDateType extends AbstractType implements Type, TypeGenerator {
             return this;
         }
 
-        throw new RuntimeException(getClass().getSimpleName() + " cannot be created from value: " + value);
+        throw new DataFormatsException(getClass().getSimpleName() + " cannot be created from value: " + value);
     }
 
     @Override

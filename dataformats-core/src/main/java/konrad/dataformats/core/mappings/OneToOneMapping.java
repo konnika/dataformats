@@ -3,6 +3,7 @@ package konrad.dataformats.core.mappings;
 import konrad.dataformats.core.Data;
 import konrad.dataformats.core.DataFormat;
 import konrad.dataformats.core.DataFormatId;
+import konrad.dataformats.core.DataFormatsException;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.Validations;
 import konrad.dataformats.core.Value;
@@ -28,11 +29,11 @@ public class OneToOneMapping implements Mapping {
 
     private void validate() {
         if (fromPath.isConcreteArrayPath()) {
-            throw new RuntimeException("Path should be abstract: " + fromPath);
+            throw new DataFormatsException("Path should be abstract: " + fromPath);
         }
 
         if (toPath.isConcreteArrayPath()) {
-            throw new RuntimeException("Path should be abstract: " + toPath);
+            throw new DataFormatsException("Path should be abstract: " + toPath);
         }
     }
 
@@ -58,9 +59,9 @@ public class OneToOneMapping implements Mapping {
 
     private Object mapValue(Value value, Path toPath) {
         var fromType = fromFormat.get(value.path().asAbstractPath()).map(ValueFormat::type)
-                .orElseThrow(() -> new RuntimeException("Value path (from) " + value.path() + " is not defined in DataFormat " + fromFormat.id()));
+                .orElseThrow(() -> new DataFormatsException("Value path (from) " + value.path() + " is not defined in DataFormat " + fromFormat.id()));
         var toType = toFormat.get(toPath.asAbstractPath()).map(ValueFormat::type)
-                .orElseThrow(() -> new RuntimeException("Value path (to) " + value.path() + " is not defined in DataFormat " + fromFormat.id()));
+                .orElseThrow(() -> new DataFormatsException("Value path (to) " + value.path() + " is not defined in DataFormat " + fromFormat.id()));
 
         if (fromType.equals(toType)) {
             return value.object();
@@ -70,11 +71,11 @@ public class OneToOneMapping implements Mapping {
                 var index = fromEnum.enumValueIndex((String) value.object());
                 return toEnum.enumValueAt(index);
             }
-            throw new RuntimeException("Type conversion from enum " + fromType + " to enum " + toType + " is not possible because of a different number of values");
+            throw new DataFormatsException("Type conversion from enum " + fromType + " to enum " + toType + " is not possible because of a different number of values");
         }
 
         // TODO continue here: implement more conversions
-        throw new RuntimeException("Type conversion from " + fromType + " to " + toType + " is not yet supported. Paths: " + fromPath + ", " + toPath);
+        throw new DataFormatsException("Type conversion from " + fromType + " to " + toType + " is not yet supported. Paths: " + fromPath + ", " + toPath);
     }
 
     public static OneToOneMapping fromCsv(DataFormat from, DataFormat to, String line) {
@@ -82,6 +83,6 @@ public class OneToOneMapping implements Mapping {
         if (parts.length == 3) {
             return new OneToOneMapping(from, to, new Path(parts[1]), new Path(parts[2]));
         }
-        throw new RuntimeException("Conversion CSV is expected to have these values per line: mapping id;path from;path to. Got " + line);
+        throw new DataFormatsException("Conversion CSV is expected to have these values per line: mapping id;path from;path to. Got " + line);
     }
 }

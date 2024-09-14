@@ -1,6 +1,7 @@
 package konrad.dataformats.core.registries;
 
 
+import konrad.dataformats.core.DataFormatsException;
 import konrad.dataformats.core.types.BigDecimalType;
 import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.EnumTypeGenerator;
@@ -30,6 +31,6 @@ public class TypeGeneratorRegistry {
     }
 
     public TypeGenerator get(String id) {
-        return generators.stream().filter(g -> g.acceptsCsv(id)).findFirst().orElseThrow(() -> new RuntimeException("No TypeGenerator found for id: " + id));
+        return generators.stream().filter(g -> g.acceptsCsv(id)).findFirst().orElseThrow(() -> new DataFormatsException("No TypeGenerator found for id: " + id));
     }
 }

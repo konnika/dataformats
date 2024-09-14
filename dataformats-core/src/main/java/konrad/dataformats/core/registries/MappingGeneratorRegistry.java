@@ -1,5 +1,6 @@
 package konrad.dataformats.core.registries;
 
+import konrad.dataformats.core.DataFormatsException;
 import konrad.dataformats.core.mappings.MappingGenerator;
 import konrad.dataformats.core.mappings.OneToOneMapping;
 
@@ -20,6 +21,6 @@ public class MappingGeneratorRegistry {
     }
 
     public MappingGenerator get(String id) {
-        return Optional.ofNullable(generators.get(id)).orElseThrow(() -> new RuntimeException("No MappingGenerator found for id: " + id));
+        return Optional.ofNullable(generators.get(id)).orElseThrow(() -> new DataFormatsException("No MappingGenerator found for id: " + id));
     }
 }

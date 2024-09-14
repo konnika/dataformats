@@ -26,7 +26,7 @@ public class Conversion {
 
     public Data applyTo(final Data data) {
         if (!data.has(from)) {
-            throw new RuntimeException("Data has the wrong format. Expected " + from + " but got " + data.dataFormatId());
+            throw new DataFormatsException("Data has the wrong format. Expected " + from + " but got " + data.dataFormatId());
         }
 
         var result = new Data(to, Collections.emptyList());
@@ -44,7 +44,7 @@ public class Conversion {
     private static String idFromCsv(String line) {
         var parts = line.split(";");
         if (parts.length < 1) {
-            throw new RuntimeException("Conversion CSV is expected to have at least one value per line: mapping id. Got " + line);
+            throw new DataFormatsException("Conversion CSV is expected to have at least one value per line: mapping id. Got " + line);
         }
         return parts[0];
     }

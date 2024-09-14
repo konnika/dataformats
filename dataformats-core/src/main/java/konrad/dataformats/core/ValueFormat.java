@@ -17,7 +17,7 @@ public class ValueFormat {
 
     private void validate() {
         if (path.isConcreteArrayPath()) {
-            throw new RuntimeException("A ValueFormat is an abstract Path with no array indices");
+            throw new DataFormatsException("A ValueFormat is an abstract Path with no array indices");
         }
     }
 
@@ -60,13 +60,13 @@ public class ValueFormat {
         if (parts.length == 2) {
             return new ValueFormat(new Path(parts[0]), typeGeneratorRegistry.get(idFromCsv(line)).fromCsv(parts[1]));
         }
-        throw new RuntimeException("ValueFormat CSV is expected to have these values per line: path;type. Got " + line);
+        throw new DataFormatsException("ValueFormat CSV is expected to have these values per line: path;type. Got " + line);
     }
 
     private static String idFromCsv(String line) {
         var parts = line.split(";");
         if (parts.length < 2) {
-            throw new RuntimeException("ValueFormat CSV is expected to have these values per line: path;type. Got " + line);
+            throw new DataFormatsException("ValueFormat CSV is expected to have these values per line: path;type. Got " + line);
         }
         return parts[1];
     }

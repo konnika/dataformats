@@ -1,5 +1,7 @@
 package konrad.dataformats.core.types;
 
+import konrad.dataformats.core.DataFormatsException;
+
 import java.util.Arrays;
 
 public class EnumTypeGenerator implements TypeGenerator {
@@ -15,19 +17,19 @@ public class EnumTypeGenerator implements TypeGenerator {
         if (value.startsWith("ENUM:")) {
             var enumValuesIndex = value.indexOf(":");
             if (enumValuesIndex == -1) {
-                throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + value);
+                throw new DataFormatsException(ERROR_MESSAGE_CSV_FORMAT + value);
             }
             var enumValuesString = value.substring(enumValuesIndex + 1).trim();
             if (enumValuesString.isBlank()) {
-                throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + value);
+                throw new DataFormatsException(ERROR_MESSAGE_CSV_FORMAT + value);
             }
             var values = enumValuesString.split(",");
             if (values.length < 1) {
-                throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + value);
+                throw new DataFormatsException(ERROR_MESSAGE_CSV_FORMAT + value);
             }
             return new EnumType(new TypeId(enumValuesString), Arrays.stream(values).toList());
         }
 
-        throw new RuntimeException("Enum Type cannot be created from value: " + value);
+        throw new DataFormatsException("Enum Type cannot be created from value: " + value);
     }
 }

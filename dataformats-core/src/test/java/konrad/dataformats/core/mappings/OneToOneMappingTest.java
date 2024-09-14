@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OneToOneMappingTest {
 
@@ -83,18 +81,5 @@ class OneToOneMappingTest {
 
         assertEquals(1, after.toMap().size());
         Assertions.assertValue(after, "mirrorBranch.mirrorLeaf.mirrorColor", "MIRROR_RED");
-    }
-
-
-    private static void assertValue(Data data, String path, String value) {
-        var expected = new Value(new Path(path), value);
-        var actual = data.getValue(new Path(path));
-        assertNotNull(actual);
-        assertTrue(actual.hasObject());
-        assertEquals(expected, actual);
-    }
-
-    private static void assertValue(Data data, String path) {
-        assertValue(data, path, "xxx");
     }
 }
