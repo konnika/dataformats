@@ -1,0 +1,87 @@
+= Dataformats
+
+* Are you using mapstruct?
+* It's great and all but you are losing control and overview?
+* Your mappers are too complicated?
+* Your mappers are too large?
+* You have too many mappers?
+
+=> _Then dataformats is for you!_
+
+Dataformats provides support for dealing with java data objects with a large hierarchy.
+The goal is to represent the hierarchy and values as a Data object so your code does not depend on the actual java objects.
+The abstract representation of Data objects (the DataFormat) also allows transformations via Conversions.
+Support for the management of the data formats, conversions, mappings and types is also provided via registries.
+Everything can be generated from simple csv files.
+
+== Get started
+
+.Add to your build.gradle
+[source,groovy]
+----
+implementation 'konrad.dataformats:dataformats-core:${dataformats-version}'
+----
+
+.Create two DataFormats, e.g.
+[source,java]
+----
+DataFormat.fromCsv(new DataFormatId(aClass.getName()), csvLines));
+----
+
+.Create a Conversion, e.g.
+[source,java]
+----
+Conversion.fromCsv(fromFormat, toFormat, csvLines, mappingGenerators);
+----
+
+.Convert your java object to a map with
+[source,java]
+----
+new ObjectMapper().convertValue(object, new TypeReference<>() {});
+----
+
+.Create a Data object from the map with
+[source,java]
+----
+Data.from(map, format);
+----
+
+.Use the Data object to pass the data
+[source,java]
+----
+public void doSomething(Data data) {
+    // do something
+}
+----
+
+.Use the Data object to convert the data to another format, e.g.
+[source,java]
+----
+conversion.applyTo(data);
+----
+
+.Convert the Data object to a map with
+[source,java]
+----
+data.toMap();
+----
+
+.Convert the map back to the java object with
+[source,java]
+----
+new ObjectMapper().convertValue(map, aClass);
+----
+
+== Maintainer and contributions
+
+I am the only maintainer of this project: https://github.com/konnika
+
+If you want to contribute please contact me.
+
+== LICENSE
+
+This repository is released under the GNU GENERAL PUBLIC LICENSE.
+
+
+
+
