@@ -1,9 +1,15 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.registries.TypeGeneratorRegistry;
+import konrad.dataformats.core.types.BooleanType;
+import konrad.dataformats.core.types.EnumType;
+import konrad.dataformats.core.types.IType;
+import konrad.dataformats.core.types.StringType;
 import konrad.dataformats.testobjects.mirrortree.MirrorColor;
 import konrad.dataformats.testobjects.tree.Color;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,25 +31,26 @@ class DataFormatTest {
 
     @Test
     void getValuePathAndTypeWorks() {
-        assertHasType(treeFormat, "value", Type.STRING);
-        assertHasType(treeFormat, "branch.value", Type.BOOLEAN);
-        assertHasType(treeFormat, "branch.nullValue", Type.STRING);
-        assertHasType(treeFormat, "branch.leaf.color", Type.forEnum(Color.class));
-        assertHasType(treeFormat, "branch.leaf.value", Type.STRING);
-        assertHasType(treeFormat, "leaves.[].color", Type.forEnum(Color.class));
-        assertHasType(treeFormat, "leaves.[].value", Type.STRING);
+        assertHasType(treeFormat, "value", new StringType());
+        assertHasType(treeFormat, "branch.value", new BooleanType());
+        assertHasType(treeFormat, "branch.nullValue", new StringType());
+        assertHasType(treeFormat, "branch.leaf.color", new EnumType(Color.class));
+        assertHasType(treeFormat, "branch.leaf.value", new StringType());
+        assertHasType(treeFormat, "leaves.[].color", new EnumType(Color.class));
+        assertHasType(treeFormat, "leaves.[].value", new StringType());
     }
 
 
     @Test
     void enumWorks() {
-        assertHasType(treeFormat, "branch.leaf.color", Type.forEnum(Color.class));
-        assertHasType(treeFormat, "branch.leaf.color", Type.forEnum("GREEN", "YELLOW", "RED", "BROWN"));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum(MirrorColor.class));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum("YELLOW", "RED", "BROWN", "GREEN"));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum("GREEN", "YELLOW", "RED"));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum("xxx"));
-        assertHasNotType(treeFormat, "branch.leaf.color", Type.forEnum());
+        assertHasType(treeFormat, "branch.leaf.color", new EnumType(Color.class));
+        assertHasType(treeFormat, "branch.leaf.color", new EnumType(new TypeId(Color.class), List.of("GREEN", "YELLOW", "RED", "BROWN")));
+        assertHasNotType(treeFormat, "branch.leaf.color", new EnumType(List.of("GREEN", "YELLOW", "RED", "BROWN")));
+        assertHasNotType(treeFormat, "branch.leaf.color", new EnumType(MirrorColor.class));
+        assertHasNotType(treeFormat, "branch.leaf.color", new EnumType(List.of("YELLOW", "RED", "BROWN", "GREEN")));
+        assertHasNotType(treeFormat, "branch.leaf.color", new EnumType(List.of("GREEN", "YELLOW", "RED")));
+        assertHasNotType(treeFormat, "branch.leaf.color", new EnumType(List.of("xxx")));
+        assertHasNotType(treeFormat, "branch.leaf.color", new EnumType(Collections.emptyList()));
     }
 
     @Test
@@ -54,23 +61,23 @@ class DataFormatTest {
                 "branch.leaf.color;ENUM:GREEN,YELLOW,RED,BROWN",
                 "leaves.[].value;java.lang.String");
 
-        var format = DataFormat.fromCsv(TestDataFormats.tree().id(), csv, TestTypeRegistry.get());
+        var format = DataFormat.fromCsv(TestDataFormats.tree().id(), csv, new TypeGeneratorRegistry());
 
-        Assertions.assertValue(format, "value", Type.STRING);
-        Assertions.assertValue(format, "branch.value", Type.BOOLEAN);
-        Assertions.assertValue(format, "branch.leaf.color", Type.forEnum(Color.class));
-        Assertions.assertValue(format, "leaves.[].value", Type.STRING);
+        Assertions.assertValue(format, "value", new StringType());
+        Assertions.assertValue(format, "branch.value", new BooleanType());
+        Assertions.assertValue(format, "branch.leaf.color", new EnumType(List.of("GREEN", "YELLOW", "RED", "BROWN")));
+        Assertions.assertValue(format, "leaves.[].value", new StringType());
     }
 
     private void assertContains(DataFormat dataFormat, String path) {
         assertTrue(dataFormat.contains(new Path(path)));
     }
 
-    private void assertHasType(DataFormat dataFormat, String path, Type type) {
+    private void assertHasType(DataFormat dataFormat, String path, IType type) {
         assertTrue(dataFormat.get(new Path(path)).map(vf -> vf.has(type)).orElse(false));
     }
 
-    private void assertHasNotType(DataFormat dataFormat, String path, Type type) {
+    private void assertHasNotType(DataFormat dataFormat, String path, IType type) {
         assertFalse(dataFormat.get(new Path(path)).map(vf -> vf.has(type)).orElse(false));
     }
 }

@@ -25,7 +25,6 @@
 package konrad.dataformats.core.mappings;
 
 import konrad.dataformats.core.DataFormat;
-import konrad.dataformats.core.Mapping;
 
 @FunctionalInterface
 public interface MappingGenerator {

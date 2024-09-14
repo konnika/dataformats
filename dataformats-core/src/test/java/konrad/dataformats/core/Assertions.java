@@ -1,5 +1,7 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.types.IType;
+
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Assertions {
-    public static void assertValue(DataFormat format, String path, Type type) {
+    public static void assertValue(DataFormat format, String path, IType type) {
         var value = format.get(new Path(path));
         assertTrue(value.isPresent());
         assertTrue(value.get().has(new Path(path)));
@@ -27,7 +29,7 @@ public class Assertions {
         }
     }
 
-    public static void assertValue(Data data, String path, Object expected, Type expectedType) {
+    public static void assertValue(Data data, String path, Object expected, IType expectedType) {
         var value = data.getValue(new Path(path));
         assertNotNull(value);
         assertTrue(value.hasObject());

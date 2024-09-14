@@ -1,5 +1,6 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.mappings.Mapping;
 import konrad.dataformats.core.registries.MappingGeneratorRegistry;
 
 import java.util.ArrayList;

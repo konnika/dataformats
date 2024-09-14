@@ -1,14 +1,15 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.registries.TypeRegistry;
+import konrad.dataformats.core.registries.TypeGeneratorRegistry;
+import konrad.dataformats.core.types.IType;
 
 import java.util.Objects;
 
 public class ValueFormat {
     private final Path path;
-    private final Type type;
+    private final IType type;
 
-    public ValueFormat(Path path, Type type) {
+    public ValueFormat(Path path, IType type) {
         this.path = path;
         this.type = type;
         validate();
@@ -24,7 +25,7 @@ public class ValueFormat {
         return Objects.equals(this.path, path);
     }
 
-    boolean has(Type type) {
+    boolean has(IType type) {
         return Objects.equals(this.type, type);
     }
 
@@ -32,7 +33,7 @@ public class ValueFormat {
         return path;
     }
 
-    public Type type() {
+    public IType type() {
         return type;
     }
 
@@ -54,11 +55,19 @@ public class ValueFormat {
         return Objects.hash(path, type);
     }
 
-    public static ValueFormat fromCsv(String line, TypeRegistry typeRegistry) {
+    public static ValueFormat fromCsv(String line, TypeGeneratorRegistry typeGeneratorRegistry) {
         var parts = line.split(";");
         if (parts.length == 2) {
-            return new ValueFormat(new Path(parts[0]), Type.fromCsv(parts[1], typeRegistry));
+            return new ValueFormat(new Path(parts[0]), typeGeneratorRegistry.get(idFromCsv(line)).fromCsv(parts[1]));
         }
         throw new RuntimeException("ValueFormat CSV is expected to have these values per line: path;type. Got " + line);
+    }
+
+    private static String idFromCsv(String line) {
+        var parts = line.split(";");
+        if (parts.length < 2) {
+            throw new RuntimeException("ValueFormat CSV is expected to have these values per line: path;type. Got " + line);
+        }
+        return parts[1];
     }
 }

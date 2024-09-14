@@ -1,7 +1,5 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.registries.TypeRegistry;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -103,25 +101,25 @@ public class Type {
         return "Type " + id + ", enumValues=" + enumValues;
     }
 
-    public static Type fromCsv(String typeString, TypeRegistry typeRegistry) {
-        if (typeString.startsWith("ENUM")) {
-            var enumValuesIndex = typeString.indexOf(":");
-            if (enumValuesIndex == -1) {
-                throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + typeString);
-            }
-            var enumValuesString = typeString.substring(enumValuesIndex + 1).trim();
-            if (enumValuesString.isBlank()) {
-                throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + typeString);
-            }
-            var values = enumValuesString.split(",");
-            if (values.length < 1) {
-                throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + typeString);
-            }
-            return Type.forEnum(values);
-        }
-
-        return typeRegistry.get(typeString);
-    }
+//    public static Type fromCsv(String typeString, TypeRegistry typeRegistry) {
+//        if (typeString.startsWith("ENUM")) {
+//            var enumValuesIndex = typeString.indexOf(":");
+//            if (enumValuesIndex == -1) {
+//                throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + typeString);
+//            }
+//            var enumValuesString = typeString.substring(enumValuesIndex + 1).trim();
+//            if (enumValuesString.isBlank()) {
+//                throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + typeString);
+//            }
+//            var values = enumValuesString.split(",");
+//            if (values.length < 1) {
+//                throw new RuntimeException(ERROR_MESSAGE_CSV_FORMAT + typeString);
+//            }
+//            return Type.forEnum(values);
+//        }
+//
+//        return typeRegistry.getForObjectClass(typeString);
+//    }
 
     public boolean is(Class<?> aClass) {
         return id.is(aClass);

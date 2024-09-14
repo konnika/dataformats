@@ -1,5 +1,7 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.types.IType;
+
 import java.util.Objects;
 
 public class Value {
@@ -28,16 +30,13 @@ public class Value {
         return object;
     }
 
-    public boolean is(Type type) {
+    public boolean is(IType type) {
         Validations.validateNotNull(type, "Type");
         if (object == null) {
             return true;
         }
-        if (type.is(object.getClass())) {
-            if (type.isEnum()) {
-                return type.hasEnumValue((String) object);
-            }
-            return true;
+        if (type.hasClass(object.getClass())) {
+            return type.accepts(object);
         }
         return false;
     }

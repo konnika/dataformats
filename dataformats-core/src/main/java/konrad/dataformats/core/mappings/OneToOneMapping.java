@@ -3,11 +3,11 @@ package konrad.dataformats.core.mappings;
 import konrad.dataformats.core.Data;
 import konrad.dataformats.core.DataFormat;
 import konrad.dataformats.core.DataFormatId;
-import konrad.dataformats.core.Mapping;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.Validations;
 import konrad.dataformats.core.Value;
 import konrad.dataformats.core.ValueFormat;
+import konrad.dataformats.core.types.EnumType;
 
 import java.util.Objects;
 
@@ -75,10 +75,10 @@ public class OneToOneMapping implements Mapping {
         if (fromType.equals(toType)) {
             return value.object();
         }
-        if (fromType.isEnum() && toType.isEnum()) {
-            if (fromType.enumValueCount() == toType.enumValueCount()) {
-                var index = fromType.enumValueIndex((String) value.object());
-                return toType.enumValueAt(index);
+        if (fromType instanceof EnumType fromEnum && toType instanceof EnumType toEnum) {
+            if (fromEnum.enumValueCount() == toEnum.enumValueCount()) {
+                var index = fromEnum.enumValueIndex((String) value.object());
+                return toEnum.enumValueAt(index);
             }
             throw new RuntimeException("Type conversion from enum " + fromType + " to enum " + toType + " is not possible because of a different number of values");
         }
