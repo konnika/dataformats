@@ -39,7 +39,7 @@ public class ValueFormat {
 
     @Override
     public String toString() {
-        return "ValueFormat " + path.toString();
+        return "ValueFormat " + path.toString() + " " + type.toString();
     }
 
     @Override

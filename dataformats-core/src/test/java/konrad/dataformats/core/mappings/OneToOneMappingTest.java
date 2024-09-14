@@ -7,6 +7,7 @@ import konrad.dataformats.core.TestDataFormats;
 import konrad.dataformats.core.Value;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +33,7 @@ class OneToOneMappingTest {
     }
 
     @Test
-    void stringInArrayWorks() {
+    void stringInListWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(),
                 new Path("leaves.[].value"), new Path("mirrorLeaves.[].mirrorValue"));
 
@@ -44,6 +45,29 @@ class OneToOneMappingTest {
 
         assertEquals(1, after.toMap().size());
         Assertions.assertValue(after, "mirrorLeaves.[0].mirrorValue", "xxx");
+    }
+
+    @Test
+    void stringInListInListWorks() {
+        var mapping = new OneToOneMapping(TestDataFormats.bigTree(), TestDataFormats.bigMirrorTree(),
+                new Path("branches.[].leaves.[].bigNumber"),
+                new Path("mirrorBranches.[].mirrorLeaves.[].bigMirrorNumber"));
+
+        var values = List.of(
+                new Value(new Path("branches.[0].leaves.[0].bigNumber"), BigDecimal.valueOf(11)),
+                new Value(new Path("branches.[0].leaves.[1].bigNumber"), BigDecimal.valueOf(12)),
+                new Value(new Path("branches.[1].leaves.[0].bigNumber"), BigDecimal.valueOf(13)),
+                new Value(new Path("branches.[1].leaves.[1].bigNumber"), BigDecimal.valueOf(14))
+        );
+        var before = new Data(TestDataFormats.bigTree(), values);
+        var after = new Data(TestDataFormats.bigMirrorTree(), Collections.emptyList());
+
+        mapping.applyTo(before, after);
+
+        Assertions.assertValue(after, "mirrorBranches.[0].mirrorLeaves.[0].bigMirrorNumber", BigDecimal.valueOf(11));
+        Assertions.assertValue(after, "mirrorBranches.[0].mirrorLeaves.[1].bigMirrorNumber", BigDecimal.valueOf(12));
+        Assertions.assertValue(after, "mirrorBranches.[1].mirrorLeaves.[0].bigMirrorNumber", BigDecimal.valueOf(13));
+        Assertions.assertValue(after, "mirrorBranches.[1].mirrorLeaves.[1].bigMirrorNumber", BigDecimal.valueOf(14));
     }
 
     @Test

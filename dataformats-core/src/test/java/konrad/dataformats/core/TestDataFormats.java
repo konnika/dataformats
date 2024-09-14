@@ -6,6 +6,7 @@ import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.types.IntegerType;
 import konrad.dataformats.core.types.LocalDateType;
 import konrad.dataformats.core.types.StringType;
+import konrad.dataformats.testobjects.bigmirrortree.BigMirrorTree;
 import konrad.dataformats.testobjects.bigtree.BigTree;
 import konrad.dataformats.testobjects.mirrortree.MirrorColor;
 import konrad.dataformats.testobjects.mirrortree.MirrorTree;
@@ -48,5 +49,14 @@ public class TestDataFormats {
                 new ValueFormat(new Path("bigInteger"), new IntegerType())
         );
         return new DataFormat(new DataFormatId(BigTree.class), formats);
+    }
+
+    public static DataFormat bigMirrorTree() {
+        var formats = List.of(
+                new ValueFormat(new Path("mirrorBranches.[].mirrorLeaves.[].bigMirrorNumber"), new BigDecimalType()),
+                new ValueFormat(new Path("mirrorBranches.[].bigMirrorDate"), new LocalDateType()),
+                new ValueFormat(new Path("bigMirrorInteger"), new IntegerType())
+        );
+        return new DataFormat(new DataFormatId(BigMirrorTree.class), formats);
     }
 }

@@ -66,7 +66,7 @@ public class Data {
 
     private void validateType(ValueFormat valueFormat, Value value) {
         if (!value.is(valueFormat.type())) {
-            throw new RuntimeException("Unexpected Value object in Data with DataFormat " + dataFormat.id() + ": " + value);
+            throw new RuntimeException("Value object has wrong format in Data with DataFormat " + dataFormat.id() + ". Expected " + valueFormat + ", but got " + value);
         }
     }
 
