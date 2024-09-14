@@ -29,6 +29,22 @@ public class Path {
         validate();
     }
 
+    public static Path join(List<Path> paths) {
+        if (paths == null) {
+            throw new RuntimeException("Cannot join null paths");
+        }
+        if (paths.isEmpty()) {
+            throw new RuntimeException("Cannot join empty paths");
+        }
+
+        var iterator = paths.iterator();
+        var path = iterator.next();
+        while (iterator.hasNext()) {
+            path = path.concat(iterator.next());
+        }
+        return path;
+    }
+
     protected void validate() {
         if (!asList.stream().allMatch(element -> element.matches(REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT) || element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX))) {
             throw new RuntimeException("Unexpected character in Path (allowed are [a-zA-Z0-9_-]): " + asString);
@@ -168,10 +184,7 @@ public class Path {
 
     private List<Path> allConcretePaths(Map<String, Object> map, Path previous, Path remaining) {
         if (!remaining.isAbstractArrayPath()) {
-            if (previous == null) {
-                return List.of(remaining);
-            }
-            return List.of(previous.concat(remaining));
+            return List.of(previous == null ? remaining : previous.concat(remaining));
         }
 
         var nextListPath = remaining.untilFirstAbstractArray();
@@ -214,4 +227,41 @@ public class Path {
         return new Path(list);
     }
 
+    public List<Integer> arrayIndices() {
+        return asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX))
+                .map(element -> Integer.parseInt(element.replaceAll("[\\[\\]]", "")))
+                .toList();
+    }
+
+    public int arrayCount() {
+        return (int) asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX)).count();
+    }
+
+    public Path copyArrayIndicesTo(Path to) {
+        if (!this.isConcreteArrayPath()) {
+            if (!to.isAbstractArrayPath()) {
+                return to;
+            }
+            throw new RuntimeException("Path is not concrete: " + this);
+        }
+        if (!to.isAbstractArrayPath()) {
+            throw new RuntimeException("Path is not abstract: " + to);
+        }
+        var arrayIndices = this.arrayIndices();
+        if (arrayIndices.size() != to.arrayCount()) {
+            throw new RuntimeException("Paths have different number of arrays: " + this + ", " + to);
+        }
+
+        var parts = new ArrayList<Path>();
+        var remaining = to;
+        for (var index : arrayIndices) {
+            var part = remaining.untilFirstAbstractArray();
+            parts.add(part);
+            parts.add(new Path("[" + index + "]"));
+            remaining = remaining.afterFirstAbstractArray();
+        }
+        parts.add(remaining);
+
+        return Path.join(parts);
+    }
 }

@@ -38,24 +38,14 @@ public class OneToOneMapping implements Mapping {
 
     @Override
     public void applyTo(Data in, Data out) {
-        if (fromPath.isArrayPath()) {
-            var beforeValuesInArray = in.getValuesIgnoringIndices(fromPath);
-            for (var value : beforeValuesInArray) {
-                var before = in.getValue(value.path());
-                if (before != null && before.hasObject()) {
-                    // FIXME this assumes that there is only one array index in the path
-                    var pathOfFirstArray = new Path(before.path().firstConcreteArrayElement());
-                    var afterPath = toPath.untilFirstAbstractArray().concat(pathOfFirstArray).concat(toPath.afterFirstAbstractArray());
-                    var afterObject = mapValue(before, afterPath);
-                    var afterValue = new Value(afterPath, afterObject);
-                    out.addOrFailIfHasObject(afterValue);
-                }
-            }
-        } else {
-            var before = in.getValue(fromPath);
+        var paths = fromPath.allConcretePaths(in.toMap());
+
+        for (var path : paths) {
+            var before = in.getValue(path);
             if (before != null && before.hasObject()) {
                 var afterObject = mapValue(before, toPath);
-                var afterValue = new Value(toPath, afterObject);
+                var afterPath = path.copyArrayIndicesTo(toPath);
+                var afterValue = new Value(afterPath, afterObject);
                 out.addOrFailIfHasObject(afterValue);
             }
         }
