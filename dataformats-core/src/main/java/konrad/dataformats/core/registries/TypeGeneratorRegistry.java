@@ -1,8 +1,11 @@
 package konrad.dataformats.core.registries;
 
 
+import konrad.dataformats.core.types.BigDecimalType;
 import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.EnumTypeGenerator;
+import konrad.dataformats.core.types.IntegerType;
+import konrad.dataformats.core.types.LocalDateType;
 import konrad.dataformats.core.types.StringType;
 import konrad.dataformats.core.types.TypeGenerator;
 
@@ -15,8 +18,11 @@ public class TypeGeneratorRegistry {
     public TypeGeneratorRegistry() {
         this.generators = new ArrayList<>();
         add(new StringType());
-        add(new BooleanType());
         add(new EnumTypeGenerator());
+        add(new BooleanType());
+        add(new IntegerType());
+        add(new BigDecimalType());
+        add(new LocalDateType());
     }
 
     public void add(TypeGenerator typeGenerator) {
