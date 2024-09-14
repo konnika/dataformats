@@ -1,7 +1,5 @@
 package konrad.dataformats.core.types;
 
-import konrad.dataformats.core.TypeId;
-
 import java.util.Arrays;
 
 public class EnumTypeGenerator implements TypeGenerator {
@@ -13,7 +11,7 @@ public class EnumTypeGenerator implements TypeGenerator {
     }
 
     @Override
-    public IType fromCsv(String value) {
+    public Type fromCsv(String value) {
         if (value.startsWith("ENUM:")) {
             var enumValuesIndex = value.indexOf(":");
             if (enumValuesIndex == -1) {

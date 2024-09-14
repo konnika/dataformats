@@ -1,13 +1,11 @@
 package konrad.dataformats.core.types;
 
-import konrad.dataformats.core.TypeId;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class EnumType extends AbstractType implements IType {
+public class EnumType extends AbstractType implements Type {
     private final List<String> enumValues = new ArrayList<>();
 
     public EnumType(Class<? extends Enum> enumClass) {

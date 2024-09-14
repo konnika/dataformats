@@ -3,8 +3,9 @@ package konrad.dataformats.core;
 import konrad.dataformats.core.registries.TypeGeneratorRegistry;
 import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.EnumType;
-import konrad.dataformats.core.types.IType;
 import konrad.dataformats.core.types.StringType;
+import konrad.dataformats.core.types.Type;
+import konrad.dataformats.core.types.TypeId;
 import konrad.dataformats.testobjects.mirrortree.MirrorColor;
 import konrad.dataformats.testobjects.tree.Color;
 import org.junit.jupiter.api.Test;
@@ -73,11 +74,11 @@ class DataFormatTest {
         assertTrue(dataFormat.contains(new Path(path)));
     }
 
-    private void assertHasType(DataFormat dataFormat, String path, IType type) {
+    private void assertHasType(DataFormat dataFormat, String path, Type type) {
         assertTrue(dataFormat.get(new Path(path)).map(vf -> vf.has(type)).orElse(false));
     }
 
-    private void assertHasNotType(DataFormat dataFormat, String path, IType type) {
+    private void assertHasNotType(DataFormat dataFormat, String path, Type type) {
         assertFalse(dataFormat.get(new Path(path)).map(vf -> vf.has(type)).orElse(false));
     }
 }

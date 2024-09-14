@@ -1,15 +1,15 @@
 package konrad.dataformats.core;
 
 import konrad.dataformats.core.registries.TypeGeneratorRegistry;
-import konrad.dataformats.core.types.IType;
+import konrad.dataformats.core.types.Type;
 
 import java.util.Objects;
 
 public class ValueFormat {
     private final Path path;
-    private final IType type;
+    private final Type type;
 
-    public ValueFormat(Path path, IType type) {
+    public ValueFormat(Path path, Type type) {
         this.path = path;
         this.type = type;
         validate();
@@ -25,7 +25,7 @@ public class ValueFormat {
         return Objects.equals(this.path, path);
     }
 
-    boolean has(IType type) {
+    boolean has(Type type) {
         return Objects.equals(this.type, type);
     }
 
@@ -33,7 +33,7 @@ public class ValueFormat {
         return path;
     }
 
-    public IType type() {
+    public Type type() {
         return type;
     }
 

@@ -1,14 +1,12 @@
 package konrad.dataformats.core.types;
 
-import konrad.dataformats.core.TypeId;
-
-public class StringType extends AbstractType implements IType, TypeGenerator {
+public class StringType extends AbstractType implements Type, TypeGenerator {
     public StringType() {
         super(new TypeId(String.class), String.class);
     }
 
     @Override
-    public IType fromCsv(String value) {
+    public Type fromCsv(String value) {
         if (String.class.getName().equals(value)) {
             return this;
         }

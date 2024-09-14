@@ -1,6 +1,6 @@
 package konrad.dataformats.core.types;
 
-public interface IType {
+public interface Type {
     boolean hasId(Class<?> aClass);
 
     boolean hasId(String string);

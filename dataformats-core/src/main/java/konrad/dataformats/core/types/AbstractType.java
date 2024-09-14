@@ -1,11 +1,10 @@
 package konrad.dataformats.core.types;
 
-import konrad.dataformats.core.TypeId;
 import konrad.dataformats.core.Validations;
 
 import java.util.Objects;
 
-public class AbstractType implements IType {
+public class AbstractType implements Type {
     protected final TypeId id;
     protected final Class<?> internalClass;
 

@@ -1,14 +1,12 @@
 package konrad.dataformats.core.types;
 
-import konrad.dataformats.core.TypeId;
-
-public class BooleanType extends AbstractType implements IType, TypeGenerator {
+public class BooleanType extends AbstractType implements Type, TypeGenerator {
     public BooleanType() {
         super(new TypeId(Boolean.class), Boolean.class);
     }
 
     @Override
-    public IType fromCsv(String value) {
+    public Type fromCsv(String value) {
         if (Boolean.class.getName().equals(value)) {
             return this;
         }

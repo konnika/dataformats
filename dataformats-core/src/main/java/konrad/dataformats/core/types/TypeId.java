@@ -1,4 +1,6 @@
-package konrad.dataformats.core;
+package konrad.dataformats.core.types;
+
+import konrad.dataformats.core.Validations;
 
 import java.util.Objects;
 

@@ -1,6 +1,6 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.types.IType;
+import konrad.dataformats.core.types.Type;
 
 import java.util.Objects;
 
@@ -30,7 +30,7 @@ public class Value {
         return object;
     }
 
-    public boolean is(IType type) {
+    public boolean is(Type type) {
         Validations.validateNotNull(type, "Type");
         if (object == null) {
             return true;
