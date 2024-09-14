@@ -48,7 +48,7 @@ class OneToOneMappingTest {
     }
 
     @Test
-    void stringInListInListWorks() {
+    void listInListWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.bigTree(), TestDataFormats.bigMirrorTree(),
                 new Path("branches.[].leaves.[].bigNumber"),
                 new Path("mirrorBranches.[].mirrorLeaves.[].bigMirrorNumber"));

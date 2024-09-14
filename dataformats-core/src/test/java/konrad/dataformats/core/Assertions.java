@@ -3,6 +3,7 @@ package konrad.dataformats.core;
 import konrad.dataformats.core.types.Type;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,6 +25,8 @@ public class Assertions {
 
         if (expected instanceof BigDecimal expectedBigDecimal) {
             assertEquals(0, expectedBigDecimal.compareTo((BigDecimal) value.object()));
+        } else if (expected instanceof LocalDate expectedDate) {
+            assertEquals(expectedDate.toString(), value.object());
         } else {
             assertEquals(expected, value.object());
         }

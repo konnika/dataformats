@@ -9,6 +9,7 @@ import konrad.dataformats.testobjects.tree.Leaf;
 import konrad.dataformats.testobjects.tree.Tree;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public class TestObjects {
@@ -20,8 +21,8 @@ public class TestObjects {
 
     public static BigTree bigTree() {
         List<BigBranch> branches = List.of(
-                new BigBranch(List.of(new BigLeaf(BigDecimal.valueOf(12)), new BigLeaf(BigDecimal.valueOf(13)))/*, LocalDate.now()*/),
-                new BigBranch(List.of(new BigLeaf(BigDecimal.valueOf(14)), new BigLeaf(BigDecimal.valueOf(15)))/*, LocalDate.now()*/)
+                new BigBranch(List.of(new BigLeaf(BigDecimal.valueOf(12)), new BigLeaf(BigDecimal.valueOf(13))), LocalDate.now()),
+                new BigBranch(List.of(new BigLeaf(BigDecimal.valueOf(14)), new BigLeaf(BigDecimal.valueOf(15))), LocalDate.now())
         );
         return new BigTree(branches, 11);
     }

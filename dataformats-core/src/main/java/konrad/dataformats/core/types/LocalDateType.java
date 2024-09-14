@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class LocalDateType extends AbstractType implements Type, TypeGenerator {
     public LocalDateType() {
-        super(new TypeId(LocalDate.class), LocalDate.class);
+        super(new TypeId(LocalDate.class), String.class);
     }
 
     @Override
