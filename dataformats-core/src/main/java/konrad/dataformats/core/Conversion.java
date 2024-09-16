@@ -34,6 +34,7 @@ public class Conversion {
         return result;
     }
 
+    // FIXME move generation from csv to new package (or even module?)
     public static Conversion fromCsv(DataFormat from, DataFormat to, List<String> lines, MappingGeneratorRegistry mappingGeneratorRegistry) {
         var mappings = lines.stream()
                 .map(line -> mappingGeneratorRegistry.get(idFromCsv(line)).apply(from, to, line))

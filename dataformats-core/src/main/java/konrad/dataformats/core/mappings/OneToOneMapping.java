@@ -74,7 +74,7 @@ public class OneToOneMapping implements Mapping {
             throw new DataFormatsException("Type conversion from enum " + fromType + " to enum " + toType + " is not possible because of a different number of values");
         }
 
-        // TODO continue here: implement more conversions
+        // TODO continue here: implement more conversions: Double<->BigDecimal, String<->Enum
         throw new DataFormatsException("Type conversion from " + fromType + " to " + toType + " is not yet supported. Paths: " + fromPath + ", " + toPath);
     }
 
