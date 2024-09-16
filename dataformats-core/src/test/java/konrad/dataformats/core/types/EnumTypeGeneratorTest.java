@@ -1,6 +1,6 @@
 package konrad.dataformats.core.types;
 
-import konrad.dataformats.core.creation.EnumTypeGenerator;
+import konrad.dataformats.core.generators.EnumTypeGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

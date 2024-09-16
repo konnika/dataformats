@@ -1,4 +1,4 @@
-package konrad.dataformats.core.creation;
+package konrad.dataformats.core.generators;
 
 import konrad.dataformats.core.DataFormat;
 import konrad.dataformats.core.DataFormatId;

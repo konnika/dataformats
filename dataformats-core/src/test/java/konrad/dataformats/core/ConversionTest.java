@@ -1,7 +1,7 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.creation.ConversionGenerator;
-import konrad.dataformats.core.creation.MappingGeneratorRegistry;
+import konrad.dataformats.core.generators.ConversionGenerator;
+import konrad.dataformats.core.generators.MappingGeneratorRegistry;
 import konrad.dataformats.core.mappings.Mapping;
 import konrad.dataformats.core.mappings.OneToOneMapping;
 import org.junit.jupiter.api.Test;
@@ -60,8 +60,8 @@ class ConversionTest {
                 "1:1;branch.leaf.color;mirrorBranch.mirrorLeaf.mirrorColor",
                 "1:1;leaves.[].value;mirrorLeaves.[].mirrorValue");
 
-        var conversionGenerator = new ConversionGenerator(TestDataFormats.tree(), TestDataFormats.mirrorTree(), new MappingGeneratorRegistry());
-        var conversion = conversionGenerator.fromCsv(csv);
+        var conversionGenerator = new ConversionGenerator(new MappingGeneratorRegistry());
+        var conversion = conversionGenerator.fromCsv(TestDataFormats.tree(), TestDataFormats.mirrorTree(), csv);
 
         var values = List.of(
                 new Value(new Path("value"), "tree"),

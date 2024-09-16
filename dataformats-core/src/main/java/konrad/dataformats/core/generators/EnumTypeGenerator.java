@@ -1,4 +1,4 @@
-package konrad.dataformats.core.creation;
+package konrad.dataformats.core.generators;
 
 import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.types.Type;

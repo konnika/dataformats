@@ -1,4 +1,4 @@
-package konrad.dataformats.core.creation;
+package konrad.dataformats.core.generators;
 
 import konrad.dataformats.core.Conversion;
 import konrad.dataformats.core.DataFormat;
@@ -9,25 +9,24 @@ import konrad.dataformats.core.validation.Validations;
 import java.util.List;
 
 public class ConversionGenerator {
-    private final DataFormat from;
-    private final DataFormat to;
     private final MappingGeneratorRegistry mappingGeneratorRegistry;
 
-    public ConversionGenerator(DataFormat from, DataFormat to, MappingGeneratorRegistry mappingGeneratorRegistry) {
-        this.from = Validations.validateNotNull(from, "Conversion DataFormat from");
-        this.to = Validations.validateNotNull(to, "Conversion DataFormat to");
+    public ConversionGenerator(MappingGeneratorRegistry mappingGeneratorRegistry) {
         this.mappingGeneratorRegistry = mappingGeneratorRegistry;
     }
 
-    public Conversion fromCsv(List<String> lines) {
+    public Conversion fromCsv(DataFormat from, DataFormat to, List<String> lines) {
+        Validations.validateNotNull(from, "Conversion DataFormat from");
+        Validations.validateNotNull(to, "Conversion DataFormat to");
+
         var mappings = lines.stream()
-                .map(this::mappingfromCsv)
+                .map(line -> mappingFromCsv(from, to, line))
                 .toList();
 
         return new Conversion(from, to, mappings);
     }
 
-    private Mapping mappingfromCsv(String line) {
+    public Mapping mappingFromCsv(DataFormat from, DataFormat to, String line) {
         var parts = line.split(";");
         if (parts.length < 1) {
             throw new DataFormatsException("Conversion CSV is expected to have at least one value per line: <mapping id>. Got " + line);

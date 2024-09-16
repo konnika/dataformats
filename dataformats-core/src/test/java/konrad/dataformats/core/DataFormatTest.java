@@ -1,7 +1,7 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.creation.DataFormatGenerator;
-import konrad.dataformats.core.creation.TypeGeneratorRegistry;
+import konrad.dataformats.core.generators.DataFormatGenerator;
+import konrad.dataformats.core.generators.TypeGeneratorRegistry;
 import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.types.StringType;
