@@ -66,6 +66,6 @@ public class Value {
 
     @Override
     public String toString() {
-        return "Value " + path + "Value " + (object == null ? "empty" : object + " (" + object.getClass() + ")");
+        return "Value " + path + (object == null ? " empty" : " " + object + " (" + object.getClass() + ")");
     }
 }

@@ -95,10 +95,6 @@ public class Data {
         throw new DataFormatsException("Path " + path + " does not exist in Dataformat " + dataFormat.id());
     }
 
-    public List<Value> getValuesIgnoringIndices(Path path) {
-        return values.values().stream().filter(value -> value.path().equalsIgnoringIndices(path)).toList();
-    }
-
     public static Data from(Map<String, Object> objectMap, DataFormat dataFormat) {
         var values = dataFormat.valueFormats().stream()
                 .map(ValueFormat::path)
