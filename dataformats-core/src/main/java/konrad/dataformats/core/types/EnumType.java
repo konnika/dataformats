@@ -1,6 +1,6 @@
 package konrad.dataformats.core.types;
 
-import konrad.dataformats.core.DataFormatsException;
+import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

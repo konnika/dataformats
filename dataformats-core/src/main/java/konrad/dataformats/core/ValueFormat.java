@@ -1,7 +1,7 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.registries.TypeGeneratorRegistry;
 import konrad.dataformats.core.types.Type;
+import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.Objects;
 
@@ -53,21 +53,5 @@ public class ValueFormat {
     @Override
     public int hashCode() {
         return Objects.hash(path, type);
-    }
-
-    public static ValueFormat fromCsv(String line, TypeGeneratorRegistry typeGeneratorRegistry) {
-        var parts = line.split(";");
-        if (parts.length == 2) {
-            return new ValueFormat(new Path(parts[0]), typeGeneratorRegistry.get(idFromCsv(line)).fromCsv(parts[1]));
-        }
-        throw new DataFormatsException("ValueFormat CSV is expected to have these values per line: path;type. Got " + line);
-    }
-
-    private static String idFromCsv(String line) {
-        var parts = line.split(";");
-        if (parts.length < 2) {
-            throw new DataFormatsException("ValueFormat CSV is expected to have these values per line: path;type. Got " + line);
-        }
-        return parts[1];
     }
 }

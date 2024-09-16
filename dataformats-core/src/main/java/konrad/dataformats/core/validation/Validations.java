@@ -1,4 +1,4 @@
-package konrad.dataformats.core;
+package konrad.dataformats.core.validation;
 
 import java.util.List;
 

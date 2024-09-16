@@ -1,7 +1,7 @@
 package konrad.dataformats.core;
 
 import konrad.dataformats.core.mappings.Mapping;
-import konrad.dataformats.core.registries.MappingGeneratorRegistry;
+import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,21 +32,5 @@ public class Conversion {
         var result = new Data(to, Collections.emptyList());
         mappings.forEach(mapping -> mapping.applyTo(data, result));
         return result;
-    }
-
-    // FIXME move generation from csv to new package (or even module?)
-    public static Conversion fromCsv(DataFormat from, DataFormat to, List<String> lines, MappingGeneratorRegistry mappingGeneratorRegistry) {
-        var mappings = lines.stream()
-                .map(line -> mappingGeneratorRegistry.get(idFromCsv(line)).apply(from, to, line))
-                .toList();
-        return new Conversion(from, to, mappings);
-    }
-
-    private static String idFromCsv(String line) {
-        var parts = line.split(";");
-        if (parts.length < 1) {
-            throw new DataFormatsException("Conversion CSV is expected to have at least one value per line: mapping id. Got " + line);
-        }
-        return parts[0];
     }
 }

@@ -2,7 +2,7 @@ package konrad.dataformats.core.registries;
 
 import konrad.dataformats.core.DataFormat;
 import konrad.dataformats.core.DataFormatId;
-import konrad.dataformats.core.DataFormatsException;
+import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.HashMap;
 import java.util.Map;

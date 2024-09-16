@@ -1,4 +1,4 @@
-package konrad.dataformats.core;
+package konrad.dataformats.core.validation;
 
 public class DataFormatsException extends RuntimeException {
     public DataFormatsException(String message) {

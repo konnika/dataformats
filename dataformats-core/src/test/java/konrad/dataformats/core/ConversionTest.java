@@ -1,15 +1,12 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.creation.ConversionGenerator;
+import konrad.dataformats.core.creation.MappingGeneratorRegistry;
 import konrad.dataformats.core.mappings.Mapping;
 import konrad.dataformats.core.mappings.OneToOneMapping;
-import konrad.dataformats.core.registries.MappingGeneratorRegistry;
-import konrad.dataformats.testobjects.tree.Color;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ConversionTest {
 
@@ -63,7 +60,8 @@ class ConversionTest {
                 "1:1;branch.leaf.color;mirrorBranch.mirrorLeaf.mirrorColor",
                 "1:1;leaves.[].value;mirrorLeaves.[].mirrorValue");
 
-        var conversion = Conversion.fromCsv(TestDataFormats.tree(), TestDataFormats.mirrorTree(), csv, new MappingGeneratorRegistry());
+        var conversionGenerator = new ConversionGenerator(TestDataFormats.tree(), TestDataFormats.mirrorTree(), new MappingGeneratorRegistry());
+        var conversion = conversionGenerator.fromCsv(csv);
 
         var values = List.of(
                 new Value(new Path("value"), "tree"),
@@ -81,11 +79,5 @@ class ConversionTest {
         Assertions.assertValue(converted, "mirrorBranch.mirrorLeaf.mirrorColor", "MIRROR_GREEN");
         Assertions.assertValue(converted, "mirrorLeaves.[0].mirrorValue", "tree.leaf1");
         Assertions.assertValue(converted, "mirrorLeaves.[1].mirrorValue", "tree.leaf2");
-    }
-
-    @Test
-    void name() {
-        String[] array = Arrays.stream(Color.values()).map(Enum::name).toArray(String[]::new);
-        assertEquals(4, array.length);
     }
 }

@@ -1,6 +1,9 @@
-package konrad.dataformats.core.types;
+package konrad.dataformats.core.creation;
 
-import konrad.dataformats.core.DataFormatsException;
+import konrad.dataformats.core.types.EnumType;
+import konrad.dataformats.core.types.Type;
+import konrad.dataformats.core.types.TypeId;
+import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.Arrays;
 

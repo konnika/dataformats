@@ -1,6 +1,9 @@
 package konrad.dataformats.core;
 
 
+import konrad.dataformats.core.validation.DataFormatsException;
+import konrad.dataformats.core.validation.Validations;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -127,12 +130,22 @@ public class Data {
             var firstElement = path.firstElement();
             if (path.afterFirstElement().isFirstElementAConcreteArray()) {
                 result.putIfAbsent(firstElement, new ArrayList<>());
-                var childList = (List<Map<String, Object>>) result.get(firstElement);
-                addValueToList(childList, path.afterFirstElement(), object);
+                try {
+                    @SuppressWarnings("unchecked")
+                    var childList = (List<Map<String, Object>>) result.get(firstElement);
+                    addValueToList(childList, path.afterFirstElement(), object);
+                } catch (ClassCastException e) {
+                    throw new DataFormatsException("Expected a list at " + firstElement + " of " + path + " but got " + result.get(firstElement).getClass());
+                }
             } else {
                 result.putIfAbsent(firstElement, new HashMap<>());
-                var childMap = (Map<String, Object>) result.get(firstElement);
-                addValueToMap(childMap, path.afterFirstElement(), object);
+                try {
+                    @SuppressWarnings("unchecked")
+                    var childMap = (Map<String, Object>) result.get(firstElement);
+                    addValueToMap(childMap, path.afterFirstElement(), object);
+                } catch (ClassCastException e) {
+                    throw new DataFormatsException("Expected a map at " + firstElement + " of " + path + " but got " + result.get(firstElement).getClass());
+                }
             }
         }
     }

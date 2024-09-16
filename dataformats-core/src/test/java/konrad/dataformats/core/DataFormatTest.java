@@ -1,6 +1,7 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.registries.TypeGeneratorRegistry;
+import konrad.dataformats.core.creation.DataFormatGenerator;
+import konrad.dataformats.core.creation.TypeGeneratorRegistry;
 import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.types.StringType;
@@ -62,7 +63,8 @@ class DataFormatTest {
                 "branch.leaf.color;ENUM:GREEN,YELLOW,RED,BROWN",
                 "leaves.[].value;java.lang.String");
 
-        var format = DataFormat.fromCsv(TestDataFormats.tree().id(), csv, new TypeGeneratorRegistry());
+        var dataFormatGenerator = new DataFormatGenerator(new TypeGeneratorRegistry());
+        var format = dataFormatGenerator.fromCsv(TestDataFormats.tree().id(), csv);
 
         Assertions.assertValue(format, "value", new StringType());
         Assertions.assertValue(format, "branch.value", new BooleanType());

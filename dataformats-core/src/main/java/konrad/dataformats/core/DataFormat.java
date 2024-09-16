@@ -1,6 +1,6 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.registries.TypeGeneratorRegistry;
+import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,11 +59,6 @@ public class DataFormat {
 
     public DataFormatId id() {
         return id;
-    }
-
-    public static DataFormat fromCsv(DataFormatId id, List<String> lines, TypeGeneratorRegistry typeGeneratorRegistry) {
-        var formats = lines.stream().map(line -> ValueFormat.fromCsv(line, typeGeneratorRegistry)).toList();
-        return new DataFormat(id, formats);
     }
 
     @Override

@@ -1,6 +1,7 @@
-package konrad.dataformats.core.mappings;
+package konrad.dataformats.core.creation;
 
 import konrad.dataformats.core.DataFormat;
+import konrad.dataformats.core.mappings.Mapping;
 
 @FunctionalInterface
 public interface MappingGenerator {

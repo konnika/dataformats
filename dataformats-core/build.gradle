@@ -34,3 +34,6 @@ publishing {
     }
 }
 
+compileJava {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}

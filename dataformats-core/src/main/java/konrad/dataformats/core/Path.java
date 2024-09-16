@@ -1,5 +1,8 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.validation.DataFormatsException;
+import konrad.dataformats.core.validation.Validations;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -113,6 +116,7 @@ public class Path {
             return null;
         }
         if (object instanceof Map) {
+            @SuppressWarnings("unchecked")
             var map = (Map<String, Object>) object;
             return afterFirstElement().getValueFrom(map);
         }
@@ -120,6 +124,7 @@ public class Path {
             if (isAbstractArrayPath()) {
                 throw new DataFormatsException("Cannot get a concrete value from an abstract Path: " + asString);
             }
+            @SuppressWarnings("unchecked")
             var list = (List<Map<String, Object>>) object;
             var index = Integer.parseInt(firstConcreteArrayElement().replaceAll("[\\[\\]]", ""));
             return afterFirstConcreteArray().getValueFrom(list.get(index));
@@ -208,7 +213,9 @@ public class Path {
             return Collections.emptyList();
         }
         if (object instanceof List<?> list) {
-            return (List<Map<String, Object>>) list;
+            @SuppressWarnings("unchecked")
+            var castedList = (List<Map<String, Object>>) list;
+            return castedList;
         }
 
         throw new DataFormatsException("ObjectMap does not contain a list, as expected: " + object.getClass() + " at " + asString);
