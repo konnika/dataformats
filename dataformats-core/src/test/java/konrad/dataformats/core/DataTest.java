@@ -1,7 +1,9 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.types.StringType;
 import konrad.dataformats.testobjects.tree.Color;
 import konrad.dataformats.testobjects.tree.Tree;
+import konrad.dataformats.testobjects.weirdtree.WeirdTree;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -120,6 +122,20 @@ class DataTest {
         assertValue(data, "leaves.[0].value", "tree.leaf1");
         assertValue(data, "leaves.[1].color", "YELLOW");
         assertValue(data, "leaves.[1].value", "tree.leaf2");
+    }
+
+    @Test
+    void createDataFromObjectWithListOfStrings() {
+        var weirdTree = new WeirdTree(List.of("one", "two", "three"));
+        var weirdTreeDataFormat = new DataFormat(new DataFormatId(WeirdTree.class),
+                List.of(new ValueFormat(new Path("weirdValues.[]"), new StringType())));
+
+        var data = Data.from(TestObjectMapper.toMap(weirdTree), weirdTreeDataFormat);
+
+        assertValue(data, "weirdValues.[0]", "one");
+        assertValue(data, "weirdValues.[1]", "two");
+        assertValue(data, "weirdValues.[2]", "three");
+        assertNoValue(data, "weirdValues.[3]");
     }
 
     @Test

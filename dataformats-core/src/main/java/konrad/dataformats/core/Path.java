@@ -127,7 +127,11 @@ public class Path {
             @SuppressWarnings("unchecked")
             var list = (List<Map<String, Object>>) object;
             var index = Integer.parseInt(firstConcreteArrayElement().replaceAll("[\\[\\]]", ""));
-            return afterFirstConcreteArray().getValueFrom(list.get(index));
+            if (endsAfterFirstConcreteArray()) {
+                return list.get(index);
+            } else {
+                return afterFirstConcreteArray().getValueFrom(list.get(index));
+            }
         }
         throw new DataFormatsException("Unexpected object in objectMap: " + object.getClass() + " at " + asString);
     }
@@ -193,18 +197,37 @@ public class Path {
         }
 
         var nextListPath = remaining.untilFirstAbstractArray();
-        var remainingPath = remaining.afterFirstAbstractArray();
+        var list = nextListPath.getListFrom(map);
 
         var result = new ArrayList<Path>();
 
-        var list = nextListPath.getListFrom(map);
-        for (int i = 0; i < list.size(); i++) {
-            var pathToAppend = nextListPath.concat(new Path("[" + i + "]"));
-            var previousPath = previous == null ? pathToAppend : previous.concat(pathToAppend);
-            result.addAll(allConcretePaths(list.get(i), previousPath, remainingPath));
+        if (remaining.endsAfterFirstAbstractArray()) {
+            for (int i = 0; i < list.size(); i++) {
+                var pathToAppend = nextListPath.concat(new Path("[" + i + "]"));
+                var previousPath = previous == null ? pathToAppend : previous.concat(pathToAppend);
+                result.add(previousPath);
+            }
+        } else {
+            var remainingPath = remaining.afterFirstAbstractArray();
+            for (int i = 0; i < list.size(); i++) {
+                var pathToAppend = nextListPath.concat(new Path("[" + i + "]"));
+                var previousPath = previous == null ? pathToAppend : previous.concat(pathToAppend);
+                result.addAll(allConcretePaths(list.get(i), previousPath, remainingPath));
+            }
         }
 
         return result;
+    }
+
+    public boolean endsAfterFirstAbstractArray() {
+        var index = asList.indexOf(ARRAY_BRACKETS_WITHOUT_INDEX);
+        return index == asList.size() - 1;
+    }
+
+    private boolean endsAfterFirstConcreteArray() {
+        var index = asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX)).findFirst()
+                .map(asList::indexOf).orElse(-1);
+        return index == asList.size() - 1;
     }
 
     public List<Map<String, Object>> getListFrom(Map<String, Object> objectMap) {
