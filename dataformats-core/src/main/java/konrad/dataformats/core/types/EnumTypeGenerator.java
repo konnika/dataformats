@@ -5,31 +5,61 @@ import konrad.dataformats.core.DataFormatsException;
 import java.util.Arrays;
 
 public class EnumTypeGenerator implements TypeGenerator {
-    private static final String ERROR_MESSAGE_CSV_FORMAT = "DataFormat CSV is expected to have a type value of: ENUM:value1,value2,value3. Got ";
+    private static final String REGEX_ENUM_FROM_ID_VALUES = "ENUM(:[\\w.]+)(:[\\w,]+)";
+    private static final String REGEX_ENUM_FROM_CLASS = "ENUM(:[\\w.]+)";
+    private static final String REGEX_ENUM_FROM_VALUES = "ENUM(:[\\w,]+)";
+    private final ClassLoader classLoader;
+
+    public EnumTypeGenerator() {
+        this(ClassLoader.getSystemClassLoader());
+    }
+
+    public EnumTypeGenerator(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 
     @Override
     public boolean acceptsCsv(String value) {
-        return value.startsWith("ENUM:");
+        return value.matches(REGEX_ENUM_FROM_ID_VALUES) || value.matches(REGEX_ENUM_FROM_CLASS) || value.matches(REGEX_ENUM_FROM_VALUES);
     }
 
     @Override
     public Type fromCsv(String value) {
-        if (value.startsWith("ENUM:")) {
-            var enumValuesIndex = value.indexOf(":");
-            if (enumValuesIndex == -1) {
-                throw new DataFormatsException(ERROR_MESSAGE_CSV_FORMAT + value);
-            }
-            var enumValuesString = value.substring(enumValuesIndex + 1).trim();
-            if (enumValuesString.isBlank()) {
-                throw new DataFormatsException(ERROR_MESSAGE_CSV_FORMAT + value);
-            }
-            var values = enumValuesString.split(",");
-            if (values.length < 1) {
-                throw new DataFormatsException(ERROR_MESSAGE_CSV_FORMAT + value);
-            }
-            return new EnumType(new TypeId(enumValuesString), Arrays.stream(values).toList());
+        if (!acceptsCsv(value)) {
+            throw new DataFormatsException("Enum Type cannot be created from value: " + value);
         }
 
-        throw new DataFormatsException("Enum Type cannot be created from value: " + value);
+        if (value.matches(REGEX_ENUM_FROM_ID_VALUES)) {
+            return createEnumTypeFromIdAndValues(value);
+        } else if (value.matches(REGEX_ENUM_FROM_CLASS)) {
+            return createEnumTypeFromClass(value);
+        } else {
+            return createEnumTypeFromValues(value);
+        }
+    }
+
+    private Type createEnumTypeFromIdAndValues(String value) {
+        String[] parts = value.split(":");
+        String id = parts[1];
+        String[] values = parts[2].split(",");
+        return new EnumType(new TypeId(id), Arrays.asList(values));
+    }
+
+    private Type createEnumTypeFromClass(String value) {
+        String[] parts = value.split(":");
+        String className = parts[1];
+        try {
+            return new EnumType((Class<? extends Enum>) classLoader.loadClass(className));
+        } catch (ClassNotFoundException e) {
+            throw new DataFormatsException("Cannot find ENUM class " + className, e);
+        } catch (ClassCastException e) {
+            throw new DataFormatsException("Class " + className + " is not an Enum", e);
+        }
+    }
+
+    private Type createEnumTypeFromValues(String value) {
+        String[] parts = value.split(":");
+        String[] values = parts[1].split(",");
+        return new EnumType(new TypeId(parts[1]), Arrays.asList(values));
     }
 }
