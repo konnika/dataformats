@@ -2,5 +2,5 @@ package konrad.dataformats.testobjects.weirdtree;
 
 import java.util.List;
 
-public record WeirdTree(List<String> weirdValues) {
+public record WeirdTree(List<String> weirdValues, NullObject nullObject) {
 }

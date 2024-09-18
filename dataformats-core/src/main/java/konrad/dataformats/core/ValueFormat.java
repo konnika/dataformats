@@ -21,15 +21,15 @@ public class ValueFormat {
         }
     }
 
-    boolean has(Path path) {
+    public boolean has(Path path) {
         return Objects.equals(this.path, path);
     }
 
-    boolean has(Type type) {
+    public boolean has(Type type) {
         return Objects.equals(this.type, type);
     }
 
-    Path path() {
+    public Path path() {
         return path;
     }
 

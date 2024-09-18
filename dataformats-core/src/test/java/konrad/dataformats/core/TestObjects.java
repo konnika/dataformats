@@ -7,6 +7,7 @@ import konrad.dataformats.testobjects.tree.Branch;
 import konrad.dataformats.testobjects.tree.Color;
 import konrad.dataformats.testobjects.tree.Leaf;
 import konrad.dataformats.testobjects.tree.Tree;
+import konrad.dataformats.testobjects.weirdtree.WeirdTree;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,5 +26,9 @@ public class TestObjects {
                 new BigBranch(List.of(new BigLeaf(BigDecimal.valueOf(14)), new BigLeaf(BigDecimal.valueOf(15))), LocalDate.now())
         );
         return new BigTree(branches, 11);
+    }
+
+    public static WeirdTree weirdTree() {
+        return new WeirdTree(List.of("one", "two", "three"), null);
     }
 }

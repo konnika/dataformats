@@ -126,7 +126,7 @@ class DataTest {
 
     @Test
     void createDataFromObjectWithListOfStrings() {
-        var weirdTree = new WeirdTree(List.of("one", "two", "three"));
+        var weirdTree = TestObjects.weirdTree();
         var weirdTreeDataFormat = new DataFormat(new DataFormatId(WeirdTree.class),
                 List.of(new ValueFormat(new Path("weirdValues.[]"), new StringType())));
 
