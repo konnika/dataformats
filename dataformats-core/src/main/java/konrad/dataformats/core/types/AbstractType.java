@@ -34,6 +34,11 @@ public class AbstractType implements Type {
     }
 
     @Override
+    public TypeId id() {
+        return id;
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;

@@ -8,4 +8,6 @@ public interface Type {
     boolean hasClass(Class<?> aClass);
 
     boolean accepts(Object object);
+
+    TypeId id();
 }
