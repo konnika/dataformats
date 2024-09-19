@@ -52,7 +52,9 @@ public class EnumTypeGenerator implements TypeGenerator {
         String[] parts = value.split(":");
         String className = parts[1];
         try {
-            return new EnumType((Class<? extends Enum>) classLoader.loadClass(className));
+            @SuppressWarnings("unchecked")
+            var enumClass = (Class<? extends Enum>) classLoader.loadClass(className);
+            return new EnumType(enumClass);
         } catch (ClassNotFoundException e) {
             throw new DataFormatsException("Cannot find ENUM class " + className, e);
         } catch (ClassCastException e) {
