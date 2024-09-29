@@ -10,7 +10,7 @@ import java.util.Objects;
 public class EnumType extends AbstractType implements Type {
     private final List<String> enumValues = new ArrayList<>();
 
-    public EnumType(Class<? extends Enum> enumClass) {
+    public EnumType(Class<? extends Enum<?>> enumClass) {
         this(new TypeId(enumClass.getName()), Arrays.stream(enumClass.getEnumConstants()).map(Enum::name).toList());
     }
 

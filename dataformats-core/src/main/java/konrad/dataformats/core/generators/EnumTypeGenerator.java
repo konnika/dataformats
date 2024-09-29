@@ -53,7 +53,7 @@ public class EnumTypeGenerator implements TypeGenerator {
         String className = parts[1];
         try {
             @SuppressWarnings("unchecked")
-            var enumClass = (Class<? extends Enum>) classLoader.loadClass(className);
+            var enumClass = (Class<? extends Enum<?>>) classLoader.loadClass(className);
             return new EnumType(enumClass);
         } catch (ClassNotFoundException e) {
             throw new DataFormatsException("Cannot find ENUM class " + className, e);
