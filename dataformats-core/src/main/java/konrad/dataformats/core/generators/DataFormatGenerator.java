@@ -35,4 +35,7 @@ public class DataFormatGenerator {
         var typeGenerator = typeGeneratorRegistry.get(value);
         return typeGenerator.fromCsv(value);
     }
+
+    // TODO add method to generate DataFormat from an Object (analyze fields recursively)
+    // TODO add method toCsv() to generate the CSV from DataFormat (or better add this method in DataFormat)
 }
