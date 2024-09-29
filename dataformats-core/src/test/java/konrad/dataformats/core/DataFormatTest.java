@@ -77,10 +77,10 @@ class DataFormatTest {
     }
 
     private void assertHasType(DataFormat dataFormat, String path, Type type) {
-        assertTrue(dataFormat.get(new Path(path)).map(vf -> vf.has(type)).orElse(false));
+        assertTrue(dataFormat.get(new Path(path)).has(type));
     }
 
     private void assertHasNotType(DataFormat dataFormat, String path, Type type) {
-        assertFalse(dataFormat.get(new Path(path)).map(vf -> vf.has(type)).orElse(false));
+        assertFalse(dataFormat.get(new Path(path)).has(type));
     }
 }

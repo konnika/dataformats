@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class DataFormat {
     private final DataFormatId id;
@@ -32,8 +31,8 @@ public class DataFormat {
         return valueFormats.stream().anyMatch(v -> v.has(path));
     }
 
-    public Optional<ValueFormat> get(Path path) {
-        return valueFormats.stream().filter(p -> p.has(path)).findFirst();
+    public ValueFormat get(Path path) {
+        return valueFormats.stream().filter(p -> p.has(path)).findFirst().orElseThrow(() -> new DataFormatsException("Value path (from) " + path + " is not defined in DataFormat " + id));
     }
 
     public List<ValueFormat> valueFormats() {

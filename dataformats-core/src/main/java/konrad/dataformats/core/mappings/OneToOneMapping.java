@@ -5,7 +5,6 @@ import konrad.dataformats.core.DataFormat;
 import konrad.dataformats.core.DataFormatId;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.Value;
-import konrad.dataformats.core.ValueFormat;
 import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.validation.DataFormatsException;
 import konrad.dataformats.core.validation.Validations;
@@ -58,10 +57,8 @@ public class OneToOneMapping implements Mapping {
     }
 
     private Object mapValue(Value value, Path toPath) {
-        var fromType = fromFormat.get(value.path().asAbstractPath()).map(ValueFormat::type)
-                .orElseThrow(() -> new DataFormatsException("Value path (from) " + value.path() + " is not defined in DataFormat " + fromFormat.id()));
-        var toType = toFormat.get(toPath.asAbstractPath()).map(ValueFormat::type)
-                .orElseThrow(() -> new DataFormatsException("Value path (to) " + value.path() + " is not defined in DataFormat " + fromFormat.id()));
+        var fromType = fromFormat.get(value.path().asAbstractPath()).type();
+        var toType = toFormat.get(toPath.asAbstractPath()).type();
 
         if (fromType.equals(toType)) {
             return value.object();

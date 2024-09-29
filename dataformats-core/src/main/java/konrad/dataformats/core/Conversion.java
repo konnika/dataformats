@@ -34,6 +34,6 @@ public class Conversion {
         return result;
     }
 
-    // TODO add validate method that checks if all paths from DataFormat from have been used during a conversion
+    // TODO 2. add validate method that checks if all paths from DataFormat from have been used during a conversion
     // TODO is the same necessary for DataFormat to?
 }
