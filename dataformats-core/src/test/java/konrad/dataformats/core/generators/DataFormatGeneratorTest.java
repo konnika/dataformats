@@ -1,31 +1,27 @@
 package konrad.dataformats.core.generators;
 
 import konrad.dataformats.core.DataFormatId;
+import konrad.dataformats.core.Path;
 import konrad.dataformats.core.TestDataFormats;
-import konrad.dataformats.core.TestObjects;
+import konrad.dataformats.testobjects.tree.Leaf;
+import konrad.dataformats.testobjects.tree.Tree;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DataFormatGeneratorTest {
     @Test
-    void testApply() {
-        // given
+    void fromClassWorksOnSimpleObject() {
         var generator = new DataFormatGenerator(new TypeGeneratorRegistry());
 
-        // when
-        var dataFormat = generator.fromObject(new DataFormatId("tree"), TestObjects.tree());
+        Map<Path, Class<?>> knownListTypes = Map.of(new Path("leaves"), Leaf.class);
+        var dataFormat = generator.fromClass(new DataFormatId("tree"), Tree.class, knownListTypes);
 
-        // then
         var expected = TestDataFormats.tree();
-        // TODO remove me
-//        var notExpectedValueFormats = new ArrayList<>(dataFormat.valueFormats());
-//        notExpectedValueFormats.removeAll(expected.valueFormats());
-//        notExpectedValueFormats.forEach(vf -> System.out.println(vf.path()));
-
         assertEquals(expected.valueFormats().size(), dataFormat.valueFormats().size());
         assertTrue(dataFormat.valueFormats().containsAll(expected.valueFormats()));
     }
-
 }

@@ -37,4 +37,10 @@ public class Validations {
         }
         return obj;
     }
+
+    public static void validateNotEmpty(Object obj, String name) {
+        if (obj == null) {
+            throw new DataFormatsException(String.format(INVALID_X_ENCOUNTERED, name, "null"));
+        }
+    }
 }

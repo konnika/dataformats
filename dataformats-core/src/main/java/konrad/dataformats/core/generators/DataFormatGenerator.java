@@ -9,10 +9,12 @@ import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.types.StringType;
 import konrad.dataformats.core.types.Type;
 import konrad.dataformats.core.validation.DataFormatsException;
+import konrad.dataformats.core.validation.Validations;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DataFormatGenerator {
     private final TypeGeneratorRegistry typeGeneratorRegistry;
@@ -41,50 +43,40 @@ public class DataFormatGenerator {
         return typeGenerator.fromCsv(value);
     }
 
-    /**
-     * This method has <b>limitations</b> inherently in Java:
-     * It cannot generate ValueFormats for Objects in lists <b>when there is no actual object in the list</b> (determining the generics type from a list is not possible at runtime)
-     */
-    public DataFormat fromObject(DataFormatId id, Object obj) {
+    public DataFormat fromClass(DataFormatId id, Class<?> aClass, Map<Path, Class<?>> knownListTypes) {
+        Validations.validateNotEmpty(aClass, "class to analyze");
+
         List<ValueFormat> formats = new ArrayList<>();
-        analyzeFields(obj, "", formats);
+        analyzeFields(aClass, "", formats, knownListTypes);
         return new DataFormat(id, formats);
     }
 
-    private void analyzeFields(Object obj, String parentPath, List<ValueFormat> formats) {
-        if (obj == null) {
-            return;
-        }
+    private void analyzeFields(Class<?> aClass, String parentPath, List<ValueFormat> formats, Map<Path, Class<?>> knownListTypes) {
+        Field[] fields = aClass.getDeclaredFields();
 
-        Class<?> clazz = obj.getClass();
-        Field[] fields = clazz.getDeclaredFields();
-
-        if (List.class.isAssignableFrom(clazz)) {
-            List<?> list = (List<?>) obj;
-            analyzeFields(list.get(0), parentPath + ".[]", formats);
-            return;
+        if (List.class.isAssignableFrom(aClass)) {
+            if (knownListTypes.containsKey(new Path(parentPath))) {
+                analyzeFields(knownListTypes.get(new Path(parentPath)), parentPath + ".[]", formats, knownListTypes);
+                return;
+            }
+            throw new DataFormatsException("Cannot determine list element type in list: " + parentPath + ". Please provide the class of this list via analyze method.");
         }
 
         for (Field field : fields) {
             field.setAccessible(true);
             String path = parentPath.isEmpty() ? field.getName() : parentPath + "." + field.getName();
-            try {
-                Object value = field.get(obj);
-                Type type = determineType(field.getType(), value);
 
-                if (!isPrimitiveOrWrapper(field.getType()) && !field.getType().equals(String.class)) {
-                    analyzeFields(value, path, formats);
-                } else {
-                    formats.add(new ValueFormat(new Path(path), type));
-                }
-            } catch (IllegalAccessException e) {
-                throw new DataFormatsException("Failed to access field: " + field.getName(), e);
+            if (!isPrimitiveOrWrapper(field.getType()) && !field.getType().equals(String.class)) {
+                analyzeFields(field.getType(), path, formats, knownListTypes);
+            } else {
+                Type type = determineType(field.getType());
+                formats.add(new ValueFormat(new Path(path), type));
             }
         }
     }
 
-    // TODO fix me: either ask all known types to accept the class or guess the type or require manual post processing
-    private Type determineType(Class<?> fieldType, Object value) {
+    // TODO ask the type registry for the type with id class
+    private Type determineType(Class<?> fieldType) {
         if (fieldType.equals(String.class)) {
             return new StringType();
         } else if (fieldType.equals(Boolean.class) || fieldType.equals(boolean.class)) {
