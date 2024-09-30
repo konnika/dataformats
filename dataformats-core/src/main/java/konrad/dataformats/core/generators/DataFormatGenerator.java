@@ -79,7 +79,7 @@ public class DataFormatGenerator {
     }
 
     private Type determineType(Class<?> fieldType) {
-        return typeRegistry.getForId(new TypeId(fieldType));
+        return typeRegistry.getForId(new TypeId(fieldType.getName()));
     }
 
     private boolean isPrimitiveOrWrapper(Class<?> type) {
