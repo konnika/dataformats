@@ -53,7 +53,7 @@ public class TestDataFormats {
 
     public static DataFormat bigMirrorTree() {
         var formats = List.of(
-                new ValueFormat(new Path("mirrorBranches.[].mirrorLeaves.[].bigMirrorNumber"), new BigDecimalType()),
+                new ValueFormat(new Path("mirrorBranches.[].bigMirrorLeaves.[].bigMirrorNumber"), new BigDecimalType()),
                 new ValueFormat(new Path("mirrorBranches.[].bigMirrorDate"), new LocalDateType()),
                 new ValueFormat(new Path("bigMirrorInteger"), new IntegerType())
         );

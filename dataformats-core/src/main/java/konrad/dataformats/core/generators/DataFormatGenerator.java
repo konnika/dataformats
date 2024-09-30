@@ -4,23 +4,26 @@ import konrad.dataformats.core.DataFormat;
 import konrad.dataformats.core.DataFormatId;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.ValueFormat;
-import konrad.dataformats.core.types.BooleanType;
-import konrad.dataformats.core.types.EnumType;
-import konrad.dataformats.core.types.StringType;
+import konrad.dataformats.core.registries.TypeRegistry;
 import konrad.dataformats.core.types.Type;
+import konrad.dataformats.core.types.TypeId;
 import konrad.dataformats.core.validation.DataFormatsException;
 import konrad.dataformats.core.validation.Validations;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class DataFormatGenerator {
     private final TypeGeneratorRegistry typeGeneratorRegistry;
+    private final TypeRegistry typeRegistry;
 
-    public DataFormatGenerator(TypeGeneratorRegistry typeGeneratorRegistry) {
+    public DataFormatGenerator(TypeGeneratorRegistry typeGeneratorRegistry, TypeRegistry typeRegistry) {
         this.typeGeneratorRegistry = typeGeneratorRegistry;
+        this.typeRegistry = typeRegistry;
     }
 
     public DataFormat fromCsv(DataFormatId id, List<String> lines) {
@@ -63,7 +66,7 @@ public class DataFormatGenerator {
         }
 
         for (Field field : fields) {
-            field.setAccessible(true);
+//            field.setAccessible(true); // FIXME how to handle private fields?
             String path = parentPath.isEmpty() ? field.getName() : parentPath + "." + field.getName();
 
             if (!isPrimitiveOrWrapper(field.getType()) && !field.getType().equals(String.class)) {
@@ -75,20 +78,8 @@ public class DataFormatGenerator {
         }
     }
 
-    // TODO ask the type registry for the type with id class
     private Type determineType(Class<?> fieldType) {
-        if (fieldType.equals(String.class)) {
-            return new StringType();
-        } else if (fieldType.equals(Boolean.class) || fieldType.equals(boolean.class)) {
-            return new BooleanType();
-        } else if (fieldType.isEnum()) {
-            @SuppressWarnings("unchecked")
-            var enumClass = (Class<? extends Enum<?>>) fieldType;
-            return new EnumType(enumClass);
-        } else {
-            // Add more type determinations as needed
-            return new StringType(); // Default to StringType for unknown types
-        }
+        return typeRegistry.getForId(new TypeId(fieldType));
     }
 
     private boolean isPrimitiveOrWrapper(Class<?> type) {
@@ -100,7 +91,9 @@ public class DataFormatGenerator {
                 type.equals(Short.class) ||
                 type.equals(Double.class) ||
                 type.equals(Long.class) ||
-                type.equals(Float.class);
+                type.equals(Float.class) ||
+                type.equals(BigDecimal.class) ||
+                type.equals(LocalDate.class);
     }
 
     // TODO add method toCsv() to generate the CSV from DataFormat (or better add this method in DataFormat)

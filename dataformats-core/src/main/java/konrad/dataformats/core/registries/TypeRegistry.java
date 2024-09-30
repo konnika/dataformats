@@ -1,9 +1,15 @@
 package konrad.dataformats.core.registries;
 
+import konrad.dataformats.core.types.BigDecimalType;
+import konrad.dataformats.core.types.BigIntegerType;
 import konrad.dataformats.core.types.BooleanType;
+import konrad.dataformats.core.types.DoubleType;
+import konrad.dataformats.core.types.IntegerType;
+import konrad.dataformats.core.types.LocalDateType;
 import konrad.dataformats.core.types.StringType;
 import konrad.dataformats.core.types.Type;
 import konrad.dataformats.core.types.TypeId;
+import konrad.dataformats.core.types.ZonedDateTimeType;
 import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.HashMap;
@@ -16,6 +22,12 @@ public class TypeRegistry {
     public TypeRegistry() {
         add(new StringType());
         add(new BooleanType());
+        add(new DoubleType());
+        add(new IntegerType());
+        add(new BigDecimalType());
+        add(new BigIntegerType());
+        add(new LocalDateType());
+        add(new ZonedDateTimeType());
     }
 
     public void add(Type type) {
