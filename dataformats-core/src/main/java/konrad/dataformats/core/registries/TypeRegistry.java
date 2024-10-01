@@ -39,6 +39,10 @@ public class TypeRegistry {
                 .orElseThrow(() -> new DataFormatsException("No Type found for class " + aClass.getName()));
     }
 
+    public boolean contains(TypeId typeId) {
+        return types.containsKey(typeId);
+    }
+
     public Type getForId(TypeId typeId) {
         return Optional.ofNullable(types.get(typeId))
                 .orElseThrow(() -> new DataFormatsException("No Type found for id " + typeId));

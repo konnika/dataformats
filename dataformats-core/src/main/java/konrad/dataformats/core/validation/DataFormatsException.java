@@ -8,4 +8,9 @@ public class DataFormatsException extends RuntimeException {
     public DataFormatsException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    @Override
+    public String toString() {
+        return getMessage();
+    }
 }
