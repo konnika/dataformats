@@ -41,4 +41,8 @@ public class TypeId {
     public String toString() {
         return "TypeId " + id;
     }
+
+    public String asString() {
+        return id;
+    }
 }

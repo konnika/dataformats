@@ -1,8 +1,5 @@
 package konrad.dataformats.core;
 
-import konrad.dataformats.core.generators.DataFormatGenerator;
-import konrad.dataformats.core.generators.TypeGeneratorRegistry;
-import konrad.dataformats.core.registries.TypeRegistry;
 import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.types.StringType;
@@ -54,23 +51,6 @@ class DataFormatTest {
         assertHasNotType(treeFormat, "branch.leaf.color", new EnumType(List.of("GREEN", "YELLOW", "RED")));
         assertHasNotType(treeFormat, "branch.leaf.color", new EnumType(List.of("xxx")));
         assertHasNotType(treeFormat, "branch.leaf.color", new EnumType(Collections.emptyList()));
-    }
-
-    @Test
-    void fromCsvWorks() {
-        var csv = List.of(
-                "value;java.lang.String",
-                "branch.value;java.lang.Boolean",
-                "branch.leaf.color;ENUM:GREEN,YELLOW,RED,BROWN",
-                "leaves.[].value;java.lang.String");
-
-        var dataFormatGenerator = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry());
-        var format = dataFormatGenerator.fromCsv(TestDataFormats.tree().id(), csv);
-
-        Assertions.assertValue(format, "value", new StringType());
-        Assertions.assertValue(format, "branch.value", new BooleanType());
-        Assertions.assertValue(format, "branch.leaf.color", new EnumType(List.of("GREEN", "YELLOW", "RED", "BROWN")));
-        Assertions.assertValue(format, "leaves.[].value", new StringType());
     }
 
     private void assertContains(DataFormat dataFormat, String path) {

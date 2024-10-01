@@ -5,6 +5,7 @@ import konrad.dataformats.core.DataFormatId;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.ValueFormat;
 import konrad.dataformats.core.registries.TypeRegistry;
+import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.types.Type;
 import konrad.dataformats.core.types.TypeId;
 import konrad.dataformats.core.validation.DataFormatsException;
@@ -96,5 +97,16 @@ public class DataFormatGenerator {
                 type.equals(LocalDate.class);
     }
 
-    // TODO add method toCsv() to generate the CSV from DataFormat (or better add this method in DataFormat)
+    public List<String> toCsv(DataFormat dataFormat) {
+        return dataFormat.valueFormats().stream()
+                .map(this::valueFormatToCsv)
+                .toList();
+    }
+
+    private String valueFormatToCsv(ValueFormat valueFormat) {
+        if (valueFormat.type() instanceof EnumType) {
+            return valueFormat.path().asString() + ";ENUM:" + valueFormat.type().id().asString();
+        }
+        return valueFormat.path().asString() + ";" + valueFormat.type().id().asString();
+    }
 }
