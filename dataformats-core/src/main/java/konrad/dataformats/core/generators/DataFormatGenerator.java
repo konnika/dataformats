@@ -12,6 +12,7 @@ import konrad.dataformats.core.validation.DataFormatsException;
 import konrad.dataformats.core.validation.Validations;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -73,8 +74,10 @@ public class DataFormatGenerator {
             if (!isPrimitiveOrWrapper(field.getType()) && !field.getType().equals(String.class)) {
                 analyzeFields(field.getType(), path, formats, knownListTypes);
             } else {
-                Type type = determineType(field.getType());
-                formats.add(new ValueFormat(new Path(path), type));
+                if (!Modifier.isStatic(field.getModifiers())) {
+                    Type type = determineType(field.getType());
+                    formats.add(new ValueFormat(new Path(path), type));
+                }
             }
         }
     }

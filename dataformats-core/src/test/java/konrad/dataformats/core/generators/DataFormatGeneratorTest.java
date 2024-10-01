@@ -1,9 +1,11 @@
 package konrad.dataformats.core.generators;
 
 import konrad.dataformats.core.Assertions;
+import konrad.dataformats.core.DataFormat;
 import konrad.dataformats.core.DataFormatId;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.TestDataFormats;
+import konrad.dataformats.core.ValueFormat;
 import konrad.dataformats.core.registries.TypeRegistry;
 import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.EnumType;
@@ -98,5 +100,23 @@ class DataFormatGeneratorTest {
 
         var actual = generator.fromCsv(expected.id(), csv);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void staticFieldsAreFiltered() {
+        var generator = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry());
+        var dataFormat = generator.fromClass(new DataFormatId("staticTree"), StaticTree.class, Map.of());
+
+        var expected = new DataFormat(new DataFormatId("staticTree"), List.of(
+                new ValueFormat(new Path("value"), new StringType())
+        ));
+
+        assertEquals(expected.valueFormats().size(), dataFormat.valueFormats().size());
+        assertTrue(dataFormat.valueFormats().containsAll(expected.valueFormats()));
+    }
+
+    class StaticTree {
+        static final String STATIC = "static";
+        String value;
     }
 }
