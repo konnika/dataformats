@@ -49,7 +49,7 @@ class OneToOneMappingTest {
     void listInListWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.bigTree(), TestDataFormats.bigMirrorTree(),
                 new Path("branches.[].leaves.[].bigNumber"),
-                new Path("mirrorBranches.[].mirrorLeaves.[].bigMirrorNumber"));
+                new Path("mirrorBranches.[].bigMirrorLeaves.[].bigMirrorNumber"));
 
         var values = List.of(
                 new Value(new Path("branches.[0].leaves.[0].bigNumber"), BigDecimal.valueOf(11)),
@@ -62,10 +62,10 @@ class OneToOneMappingTest {
 
         mapping.applyTo(before, after);
 
-        Assertions.assertValue(after, "mirrorBranches.[0].mirrorLeaves.[0].bigMirrorNumber", BigDecimal.valueOf(11));
-        Assertions.assertValue(after, "mirrorBranches.[0].mirrorLeaves.[1].bigMirrorNumber", BigDecimal.valueOf(12));
-        Assertions.assertValue(after, "mirrorBranches.[1].mirrorLeaves.[0].bigMirrorNumber", BigDecimal.valueOf(13));
-        Assertions.assertValue(after, "mirrorBranches.[1].mirrorLeaves.[1].bigMirrorNumber", BigDecimal.valueOf(14));
+        Assertions.assertValue(after, "mirrorBranches.[0].bigMirrorLeaves.[0].bigMirrorNumber", BigDecimal.valueOf(11));
+        Assertions.assertValue(after, "mirrorBranches.[0].bigMirrorLeaves.[1].bigMirrorNumber", BigDecimal.valueOf(12));
+        Assertions.assertValue(after, "mirrorBranches.[1].bigMirrorLeaves.[0].bigMirrorNumber", BigDecimal.valueOf(13));
+        Assertions.assertValue(after, "mirrorBranches.[1].bigMirrorLeaves.[1].bigMirrorNumber", BigDecimal.valueOf(14));
     }
 
     @Test

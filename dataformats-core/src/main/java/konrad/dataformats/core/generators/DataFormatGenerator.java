@@ -67,7 +67,7 @@ public class DataFormatGenerator {
         }
 
         for (Field field : fields) {
-//            field.setAccessible(true); // FIXME how to handle private fields?
+//            field.setAccessible(true); // leave this here in case I need it at some point, as a reminder
             String path = parentPath.isEmpty() ? field.getName() : parentPath + "." + field.getName();
 
             if (!isPrimitiveOrWrapper(field.getType()) && !field.getType().equals(String.class)) {
