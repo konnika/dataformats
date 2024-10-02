@@ -7,6 +7,7 @@ import konrad.dataformats.core.Path;
 import konrad.dataformats.core.TestDataFormats;
 import konrad.dataformats.core.ValueFormat;
 import konrad.dataformats.core.registries.TypeRegistry;
+import konrad.dataformats.core.types.BigIntegerType;
 import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.types.StringType;
@@ -18,6 +19,7 @@ import konrad.dataformats.testobjects.tree.Leaf;
 import konrad.dataformats.testobjects.tree.Tree;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -115,8 +117,25 @@ class DataFormatGeneratorTest {
         assertTrue(dataFormat.valueFormats().containsAll(expected.valueFormats()));
     }
 
+    @Test
+    void knownTypesAreRecognized() {
+        var generator = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry());
+        var dataFormat = generator.fromClass(new DataFormatId("bigIntegerTree"), BigIntegerTree.class, Map.of());
+
+        var expected = new DataFormat(new DataFormatId("bigIntegerTree"), List.of(
+                new ValueFormat(new Path("value"), new BigIntegerType())
+        ));
+
+        assertEquals(expected.valueFormats().size(), dataFormat.valueFormats().size());
+        assertTrue(dataFormat.valueFormats().containsAll(expected.valueFormats()));
+    }
+
     class StaticTree {
         static final String STATIC = "static";
         String value;
+    }
+
+    class BigIntegerTree {
+        BigInteger value;
     }
 }

@@ -13,8 +13,6 @@ import konrad.dataformats.core.validation.Validations;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,12 +78,16 @@ public class DataFormatGenerator {
 //            field.setAccessible(true); // leave this here in case I need it at some point, as a reminder
             String path = parentPath.isEmpty() ? field.getName() : parentPath + "." + field.getName();
 
-            if (!isPrimitiveOrWrapper(field.getType()) && !field.getType().equals(String.class)) {
-                analyzeFields(field.getType(), path, formats, knownListTypes);
+            var type = determineType(field.getType());
+            if (type.isEmpty()) {
+                if (isPrimitiveOrWrapper(field.getType())) {
+                    errors.add(new DataFormatsException("No Type found for class " + field.getType().getName()));
+                } else {
+                    analyzeFields(field.getType(), path, formats, knownListTypes);
+                }
             } else {
                 if (!Modifier.isStatic(field.getModifiers())) {
-                    Optional<Type> typeOptional = determineType(field.getType());
-                    typeOptional.ifPresent(type -> formats.add(new ValueFormat(new Path(path), type)));
+                    formats.add(new ValueFormat(new Path(path), type.orElseThrow(() -> new DataFormatsException("No Type found for class " + field.getType().getName()))));
                 }
             }
         }
@@ -94,7 +96,6 @@ public class DataFormatGenerator {
     private Optional<Type> determineType(Class<?> fieldType) {
         var typeId = new TypeId(fieldType.getName());
         if (!typeRegistry.contains(typeId)) {
-            errors.add(new DataFormatsException("No Type found for class " + fieldType.getName()));
             return Optional.empty();
         }
         return Optional.of(typeRegistry.getForId(typeId));
@@ -109,9 +110,7 @@ public class DataFormatGenerator {
                 type.equals(Short.class) ||
                 type.equals(Double.class) ||
                 type.equals(Long.class) ||
-                type.equals(Float.class) ||
-                type.equals(BigDecimal.class) ||
-                type.equals(LocalDate.class);
+                type.equals(Float.class);
     }
 
     public List<String> toCsv(DataFormat dataFormat) {

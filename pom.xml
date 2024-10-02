@@ -6,7 +6,7 @@
 
     <groupId>konrad.dataformats</groupId>
     <artifactId>dataformats-root</artifactId>
-    <version>0.9.2</version>
+    <version>0.9.3</version>
 
     <packaging>pom</packaging>
 
@@ -78,5 +78,21 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
