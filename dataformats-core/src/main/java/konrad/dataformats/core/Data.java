@@ -91,8 +91,7 @@ public class Data {
         if (dataFormat.contains(path.asAbstractPath())) {
             return values.get(path);
         }
-
-        throw new DataFormatsException("Path " + path + " does not exist in Dataformat " + dataFormat.id());
+        throw new DataFormatsException("%s does not exist in Dataformat %s".formatted(path, dataFormat.id()));
     }
 
     public static Data from(Map<String, Object> objectMap, DataFormat dataFormat) {

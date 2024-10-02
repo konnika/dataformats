@@ -8,6 +8,7 @@ import konrad.dataformats.core.types.CharacterType;
 import konrad.dataformats.core.types.DoubleType;
 import konrad.dataformats.core.types.FloatType;
 import konrad.dataformats.core.types.IntegerType;
+import konrad.dataformats.core.types.LocalDateTimeType;
 import konrad.dataformats.core.types.LocalDateType;
 import konrad.dataformats.core.types.LongType;
 import konrad.dataformats.core.types.StringType;
@@ -34,6 +35,7 @@ public class TypeRegistry {
         add(new BigDecimalType());
         add(new BigIntegerType());
         add(new LocalDateType());
+        add(new LocalDateTimeType());
         add(new ZonedDateTimeType());
         types.put(new TypeId(boolean.class), new BooleanType());
         types.put(new TypeId(int.class), new IntegerType());

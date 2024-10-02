@@ -69,7 +69,9 @@ public class DataFormatGenerator {
             if (knownListTypes.containsKey(new Path(parentPath))) {
                 analyzeFields(knownListTypes.get(new Path(parentPath)), parentPath + ".[]", formats, knownListTypes);
             } else {
-                errors.add(new DataFormatsException("Cannot determine list element type in list: " + parentPath + ". Please provide the class of this list via analyze method."));
+                errors.add(new DataFormatsException("Cannot determine list element type in list: " + parentPath +
+                        ". Please provide the class of this list via analyze method. " +
+                        "E.g. knownListTypes.put(new Path(\"" + parentPath + "\"), XXX.class);"));
             }
             return;
         }
