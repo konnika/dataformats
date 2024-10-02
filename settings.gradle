@@ -1,7 +1,0 @@
-rootProject.name = 'dataformats'
-
-include 'dataformats-testobjects'
-include 'dataformats-light'
-include 'dataformats-core'
-include 'dataformats-use'
-
