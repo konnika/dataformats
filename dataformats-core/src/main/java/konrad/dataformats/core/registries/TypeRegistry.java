@@ -6,6 +6,7 @@ import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.DoubleType;
 import konrad.dataformats.core.types.IntegerType;
 import konrad.dataformats.core.types.LocalDateType;
+import konrad.dataformats.core.types.LongType;
 import konrad.dataformats.core.types.StringType;
 import konrad.dataformats.core.types.Type;
 import konrad.dataformats.core.types.TypeId;
@@ -24,6 +25,7 @@ public class TypeRegistry {
         add(new BooleanType());
         add(new DoubleType());
         add(new IntegerType());
+        add(new LongType());
         add(new BigDecimalType());
         add(new BigIntegerType());
         add(new LocalDateType());

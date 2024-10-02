@@ -7,6 +7,7 @@ import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.DoubleType;
 import konrad.dataformats.core.types.IntegerType;
 import konrad.dataformats.core.types.LocalDateType;
+import konrad.dataformats.core.types.LongType;
 import konrad.dataformats.core.types.StringType;
 import konrad.dataformats.core.types.ZonedDateTimeType;
 import konrad.dataformats.core.validation.DataFormatsException;
@@ -22,6 +23,7 @@ public class TypeGeneratorRegistry {
         add(new SimpleTypeGenerator(new StringType()));
         add(new SimpleTypeGenerator(new BooleanType()));
         add(new SimpleTypeGenerator(new IntegerType()));
+        add(new SimpleTypeGenerator(new LongType()));
         add(new SimpleTypeGenerator(new BigDecimalType()));
         add(new SimpleTypeGenerator(new LocalDateType()));
         add(new SimpleTypeGenerator(new BigIntegerType()));
