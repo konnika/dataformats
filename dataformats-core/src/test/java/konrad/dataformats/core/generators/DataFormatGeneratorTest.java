@@ -10,6 +10,7 @@ import konrad.dataformats.core.registries.TypeRegistry;
 import konrad.dataformats.core.types.BigIntegerType;
 import konrad.dataformats.core.types.BooleanType;
 import konrad.dataformats.core.types.EnumType;
+import konrad.dataformats.core.types.IntegerType;
 import konrad.dataformats.core.types.StringType;
 import konrad.dataformats.testobjects.bigmirrortree.BigMirrorBranch;
 import konrad.dataformats.testobjects.bigmirrortree.BigMirrorLeaf;
@@ -118,12 +119,14 @@ class DataFormatGeneratorTest {
     }
 
     @Test
-    void knownTypesAreRecognized() {
+    void knownTypesAndPrimitivesAreRecognized() {
         var generator = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry());
         var dataFormat = generator.fromClass(new DataFormatId("bigIntegerTree"), BigIntegerTree.class, Map.of());
 
         var expected = new DataFormat(new DataFormatId("bigIntegerTree"), List.of(
-                new ValueFormat(new Path("value"), new BigIntegerType())
+                new ValueFormat(new Path("bigInt"), new BigIntegerType()),
+                new ValueFormat(new Path("integer"), new IntegerType()),
+                new ValueFormat(new Path("primitiveInt"), new IntegerType())
         ));
 
         assertEquals(expected.valueFormats().size(), dataFormat.valueFormats().size());
@@ -136,6 +139,8 @@ class DataFormatGeneratorTest {
     }
 
     class BigIntegerTree {
-        BigInteger value;
+        int primitiveInt;
+        Integer integer;
+        BigInteger bigInt;
     }
 }
