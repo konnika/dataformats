@@ -14,6 +14,7 @@ import konrad.dataformats.core.validation.Validations;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -76,7 +77,8 @@ public class DataFormatGenerator {
             return;
         }
 
-        for (Field field : fields) {
+        var nonStaticFields = Arrays.stream(fields).filter(f -> !Modifier.isStatic(f.getModifiers())).toList();
+        for (Field field : nonStaticFields) {
 //            field.setAccessible(true); // leave this here in case I need it at some point, as a reminder
             String path = parentPath.isEmpty() ? field.getName() : parentPath + "." + field.getName();
 
@@ -88,9 +90,7 @@ public class DataFormatGenerator {
                     analyzeFields(field.getType(), path, formats, knownListTypes);
                 }
             } else {
-                if (!Modifier.isStatic(field.getModifiers())) {
-                    formats.add(new ValueFormat(new Path(path), type.orElseThrow(() -> new DataFormatsException("No Type found for class " + field.getType().getName()))));
-                }
+                formats.add(new ValueFormat(new Path(path), type.orElseThrow(() -> new DataFormatsException("No Type found for class " + field.getType().getName()))));
             }
         }
     }

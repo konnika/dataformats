@@ -5,6 +5,7 @@ import konrad.dataformats.core.DataFormat;
 import konrad.dataformats.core.DataFormatId;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.TestDataFormats;
+import konrad.dataformats.core.TestObjects;
 import konrad.dataformats.core.ValueFormat;
 import konrad.dataformats.core.registries.TypeRegistry;
 import konrad.dataformats.core.types.BigIntegerType;
@@ -107,11 +108,13 @@ class DataFormatGeneratorTest {
 
     @Test
     void staticFieldsAreFiltered() {
-        var generator = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry());
+        var typeRegistry = new TypeRegistry();
+        typeRegistry.add(new EnumType(Color.class));
+        var generator = new DataFormatGenerator(new TypeGeneratorRegistry(), typeRegistry);
         var dataFormat = generator.fromClass(new DataFormatId("staticTree"), StaticTree.class, Map.of());
 
         var expected = new DataFormat(new DataFormatId("staticTree"), List.of(
-                new ValueFormat(new Path("value"), new StringType())
+                new ValueFormat(new Path("staticTreeValue"), new StringType())
         ));
 
         assertEquals(expected.valueFormats().size(), dataFormat.valueFormats().size());
@@ -135,7 +138,8 @@ class DataFormatGeneratorTest {
 
     class StaticTree {
         static final String STATIC = "static";
-        String value;
+        static final Tree STATIC_OBJECT = TestObjects.tree();
+        String staticTreeValue;
     }
 
     class BigIntegerTree {
