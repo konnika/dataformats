@@ -32,7 +32,7 @@ public class DataFormat {
     }
 
     public ValueFormat get(Path path) {
-        return valueFormats.stream().filter(p -> p.has(path)).findFirst().orElseThrow(() -> new DataFormatsException("Value path (from) " + path + " is not defined in DataFormat " + id));
+        return valueFormats.stream().filter(p -> p.has(path)).findFirst().orElseThrow(() -> new DataFormatsException(path + " is not defined in DataFormat " + id));
     }
 
     public List<ValueFormat> valueFormats() {
