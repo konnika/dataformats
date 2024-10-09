@@ -20,6 +20,8 @@ public class ConversionGenerator {
         Validations.validateNotNull(to, "Conversion DataFormat to");
 
         var mappings = lines.stream()
+                .filter(line -> !line.isBlank())
+                .filter(line -> !line.startsWith("#"))
                 .map(line -> mappingFromCsv(from, to, line))
                 .toList();
 
