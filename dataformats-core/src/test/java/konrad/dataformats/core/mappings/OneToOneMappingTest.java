@@ -71,20 +71,4 @@ class OneToOneMappingTest {
         Assertions.assertValue(after, "mirrorBranches.[1].bigMirrorLeaves.[0].bigMirrorNumber", BigDecimal.valueOf(13));
         Assertions.assertValue(after, "mirrorBranches.[1].bigMirrorLeaves.[1].bigMirrorNumber", BigDecimal.valueOf(14));
     }
-
-    @Test
-    void enumWorks() {
-        var mapping = new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(),
-                new Path("branch.leaf.color"), new Path("mirrorBranch.mirrorLeaf.mirrorColor"),
-                new TypeConversionRegistry());
-
-        var values = List.of(new Value(new Path("branch.leaf.color"), "RED"));
-        var before = new Data(TestDataFormats.tree(), values);
-        var after = new Data(TestDataFormats.mirrorTree(), Collections.emptyList());
-
-        mapping.applyTo(before, after);
-
-        assertEquals(1, after.toMap().size());
-        Assertions.assertValue(after, "mirrorBranch.mirrorLeaf.mirrorColor", "MIRROR_RED");
-    }
 }

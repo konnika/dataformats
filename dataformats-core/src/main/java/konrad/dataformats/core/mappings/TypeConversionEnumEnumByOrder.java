@@ -6,7 +6,7 @@ import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.Optional;
 
-public class TypeConversionEnumEnum implements TypeConversion {
+public class TypeConversionEnumEnumByOrder implements TypeConversion {
     @Override
     public boolean accepts(Type from, Type to) {
         if (from instanceof EnumType fromEnum && to instanceof EnumType toEnum) {

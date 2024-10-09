@@ -1,6 +1,7 @@
 package konrad.dataformats.core.validation;
 
 import java.util.List;
+import java.util.Map;
 
 public class Validations {
 
@@ -38,9 +39,11 @@ public class Validations {
         return obj;
     }
 
-    public static void validateNotEmpty(Object obj, String name) {
+    public static <T extends Map<?, ?>> T validateNotEmpty(T obj, String name) {
         if (obj == null) {
             throw new DataFormatsException(String.format(INVALID_X_ENCOUNTERED, name, "null"));
         }
+
+        return obj;
     }
 }

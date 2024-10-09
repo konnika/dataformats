@@ -2,15 +2,25 @@ package konrad.dataformats.core;
 
 import konrad.dataformats.core.generators.ConversionGenerator;
 import konrad.dataformats.core.generators.MappingGeneratorRegistry;
+import konrad.dataformats.core.mappings.EnumToEnumMapping;
 import konrad.dataformats.core.mappings.Mapping;
 import konrad.dataformats.core.mappings.OneToOneMapping;
 import konrad.dataformats.core.registries.TypeConversionRegistry;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 class ConversionTest {
-    private final TypeConversionRegistry typeConversionRegistry = new TypeConversionRegistry();
+    private TypeConversionRegistry typeConversionRegistry;
+    private MappingGeneratorRegistry mappingGeneratorRegistry;
+
+    @BeforeEach
+    void setUp() {
+        typeConversionRegistry = new TypeConversionRegistry();
+        mappingGeneratorRegistry = new MappingGeneratorRegistry(typeConversionRegistry);
+    }
 
     @Test
     void convertObject() {
@@ -31,9 +41,9 @@ class ConversionTest {
                 mirrorMapping("value", "mirrorValue"),
                 mirrorMapping("branch.value", "mirrorBranch.mirrorValue"),
                 mirrorMapping("branch.nullValue", "mirrorBranch.mirrorNullValue"),
-                mirrorMapping("branch.leaf.color", "mirrorBranch.mirrorLeaf.mirrorColor"),
+                mirrorColorMapping("branch.leaf.color", "mirrorBranch.mirrorLeaf.mirrorColor"),
                 mirrorMapping("branch.leaf.value", "mirrorBranch.mirrorLeaf.mirrorValue"),
-                mirrorMapping("leaves.[].color", "mirrorLeaves.[].mirrorColor"),
+                mirrorColorMapping("leaves.[].color", "mirrorLeaves.[].mirrorColor"),
                 mirrorMapping("leaves.[].value", "mirrorLeaves.[].mirrorValue"));
 
         var conversion = new Conversion(TestDataFormats.tree(), TestDataFormats.mirrorTree(), mappings);
@@ -54,15 +64,25 @@ class ConversionTest {
         return new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(), new Path(path), new Path(mirrorPath), typeConversionRegistry);
     }
 
+    private EnumToEnumMapping mirrorColorMapping(String path, String mirrorPath) {
+        var enumMappings = Map.of(
+                "GREEN", "MIRROR_GREEN",
+                "YELLOW", "MIRROR_YELLOW",
+                "RED", "MIRROR_RED",
+                "BROWN", "MIRROR_BROWN"
+        );
+        return new EnumToEnumMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(), new Path(path), new Path(mirrorPath), enumMappings);
+    }
+
     @Test
     void fromCsvWorks() {
         var csv = List.of(
                 "1:1;value;mirrorValue",
                 "1:1;branch.value;mirrorBranch.mirrorValue",
-                "1:1;branch.leaf.color;mirrorBranch.mirrorLeaf.mirrorColor",
+                "1:1:ENUM;branch.leaf.color;mirrorBranch.mirrorLeaf.mirrorColor;RED:MIRROR_RED,GREEN:MIRROR_GREEN,BLUE:MIRROR_BLUE",
                 "1:1;leaves.[].value;mirrorLeaves.[].mirrorValue");
 
-        var conversionGenerator = new ConversionGenerator(new MappingGeneratorRegistry(typeConversionRegistry));
+        var conversionGenerator = new ConversionGenerator(mappingGeneratorRegistry);
         var conversion = conversionGenerator.fromCsv(TestDataFormats.tree(), TestDataFormats.mirrorTree(), csv);
 
         var values = List.of(

@@ -12,11 +12,12 @@ public class MappingGeneratorRegistry {
 
     public MappingGeneratorRegistry(TypeConversionRegistry typeConversionRegistry) {
         this.generators = new HashMap<>();
-        add("1:1", new OneToOneMappingGenerator(typeConversionRegistry));
+        add(new OneToOneMappingGenerator(typeConversionRegistry));
+        add(new EnumToEnumMappingGenerator());
     }
 
-    public void add(String id, MappingGenerator mappingGenerator) {
-        generators.put(id, mappingGenerator);
+    public void add(MappingGenerator mappingGenerator) {
+        generators.put(mappingGenerator.id(), mappingGenerator);
     }
 
     public MappingGenerator get(String value) {

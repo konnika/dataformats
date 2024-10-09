@@ -51,7 +51,7 @@ public class DataFormatGenerator {
     }
 
     public DataFormat fromClass(DataFormatId id, Class<?> aClass, Map<Path, Class<?>> knownListTypes) {
-        Validations.validateNotEmpty(aClass, "class to analyze");
+        Validations.validateNotNull(aClass, "class to analyze");
         Validations.validateNotNull(knownListTypes, "known list types");
 
         errors.clear();
