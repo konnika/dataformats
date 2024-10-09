@@ -1,5 +1,6 @@
 package konrad.dataformats.core.generators;
 
+import konrad.dataformats.core.registries.TypeConversionRegistry;
 import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.HashMap;
@@ -9,9 +10,9 @@ import java.util.Optional;
 public class MappingGeneratorRegistry {
     private final Map<String, MappingGenerator> generators;
 
-    public MappingGeneratorRegistry() {
+    public MappingGeneratorRegistry(TypeConversionRegistry typeConversionRegistry) {
         this.generators = new HashMap<>();
-        add("1:1", new OneToOneMappingGenerator());
+        add("1:1", new OneToOneMappingGenerator(typeConversionRegistry));
     }
 
     public void add(String id, MappingGenerator mappingGenerator) {

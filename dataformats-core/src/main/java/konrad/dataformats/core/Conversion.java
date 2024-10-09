@@ -2,6 +2,7 @@ package konrad.dataformats.core;
 
 import konrad.dataformats.core.mappings.Mapping;
 import konrad.dataformats.core.validation.DataFormatsException;
+import konrad.dataformats.core.validation.Validations;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,9 +16,7 @@ public class Conversion {
     public Conversion(final DataFormat from, final DataFormat to, final List<Mapping> mappings) {
         this.from = from;
         this.to = to;
-        if (mappings != null) {
-            this.mappings.addAll(mappings);
-        }
+        this.mappings.addAll(Validations.validateNotNull(mappings, "Mappings"));
     }
 
     public boolean matches(DataFormat from, DataFormat to) {

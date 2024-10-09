@@ -21,7 +21,7 @@ public class OneToOneMapping implements Mapping {
     private final Type toType;
     private final TypeConversionRegistry typeConversionRegistry;
 
-    public OneToOneMapping(DataFormat fromFormat, DataFormat toFormat, Path fromPath, Path toPath) {
+    public OneToOneMapping(DataFormat fromFormat, DataFormat toFormat, Path fromPath, Path toPath, TypeConversionRegistry typeConversionRegistry) {
         this.fromFormat = Validations.validateNotNull(fromFormat, "fromFormat");
         this.toFormat = Validations.validateNotNull(toFormat, "toFormat");
         this.fromPath = Validations.validateNotNull(fromPath, "from");
@@ -29,9 +29,7 @@ public class OneToOneMapping implements Mapping {
         this.fromType = fromFormat.get(fromPath).type();
         this.toType = toFormat.get(toPath).type();
 
-        // FIXME how to get this registry here? constructor param? static setter? is there a more elegant pattern?
-        this.typeConversionRegistry = new TypeConversionRegistry();
-
+        this.typeConversionRegistry = typeConversionRegistry;
         validate();
     }
 

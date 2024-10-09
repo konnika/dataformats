@@ -5,6 +5,7 @@ import konrad.dataformats.core.Data;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.TestDataFormats;
 import konrad.dataformats.core.Value;
+import konrad.dataformats.core.registries.TypeConversionRegistry;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -18,7 +19,8 @@ class OneToOneMappingTest {
     @Test
     void stringWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(),
-                new Path("value"), new Path("mirrorValue"));
+                new Path("value"), new Path("mirrorValue"),
+                new TypeConversionRegistry());
 
         var values = List.of(new Value(new Path("value"), "xxx"));
         var before = new Data(TestDataFormats.tree(), values);
@@ -33,7 +35,8 @@ class OneToOneMappingTest {
     @Test
     void stringInListWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(),
-                new Path("leaves.[].value"), new Path("mirrorLeaves.[].mirrorValue"));
+                new Path("leaves.[].value"), new Path("mirrorLeaves.[].mirrorValue"),
+                new TypeConversionRegistry());
 
         var values = List.of(new Value(new Path("leaves.[0].value"), "xxx"));
         var before = new Data(TestDataFormats.tree(), values);
@@ -49,7 +52,8 @@ class OneToOneMappingTest {
     void listInListWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.bigTree(), TestDataFormats.bigMirrorTree(),
                 new Path("branches.[].leaves.[].bigNumber"),
-                new Path("mirrorBranches.[].bigMirrorLeaves.[].bigMirrorNumber"));
+                new Path("mirrorBranches.[].bigMirrorLeaves.[].bigMirrorNumber"),
+                new TypeConversionRegistry());
 
         var values = List.of(
                 new Value(new Path("branches.[0].leaves.[0].bigNumber"), BigDecimal.valueOf(11)),
@@ -71,7 +75,8 @@ class OneToOneMappingTest {
     @Test
     void enumWorks() {
         var mapping = new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(),
-                new Path("branch.leaf.color"), new Path("mirrorBranch.mirrorLeaf.mirrorColor"));
+                new Path("branch.leaf.color"), new Path("mirrorBranch.mirrorLeaf.mirrorColor"),
+                new TypeConversionRegistry());
 
         var values = List.of(new Value(new Path("branch.leaf.color"), "RED"));
         var before = new Data(TestDataFormats.tree(), values);
