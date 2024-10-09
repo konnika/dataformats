@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 class ConversionTest {
+    private final TypeConversionRegistry typeConversionRegistry = new TypeConversionRegistry();
 
     @Test
     void convertObject() {
@@ -49,8 +50,8 @@ class ConversionTest {
         Assertions.assertValue(converted, "mirrorLeaves.[1].mirrorValue", "tree.leaf2");
     }
 
-    private static OneToOneMapping mirrorMapping(String path, String mirrorPath) {
-        return new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(), new Path(path), new Path(mirrorPath), new TypeConversionRegistry());
+    private OneToOneMapping mirrorMapping(String path, String mirrorPath) {
+        return new OneToOneMapping(TestDataFormats.tree(), TestDataFormats.mirrorTree(), new Path(path), new Path(mirrorPath), typeConversionRegistry);
     }
 
     @Test
@@ -61,7 +62,7 @@ class ConversionTest {
                 "1:1;branch.leaf.color;mirrorBranch.mirrorLeaf.mirrorColor",
                 "1:1;leaves.[].value;mirrorLeaves.[].mirrorValue");
 
-        var conversionGenerator = new ConversionGenerator(new MappingGeneratorRegistry(new TypeConversionRegistry()));
+        var conversionGenerator = new ConversionGenerator(new MappingGeneratorRegistry(typeConversionRegistry));
         var conversion = conversionGenerator.fromCsv(TestDataFormats.tree(), TestDataFormats.mirrorTree(), csv);
 
         var values = List.of(

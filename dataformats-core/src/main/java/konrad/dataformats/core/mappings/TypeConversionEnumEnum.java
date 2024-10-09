@@ -4,10 +4,25 @@ import konrad.dataformats.core.types.EnumType;
 import konrad.dataformats.core.types.Type;
 import konrad.dataformats.core.validation.DataFormatsException;
 
+import java.util.Optional;
+
 public class TypeConversionEnumEnum implements TypeConversion {
     @Override
-    public boolean accepts(Type fromType, Type toType) {
-        return fromType instanceof EnumType && toType instanceof EnumType;
+    public boolean accepts(Type from, Type to) {
+        if (from instanceof EnumType fromEnum && to instanceof EnumType toEnum) {
+            return fromEnum.enumValueCount() == toEnum.enumValueCount();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Optional<AcceptedTypeConversion> acceptedTypeConversion(Type from, Type to) {
+        if (from instanceof EnumType fromEnum && to instanceof EnumType toEnum && fromEnum.enumValueCount() == toEnum.enumValueCount()) {
+            return Optional.of(new AcceptedTypeConversion(from, to, this));
+        }
+
+        return Optional.empty();
     }
 
     @Override
