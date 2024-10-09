@@ -1,7 +1,13 @@
 package konrad.dataformats.core.registries;
 
 import konrad.dataformats.core.mappings.TypeConversion;
+import konrad.dataformats.core.mappings.TypeConversionBigDecimalToDouble;
+import konrad.dataformats.core.mappings.TypeConversionBigIntegerToInteger;
+import konrad.dataformats.core.mappings.TypeConversionDoubleToBigDecimal;
 import konrad.dataformats.core.mappings.TypeConversionEnumEnum;
+import konrad.dataformats.core.mappings.TypeConversionEnumToString;
+import konrad.dataformats.core.mappings.TypeConversionIntegerToBigInteger;
+import konrad.dataformats.core.mappings.TypeConversionStringToEnum;
 import konrad.dataformats.core.types.Type;
 import konrad.dataformats.core.validation.DataFormatsException;
 
@@ -14,7 +20,12 @@ public class TypeConversionRegistry {
 
     public TypeConversionRegistry() {
         this.conversions = new ArrayList<>();
-
+        add(new TypeConversionBigDecimalToDouble());
+        add(new TypeConversionDoubleToBigDecimal());
+        add(new TypeConversionBigIntegerToInteger());
+        add(new TypeConversionIntegerToBigInteger());
+        add(new TypeConversionEnumToString());
+        add(new TypeConversionStringToEnum());
         add(new TypeConversionEnumEnum());
     }
 

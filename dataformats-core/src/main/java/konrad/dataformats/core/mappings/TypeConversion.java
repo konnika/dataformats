@@ -3,7 +3,7 @@ package konrad.dataformats.core.mappings;
 import konrad.dataformats.core.types.Type;
 
 public interface TypeConversion {
-    boolean accepts(Type fromType, Type toType);
+    boolean accepts(Type from, Type to);
 
-    Object convert(Type fromType, Type toType, Object object);
+    Object convert(Type from, Type to, Object object);
 }
