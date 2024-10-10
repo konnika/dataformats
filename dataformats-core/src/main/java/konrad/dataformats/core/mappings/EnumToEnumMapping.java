@@ -42,6 +42,8 @@ public class EnumToEnumMapping implements Mapping {
         if (toPath.isConcreteArrayPath()) {
             throw new DataFormatsException("Path should be abstract: " + toPath);
         }
+
+        // TODO add validations for enum values and mappings
     }
 
     @Override

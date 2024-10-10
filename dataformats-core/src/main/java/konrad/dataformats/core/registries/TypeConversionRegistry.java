@@ -5,6 +5,7 @@ import konrad.dataformats.core.mappings.TypeConversion;
 import konrad.dataformats.core.mappings.TypeConversionBigDecimalToDouble;
 import konrad.dataformats.core.mappings.TypeConversionBigIntegerToInteger;
 import konrad.dataformats.core.mappings.TypeConversionDoubleToBigDecimal;
+import konrad.dataformats.core.mappings.TypeConversionEnumEnumByValue;
 import konrad.dataformats.core.mappings.TypeConversionEnumToString;
 import konrad.dataformats.core.mappings.TypeConversionIntegerToBigInteger;
 import konrad.dataformats.core.mappings.TypeConversionStringToEnum;
@@ -27,6 +28,7 @@ public class TypeConversionRegistry {
         add(new TypeConversionIntegerToBigInteger());
         add(new TypeConversionEnumToString());
         add(new TypeConversionStringToEnum());
+        add(new TypeConversionEnumEnumByValue());
     }
 
     public void add(TypeConversion typeConversion) {
