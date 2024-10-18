@@ -4,13 +4,21 @@ import konrad.dataformats.core.Assertions;
 import konrad.dataformats.core.Data;
 import konrad.dataformats.core.Path;
 import konrad.dataformats.core.TestDataFormats;
+import konrad.dataformats.core.TestObjectMapper;
+import konrad.dataformats.core.TestObjects;
 import konrad.dataformats.core.Value;
+import konrad.dataformats.core.generators.DataFormatGenerator;
+import konrad.dataformats.core.generators.TypeGeneratorRegistry;
 import konrad.dataformats.core.registries.TypeConversionRegistry;
+import konrad.dataformats.core.registries.TypeRegistry;
+import konrad.dataformats.testobjects.weirdtree.WeirdTree;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -70,5 +78,28 @@ class OneToOneMappingTest {
         Assertions.assertValue(after, "mirrorBranches.[0].bigMirrorLeaves.[1].bigMirrorNumber", BigDecimal.valueOf(12));
         Assertions.assertValue(after, "mirrorBranches.[1].bigMirrorLeaves.[0].bigMirrorNumber", BigDecimal.valueOf(13));
         Assertions.assertValue(after, "mirrorBranches.[1].bigMirrorLeaves.[1].bigMirrorNumber", BigDecimal.valueOf(14));
+    }
+
+    @Test
+    void listOfStringsWorks() {
+        Map<Path, Class<?>> knownListTypes = new HashMap<>();
+        knownListTypes.put(new Path("weirdValues"), String.class);
+        var weirdTreeFormat = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry())
+                .fromClass(WeirdTree.class, knownListTypes);
+
+        var mapping = new OneToOneMapping(weirdTreeFormat, weirdTreeFormat,
+                new Path("weirdValues.[]"), new Path("weirdValues.[]"),
+                new TypeConversionRegistry());
+
+        var weirdTree = TestObjects.weirdTree();
+
+        var before = Data.from(TestObjectMapper.toMap(weirdTree), weirdTreeFormat);
+        var after = new Data(weirdTreeFormat, Collections.emptyList());
+
+        mapping.applyTo(before, after);
+
+        Assertions.assertValue(after, "weirdValues.[0]", "one");
+        Assertions.assertValue(after, "weirdValues.[1]", "two");
+        Assertions.assertValue(after, "weirdValues.[2]", "three");
     }
 }

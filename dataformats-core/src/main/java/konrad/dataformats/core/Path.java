@@ -294,7 +294,11 @@ public class Path {
             var part = remaining.untilFirstAbstractArray();
             parts.add(part);
             parts.add(new Path("[" + index + "]"));
-            remaining = remaining.afterFirstAbstractArray();
+            if (remaining.endsAfterFirstAbstractArray()) {
+                return Path.join(parts);
+            } else {
+                remaining = remaining.afterFirstAbstractArray();
+            }
         }
         parts.add(remaining);
 
