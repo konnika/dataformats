@@ -6,7 +6,7 @@
 
     <groupId>konrad.dataformats</groupId>
     <artifactId>dataformats-root</artifactId>
-    <version>0.9.8</version>
+    <version>0.9.9</version>
 
     <packaging>pom</packaging>
 

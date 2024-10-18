@@ -1,5 +1,8 @@
 package konrad.dataformats.core;
 
+import konrad.dataformats.core.generators.DataFormatGenerator;
+import konrad.dataformats.core.generators.TypeGeneratorRegistry;
+import konrad.dataformats.core.registries.TypeRegistry;
 import konrad.dataformats.core.types.StringType;
 import konrad.dataformats.testobjects.tree.Color;
 import konrad.dataformats.testobjects.tree.Tree;
@@ -8,7 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static konrad.dataformats.core.Assertions.assertNoValue;
 import static konrad.dataformats.core.Assertions.assertValue;
@@ -125,12 +130,29 @@ class DataTest {
     }
 
     @Test
-    void createDataFromObjectWithListOfStrings() {
+    void createDataFromObjectWithListOfStringsWithDataFormatFromScratch() {
         var weirdTree = TestObjects.weirdTree();
-        var weirdTreeDataFormat = new DataFormat(new DataFormatId(WeirdTree.class),
+        var dataFormatFromScratch = new DataFormat(new DataFormatId(WeirdTree.class),
                 List.of(new ValueFormat(new Path("weirdValues.[]"), new StringType())));
 
-        var data = Data.from(TestObjectMapper.toMap(weirdTree), weirdTreeDataFormat);
+        var data = Data.from(TestObjectMapper.toMap(weirdTree), dataFormatFromScratch);
+
+        assertValue(data, "weirdValues.[0]", "one");
+        assertValue(data, "weirdValues.[1]", "two");
+        assertValue(data, "weirdValues.[2]", "three");
+        assertNoValue(data, "weirdValues.[3]");
+    }
+
+    @Test
+    void createDataFromObjectWithListOfStringsWithDataFormatFromClass() {
+        var weirdTree = TestObjects.weirdTree();
+        Map<Path, Class<?>> knownListTypes = new HashMap<>();
+        knownListTypes.put(new Path("weirdValues"), String.class);
+
+        var dataFormatFromClass = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry())
+                .fromClass(new DataFormatId(WeirdTree.class), WeirdTree.class, knownListTypes);
+
+        var data = Data.from(TestObjectMapper.toMap(weirdTree), dataFormatFromClass);
 
         assertValue(data, "weirdValues.[0]", "one");
         assertValue(data, "weirdValues.[1]", "two");

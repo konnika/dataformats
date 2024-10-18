@@ -19,9 +19,11 @@ import konrad.dataformats.testobjects.bigmirrortree.BigMirrorTree;
 import konrad.dataformats.testobjects.tree.Color;
 import konrad.dataformats.testobjects.tree.Leaf;
 import konrad.dataformats.testobjects.tree.Tree;
+import konrad.dataformats.testobjects.weirdtree.WeirdTree;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +76,19 @@ class DataFormatGeneratorTest {
         var expected = TestDataFormats.bigMirrorTree();
         assertEquals(expected.valueFormats().size(), dataFormat.valueFormats().size());
         assertTrue(dataFormat.valueFormats().containsAll(expected.valueFormats()));
+    }
+
+    @Test
+    void fromClassWorksOnListOfStrings() {
+        Map<Path, Class<?>> knownListTypes = new HashMap<>();
+        knownListTypes.put(new Path("weirdValues"), String.class);
+
+        var dataFormat = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry())
+                .fromClass(new DataFormatId(WeirdTree.class), WeirdTree.class, knownListTypes);
+
+        assertEquals(3, dataFormat.valueFormats().size());
+        assertEquals(new Path("weirdValues.[]"), dataFormat.valueFormats().get(0).path());
+        assertEquals(new StringType(), dataFormat.valueFormats().get(0).type());
     }
 
     @Test

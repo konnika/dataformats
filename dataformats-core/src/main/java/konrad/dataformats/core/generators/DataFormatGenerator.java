@@ -67,13 +67,7 @@ public class DataFormatGenerator {
         Field[] fields = aClass.getDeclaredFields();
 
         if (List.class.isAssignableFrom(aClass)) {
-            if (knownListTypes.containsKey(new Path(parentPath))) {
-                analyzeFields(knownListTypes.get(new Path(parentPath)), parentPath + ".[]", formats, knownListTypes);
-            } else {
-                errors.add(new DataFormatsException("Cannot determine list element type in list: " + parentPath +
-                        ". Please provide the class of this list via analyze method. " +
-                        "E.g. knownListTypes.put(new Path(\"" + parentPath + "\"), XXX.class);"));
-            }
+            analyzeList(parentPath, formats, knownListTypes);
             return;
         }
 
@@ -92,6 +86,24 @@ public class DataFormatGenerator {
             } else {
                 formats.add(new ValueFormat(new Path(path), type.orElseThrow(() -> new DataFormatsException("No Type found for class " + field.getType().getName()))));
             }
+        }
+    }
+
+    private void analyzeList(String parentPath, List<ValueFormat> formats, Map<Path, Class<?>> knownListTypes) {
+        if (knownListTypes.containsKey(new Path(parentPath))) {
+            var path = parentPath + ".[]";
+            Class<?> listType = knownListTypes.get(new Path(parentPath));
+
+            if (typeRegistry.contains(new TypeId(listType))) {
+                var type = typeRegistry.getForId(new TypeId(listType));
+                formats.add(new ValueFormat(new Path(path), type));
+            } else {
+                analyzeFields(listType, path, formats, knownListTypes);
+            }
+        } else {
+            errors.add(new DataFormatsException("Cannot determine list element type in list: " + parentPath +
+                    ". Please provide the class of this list via analyze method. " +
+                    "E.g. knownListTypes.put(new Path(\"" + parentPath + "\"), XXX.class);"));
         }
     }
 

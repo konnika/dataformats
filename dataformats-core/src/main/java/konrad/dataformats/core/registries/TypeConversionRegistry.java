@@ -13,6 +13,7 @@ import konrad.dataformats.core.types.Type;
 import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,32 +44,24 @@ public class TypeConversionRegistry {
         conversions.stream().filter(c -> c.getClass().equals(typeConversionClass)).findFirst().ifPresent(conversions::remove);
     }
 
-    public TypeConversion getOld(Type from, Type to) {
-        var applicableConversions = conversions.stream().filter(c -> c.accepts(from, to)).toList();
+    public AcceptedTypeConversion get(Type from, Type to, String... extraInfoForException) {
+        var applicableConversions = getAcceptedTypeConversions(from, to);
+
         if (applicableConversions.isEmpty()) {
-            throw new DataFormatsException("No TypeConversion found for types: " + from + " -> " + to);
+            throw new DataFormatsException("No TypeConversion found for types: " + from + " -> " + to + ". " + String.join(" ", extraInfoForException));
         } else if (applicableConversions.size() > 1) {
             var typeConversions = applicableConversions.stream().map(c -> c.getClass().getName()).collect(Collectors.joining(", "));
-            throw new DataFormatsException("Multiple TypeConversions found for types: " + from + " -> " + to + " : " + typeConversions);
+            throw new DataFormatsException("Multiple TypeConversions found for types: " + from + " -> " + to + " : " + typeConversions + ". " + String.join(" ", extraInfoForException));
         } else {
             return applicableConversions.get(0);
         }
     }
 
-    public AcceptedTypeConversion get(Type from, Type to) {
-        var applicableConversions = conversions.stream()
+    public List<AcceptedTypeConversion> getAcceptedTypeConversions(Type from, Type to) {
+        return conversions.stream()
                 .map(c -> c.acceptedTypeConversion(from, to))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
-
-        if (applicableConversions.isEmpty()) {
-            throw new DataFormatsException("No TypeConversion found for types: " + from + " -> " + to);
-        } else if (applicableConversions.size() > 1) {
-            var typeConversions = applicableConversions.stream().map(c -> c.getClass().getName()).collect(Collectors.joining(", "));
-            throw new DataFormatsException("Multiple TypeConversions found for types: " + from + " -> " + to + " : " + typeConversions);
-        } else {
-            return applicableConversions.get(0);
-        }
     }
 }

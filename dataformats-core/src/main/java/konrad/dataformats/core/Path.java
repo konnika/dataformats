@@ -212,7 +212,10 @@ public class Path {
             for (int i = 0; i < list.size(); i++) {
                 var pathToAppend = nextListPath.concat(new Path("[" + i + "]"));
                 var previousPath = previous == null ? pathToAppend : previous.concat(pathToAppend);
-                result.addAll(allConcretePaths(list.get(i), previousPath, remainingPath));
+                var mapOrObject = list.get(i);
+                @SuppressWarnings("unchecked")
+                var mapInList = (Map<String, Object>) mapOrObject;
+                result.addAll(allConcretePaths(mapInList, previousPath, remainingPath));
             }
         }
 
@@ -230,15 +233,13 @@ public class Path {
         return index == asList.size() - 1;
     }
 
-    public List<Map<String, Object>> getListFrom(Map<String, Object> objectMap) {
+    public List<?> getListFrom(Map<String, Object> objectMap) {
         var object = getValueFrom(objectMap);
         if (object == null) {
             return Collections.emptyList();
         }
         if (object instanceof List<?> list) {
-            @SuppressWarnings("unchecked")
-            var castedList = (List<Map<String, Object>>) list;
-            return castedList;
+            return list;
         }
 
         throw new DataFormatsException("ObjectMap does not contain a list, as expected: " + object.getClass() + " at " + asString);
