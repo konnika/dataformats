@@ -50,9 +50,10 @@ public class DataFormatGenerator {
         return typeGenerator.fromCsv(value);
     }
 
-    public DataFormat fromClass(DataFormatId id, Class<?> aClass, Map<Path, Class<?>> knownListTypes) {
+    public DataFormat fromClass(Class<?> aClass, Map<Path, Class<?>> knownListTypes) {
         Validations.validateNotNull(aClass, "class to analyze");
         Validations.validateNotNull(knownListTypes, "known list types");
+        var id = new DataFormatId(aClass);
 
         errors.clear();
         List<ValueFormat> formats = new ArrayList<>();

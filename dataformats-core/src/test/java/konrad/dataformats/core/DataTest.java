@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static konrad.dataformats.core.Assertions.assertNoValue;
 import static konrad.dataformats.core.Assertions.assertValue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -150,7 +151,7 @@ class DataTest {
         knownListTypes.put(new Path("weirdValues"), String.class);
 
         var dataFormatFromClass = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry())
-                .fromClass(new DataFormatId(WeirdTree.class), WeirdTree.class, knownListTypes);
+                .fromClass(WeirdTree.class, knownListTypes);
 
         var data = Data.from(TestObjectMapper.toMap(weirdTree), dataFormatFromClass);
 
@@ -158,6 +159,22 @@ class DataTest {
         assertValue(data, "weirdValues.[1]", "two");
         assertValue(data, "weirdValues.[2]", "three");
         assertNoValue(data, "weirdValues.[3]");
+    }
+
+    @Test
+    void toMapWithListOfStrings() {
+        var weirdTree = TestObjects.weirdTree();
+        Map<Path, Class<?>> knownListTypes = new HashMap<>();
+        knownListTypes.put(new Path("weirdValues"), String.class);
+
+        var dataFormatFromClass = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry())
+                .fromClass(WeirdTree.class, knownListTypes);
+
+        var data = Data.from(TestObjectMapper.toMap(weirdTree), dataFormatFromClass);
+
+        var map = data.toMap();
+        assertDoesNotThrow(() -> map);
+        assertEquals(List.of("one", "two", "three"), map.get("weirdValues"));
     }
 
     @Test

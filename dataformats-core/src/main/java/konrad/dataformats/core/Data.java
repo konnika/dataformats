@@ -126,9 +126,15 @@ public class Data {
             if (path.afterFirstElement().isFirstElementAConcreteArray()) {
                 result.putIfAbsent(firstElement, new ArrayList<>());
                 try {
-                    @SuppressWarnings("unchecked")
-                    var childList = (List<Map<String, Object>>) result.get(firstElement);
-                    addValueToList(childList, path.afterFirstElement(), object);
+                    if (path.afterFirstElement().length() == 1) {
+                        @SuppressWarnings("unchecked")
+                        var childList = (List<Object>) result.get(firstElement);
+                        addSimpleValueToList(childList, path.afterFirstElement(), object);
+                    } else {
+                        @SuppressWarnings("unchecked")
+                        var childList = (List<Map<String, Object>>) result.get(firstElement);
+                        addValueToList(childList, path.afterFirstElement(), object);
+                    }
                 } catch (ClassCastException e) {
                     throw new DataFormatsException("Expected a list at " + firstElement + " of " + path + " but got " + result.get(firstElement).getClass());
                 }
@@ -159,6 +165,25 @@ public class Data {
             list.add(new HashMap<>());
         }
         addValueToMap(list.get(index), path.afterFirstElement(), object);
+    }
+
+    private void addSimpleValueToList(List<Object> list, Path path, Object object) {
+        if (path.length() != 1) {
+            throw new DataFormatsException("Expected Path of length 1: " + path);
+        }
+
+        if (!path.isFirstElementAConcreteArray()) {
+            throw new DataFormatsException("Expected list index in the first element of: " + path);
+        }
+
+        var index = Integer.parseInt(path.firstElement().replaceAll("[\\[\\]]", ""));
+        while (list.size() < index) {
+            list.add("null");
+        }
+        if (index < list.size()) {
+            list.remove(index);
+        }
+        list.add(index, object);
     }
 
     public boolean has(DataFormat dataFormat) {

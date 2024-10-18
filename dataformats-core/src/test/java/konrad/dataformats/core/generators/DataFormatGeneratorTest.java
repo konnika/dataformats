@@ -57,7 +57,7 @@ class DataFormatGeneratorTest {
         var generator = new DataFormatGenerator(new TypeGeneratorRegistry(), typeRegistry);
 
         Map<Path, Class<?>> knownListTypes = Map.of(new Path("leaves"), Leaf.class);
-        var dataFormat = generator.fromClass(new DataFormatId("tree"), Tree.class, knownListTypes);
+        var dataFormat = generator.fromClass(Tree.class, knownListTypes);
 
         var expected = TestDataFormats.tree();
         assertEquals(expected.valueFormats().size(), dataFormat.valueFormats().size());
@@ -71,7 +71,7 @@ class DataFormatGeneratorTest {
         Map<Path, Class<?>> knownListTypes = Map.of(
                 new Path("mirrorBranches"), BigMirrorBranch.class,
                 new Path("mirrorBranches.[].bigMirrorLeaves"), BigMirrorLeaf.class);
-        var dataFormat = generator.fromClass(new DataFormatId("bigMirrorTree"), BigMirrorTree.class, knownListTypes);
+        var dataFormat = generator.fromClass(BigMirrorTree.class, knownListTypes);
 
         var expected = TestDataFormats.bigMirrorTree();
         assertEquals(expected.valueFormats().size(), dataFormat.valueFormats().size());
@@ -84,7 +84,7 @@ class DataFormatGeneratorTest {
         knownListTypes.put(new Path("weirdValues"), String.class);
 
         var dataFormat = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry())
-                .fromClass(new DataFormatId(WeirdTree.class), WeirdTree.class, knownListTypes);
+                .fromClass(WeirdTree.class, knownListTypes);
 
         assertEquals(3, dataFormat.valueFormats().size());
         assertEquals(new Path("weirdValues.[]"), dataFormat.valueFormats().get(0).path());
@@ -126,7 +126,7 @@ class DataFormatGeneratorTest {
         var typeRegistry = new TypeRegistry();
         typeRegistry.add(new EnumType(Color.class));
         var generator = new DataFormatGenerator(new TypeGeneratorRegistry(), typeRegistry);
-        var dataFormat = generator.fromClass(new DataFormatId("staticTree"), StaticTree.class, Map.of());
+        var dataFormat = generator.fromClass(StaticTree.class, Map.of());
 
         var expected = new DataFormat(new DataFormatId("staticTree"), List.of(
                 new ValueFormat(new Path("staticTreeValue"), new StringType())
@@ -139,7 +139,7 @@ class DataFormatGeneratorTest {
     @Test
     void knownTypesAndPrimitivesAreRecognized() {
         var generator = new DataFormatGenerator(new TypeGeneratorRegistry(), new TypeRegistry());
-        var dataFormat = generator.fromClass(new DataFormatId("bigIntegerTree"), BigIntegerTree.class, Map.of());
+        var dataFormat = generator.fromClass(BigIntegerTree.class, Map.of());
 
         var expected = new DataFormat(new DataFormatId("bigIntegerTree"), List.of(
                 new ValueFormat(new Path("bigInt"), new BigIntegerType()),
