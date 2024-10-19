@@ -4,13 +4,17 @@ import konrad.dataformats.core.validation.DataFormatsException;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class DataFormat {
     private final DataFormatId id;
     private final List<ValueFormat> valueFormats = new ArrayList<>();
+    private final Map<Path, ValueFormat> pathToValueFormat = new HashMap<>();
 
     public DataFormat(DataFormatId id, List<ValueFormat> valueFormats) {
         this.id = id;
@@ -25,14 +29,16 @@ public class DataFormat {
         }
 
         this.valueFormats.add(valueFormat);
+        pathToValueFormat.put(valueFormat.path(), valueFormat);
     }
 
     public boolean contains(Path path) {
-        return valueFormats.stream().anyMatch(v -> v.has(path));
+        return pathToValueFormat.containsKey(path);
     }
 
     public ValueFormat get(Path path) {
-        return valueFormats.stream().filter(p -> p.has(path)).findFirst().orElseThrow(() -> new DataFormatsException(path + " is not defined in DataFormat " + id));
+        return Optional.ofNullable(pathToValueFormat.get(path))
+                .orElseThrow(() -> new DataFormatsException(path + " is not defined in DataFormat " + id));
     }
 
     public List<ValueFormat> valueFormats() {

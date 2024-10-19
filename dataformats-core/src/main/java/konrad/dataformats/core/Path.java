@@ -72,19 +72,6 @@ public class Path {
         return Objects.equals(asString, path.asString);
     }
 
-    public boolean equalsIgnoringIndices(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Path path = (Path) o;
-        if (Objects.equals(asString, path.asString)) {
-            return true;
-        }
-
-        var thisPathIndexesRemoved = asString.replaceAll(REGEX_ARRAY_BRACKETS_WITH_INDEX, ARRAY_BRACKETS_WITHOUT_INDEX);
-        var otherPathIndexesRemoved = path.asString.replaceAll(REGEX_ARRAY_BRACKETS_WITH_INDEX, ARRAY_BRACKETS_WITHOUT_INDEX);
-        return Objects.equals(thisPathIndexesRemoved, otherPathIndexesRemoved);
-    }
-
     @Override
     public int hashCode() {
         return Objects.hashCode(asString);

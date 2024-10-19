@@ -61,10 +61,7 @@ public class Data {
     }
 
     private ValueFormat validatePath(Path path) {
-        return dataFormat.valueFormats().stream()
-                .filter(vf -> vf.path().equalsIgnoringIndices(path))
-                .findFirst()
-                .orElseThrow(() -> new DataFormatsException("Path " + path + " does not exist in Dataformat " + dataFormat.id()));
+        return dataFormat.get(path.asAbstractPath());
     }
 
     private void validateType(ValueFormat valueFormat, Value value) {
