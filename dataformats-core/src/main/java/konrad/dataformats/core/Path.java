@@ -8,15 +8,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class Path {
     public static final String ARRAY_BRACKETS_WITHOUT_INDEX = "[]";
-    public static final String REGEX_ARRAY_BRACKETS_WITHOUT_INDEX = "\\[]";
-    public static final String REGEX_ARRAY_BRACKETS_WITH_INDEX = "\\[\\d+]";
-    public static final String REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX = "\\[\\d*]";
+    public static final Pattern REGEX_ARRAY_BRACKETS_WITH_INDEX = Pattern.compile("\\[\\d+]");
+    public static final Pattern REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX = Pattern.compile("\\[\\d*]");
+    public static final String REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT = "[a-zA-Z0-9_-]+";
+    public static final String REGEX_PATH_ELEMENT = "(" + REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT + "|" + REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX + ")";
+    public static final Pattern REGEX_PATH = Pattern.compile(REGEX_PATH_ELEMENT + "(." + REGEX_PATH_ELEMENT + ")*");
     public static final String SEPARATOR = ".";
     public static final String REGEX_SEPARATOR = "\\.";
-    public static final String REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT = "[a-zA-Z0-9_-]+";
 
     protected final String asString;
     protected final List<String> asList;
@@ -49,8 +51,8 @@ public class Path {
     }
 
     protected void validate() {
-        if (!asList.stream().allMatch(element -> element.matches(REGEX_ALLOWED_CHARACTERS_FOR_PATH_ELEMENT) || element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX))) {
-            throw new DataFormatsException("Unexpected character in Path (allowed are [a-zA-Z0-9_-]): " + asString);
+        if (!REGEX_PATH.matcher(asString).matches()) {
+            throw new DataFormatsException("Unexpected Path. Allowed is " + REGEX_PATH.pattern() + ": " + asString);
         }
 
         if (isConcreteArrayPath() && isAbstractArrayPath()) {
@@ -81,16 +83,12 @@ public class Path {
         return asList.size();
     }
 
-    public boolean isArrayPath() {
-        return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX));
-    }
-
     public boolean isAbstractArrayPath() {
-        return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITHOUT_INDEX));
+        return asString.contains(ARRAY_BRACKETS_WITHOUT_INDEX);
     }
 
     public boolean isConcreteArrayPath() {
-        return asList.stream().anyMatch(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX));
+        return REGEX_ARRAY_BRACKETS_WITH_INDEX.matcher(asString).find();
     }
 
     public Object getValueFrom(Map<String, Object> objectMap) {
@@ -151,7 +149,7 @@ public class Path {
 
     public String firstConcreteArrayElement() {
         return asList.stream()
-                .filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX))
+                .filter(element -> REGEX_ARRAY_BRACKETS_WITH_INDEX.matcher(element).matches())
                 .findFirst()
                 .orElseThrow(() -> new DataFormatsException("Path does not contain array, as expected: " + asString));
     }
@@ -166,12 +164,21 @@ public class Path {
     }
 
     public Path afterFirstConcreteArray() {
-        int index = asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX)).findFirst().map(asList::indexOf).orElse(-1);
+        int index = firstConcreteArrayPosition();
         if (index > -1) {
             return new Path(asList.subList(index + 1, asList.size()));
         }
 
         throw new DataFormatsException("Path does not contain a concrete array, as expected: " + asString);
+    }
+
+    private int firstConcreteArrayPosition() {
+        for (int i = 0; i < asList.size(); i++) {
+            if (REGEX_ARRAY_BRACKETS_WITH_INDEX.matcher(asList.get(i)).matches()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public List<Path> allConcretePaths(Map<String, Object> map) {
@@ -215,8 +222,7 @@ public class Path {
     }
 
     private boolean endsAfterFirstConcreteArray() {
-        var index = asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX)).findFirst()
-                .map(asList::indexOf).orElse(-1);
+        var index = firstConcreteArrayPosition();
         return index == asList.size() - 1;
     }
 
@@ -233,7 +239,7 @@ public class Path {
     }
 
     public boolean isFirstElementAConcreteArray() {
-        return asList.get(0).matches(REGEX_ARRAY_BRACKETS_WITH_INDEX);
+        return REGEX_ARRAY_BRACKETS_WITH_INDEX.matcher(asList.get(0)).matches();
     }
 
     public int indexOfFirstConcreteArrayElement() {
@@ -245,19 +251,20 @@ public class Path {
     }
 
     public Path asAbstractPath() {
-        var list = asList.stream().map(element -> element.replaceAll(REGEX_ARRAY_BRACKETS_WITH_INDEX, ARRAY_BRACKETS_WITHOUT_INDEX)).toList();
+        var list = asList.stream().map(element -> REGEX_ARRAY_BRACKETS_WITH_INDEX.matcher(element).replaceAll(ARRAY_BRACKETS_WITHOUT_INDEX)).toList();
         return new Path(list);
     }
 
     public List<Integer> arrayIndices() {
-        return asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_INDEX))
+        return asList.stream().filter(element -> REGEX_ARRAY_BRACKETS_WITH_INDEX.matcher(element).matches())
                 .map(Path::new)
                 .map(Path::indexOfFirstConcreteArrayElement)
                 .toList();
     }
 
     public int arrayCount() {
-        return (int) asList.stream().filter(element -> element.matches(REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX)).count();
+        return (int) asList.stream().filter(element -> REGEX_ARRAY_BRACKETS_WITH_OR_WITHOUT_INDEX.matcher(element).matches())
+                .count();
     }
 
     public Path copyArrayIndicesTo(Path to) {
