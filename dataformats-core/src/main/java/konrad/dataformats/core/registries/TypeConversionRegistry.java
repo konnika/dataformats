@@ -1,6 +1,7 @@
 package konrad.dataformats.core.registries;
 
 import konrad.dataformats.core.mappings.AcceptedTypeConversion;
+import konrad.dataformats.core.mappings.AcceptedTypeConversionId;
 import konrad.dataformats.core.mappings.TypeConversion;
 import konrad.dataformats.core.mappings.TypeConversionBigDecimalToDouble;
 import konrad.dataformats.core.mappings.TypeConversionBigIntegerToInteger;
@@ -12,17 +13,22 @@ import konrad.dataformats.core.mappings.TypeConversionStringToEnum;
 import konrad.dataformats.core.types.Type;
 import konrad.dataformats.core.validation.DataFormatsException;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TypeConversionRegistry {
     private final Set<TypeConversion> conversions;
+    private final Map<AcceptedTypeConversionId, AcceptedTypeConversion> acceptedConversions;
 
     public TypeConversionRegistry() {
         this.conversions = new HashSet<>();
+        acceptedConversions = new HashMap<>();
+
         add(new TypeConversionBigDecimalToDouble());
         add(new TypeConversionDoubleToBigDecimal());
         add(new TypeConversionBigIntegerToInteger());
@@ -45,6 +51,12 @@ public class TypeConversionRegistry {
     }
 
     public AcceptedTypeConversion get(Type from, Type to, String... extraInfoForException) {
+        var conversion = Optional.ofNullable(acceptedConversions.get(new AcceptedTypeConversionId(from, to)));
+
+        if (conversion.isPresent()) {
+            return conversion.get();
+        }
+
         var applicableConversions = getAcceptedTypeConversions(from, to);
 
         if (applicableConversions.isEmpty()) {
@@ -53,6 +65,8 @@ public class TypeConversionRegistry {
             var typeConversions = applicableConversions.stream().map(c -> c.getClass().getName()).collect(Collectors.joining(", "));
             throw new DataFormatsException("Multiple TypeConversions found for types: " + from + " -> " + to + " : " + typeConversions + ". " + String.join(" ", extraInfoForException));
         } else {
+            applicableConversions.forEach(c -> acceptedConversions.putIfAbsent(c.id(), c));
+
             return applicableConversions.get(0);
         }
     }

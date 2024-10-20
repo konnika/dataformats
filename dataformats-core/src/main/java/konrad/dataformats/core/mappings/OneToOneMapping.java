@@ -68,6 +68,7 @@ public class OneToOneMapping implements Mapping {
             return object;
         }
 
-        return typeConversionRegistry.get(fromType, toType, fromPath.toString()).convert(object);
+        return typeConversionRegistry.get(fromType, toType,
+                "from " + fromPath.toString(), "to " + toPath.toString()).convert(object);
     }
 }

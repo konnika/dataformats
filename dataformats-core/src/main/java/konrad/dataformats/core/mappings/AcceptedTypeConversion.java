@@ -16,4 +16,8 @@ public class AcceptedTypeConversion {
     public Object convert(Object object) {
         return typeConversion.convert(from, to, object);
     }
+
+    public AcceptedTypeConversionId id() {
+        return new AcceptedTypeConversionId(from, to);
+    }
 }
